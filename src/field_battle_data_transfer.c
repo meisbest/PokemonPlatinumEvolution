@@ -21,7 +21,7 @@
 #include "applications/pokemon_summary_screen/main.h"
 #include "field/field_system.h"
 #include "savedata/save_table.h"
-
+#include "badges.h"
 #include "bag.h"
 #include "battle_regulation.h"
 #include "charcode_util.h"
@@ -62,6 +62,75 @@
 
 static int CalcTerrain(const FieldSystem *fieldSystem, enum BattleBackground background);
 static void SetBackgroundAndTerrain(FieldBattleDTO *dto, const FieldSystem *fieldSystem);
+
+
+// --- INIZIO LEVEL CAP PERSONALIZZATO ---
+
+// Funzione d'appoggio per leggere le variabili in sicurezza
+static u16 ReadVarSafe(VarsFlags *varsFlags, u16 varID) {
+    u16 *varAddress = VarsFlags_GetVarAddress(varsFlags, varID);
+    if (varAddress == NULL) {
+        return 0; // Se la variabile non esiste, restituisci 0
+    }
+    return *varAddress; // Altrimenti restituisci il suo valore
+}
+
+u32 GetHardLevelCap(SaveData *saveData) {
+    TrainerInfo *trInfo = SaveData_GetTrainerInfo(saveData);
+    VarsFlags *varsFlags = SaveData_GetVarsFlags(saveData);
+
+    // 1. Monte Ostile
+    if (ReadVarSafe(varsFlags, 0x40AD) >= 1) return 100;
+    // 2. Lega
+    if (ReadVarSafe(varsFlags, 0x40F4) >= 1) return 90;
+    // 3. Rivale Lega
+    if (ReadVarSafe(varsFlags, 0x40EF) >= 1) return 70;
+    // 4. Badge 8: Volkner
+    if (TrainerInfo_HasBadge(trInfo, BADGE_ID_BEACON)) return 65;
+    // 5. Cyrus Mondo Distorto
+    if (ReadVarSafe(varsFlags, 0x4055) >= 10) return 62;
+    // 6. Monte Corona
+    if (ReadVarSafe(varsFlags, 0x4098) >= 2) return 60;
+    // 7. Saturno Base
+    if (ReadVarSafe(varsFlags, 0x410D) >= 1) return 55;
+    // 8. Cyrus Base
+    if (ReadVarSafe(varsFlags, 0x40D6) >= 1) return 53;
+    // 9. Badge 7: Candice
+    if (TrainerInfo_HasBadge(trInfo, BADGE_ID_ICICLE)) return 50;
+    // 10. Martes Lago Verità
+    if (ReadVarSafe(varsFlags, 0x40D3) >= 1) return 45;
+    // 11. Flag 318 Saturno Lago Valore
+    if (VarsFlags_CheckFlag(varsFlags, 318)) return 43; 
+    // 12. Badge 6: Byron
+    if (TrainerInfo_HasBadge(trInfo, BADGE_ID_MINE)) return 40;
+    // 13. Rivale Canalipoli
+    if (ReadVarSafe(varsFlags, 0x4078) >= 1) return 38;
+    // 14. Badge 4: Wake
+    if (TrainerInfo_HasBadge(trInfo, BADGE_ID_FEN)) return 35;
+    // 15. Rivale Arenipoli
+    if (ReadVarSafe(varsFlags, 0x407C) >= 2) return 33;
+    // 16. Badge 3: Maylene
+    if (TrainerInfo_HasBadge(trInfo, BADGE_ID_COBBLE)) return 30;
+    // 17. Rivale Cuoripoli
+    if (ReadVarSafe(varsFlags, 0x407B) >= 2) return 28;
+    // 18. Badge 5: Fantina
+    if (TrainerInfo_HasBadge(trInfo, BADGE_ID_RELIC)) return 25;
+    // 19. Jupiter
+    if (ReadVarSafe(varsFlags, 0x407A) >= 3) return 20;
+    // 20. Badge 2: Gardenia
+    if (TrainerInfo_HasBadge(trInfo, BADGE_ID_FOREST)) return 18;
+    // 21. Mars
+    if (ReadVarSafe(varsFlags, 0x4089) >= 2) return 15;
+    // 22. Badge 1: Roark
+    if (TrainerInfo_HasBadge(trInfo, BADGE_ID_COAL)) return 12;
+    // 23. Rivale Percorso 203
+    if (ReadVarSafe(varsFlags, 0x4088) >= 1) return 10;
+
+    // Default
+    return 8;
+}
+
+// --- FINE LEVEL CAP PERSONALIZZATO ---
 
 FieldBattleDTO *FieldBattleDTO_New(enum HeapID heapID, u32 battleType)
 {

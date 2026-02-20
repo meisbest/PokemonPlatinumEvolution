@@ -218,8 +218,26 @@ int BoxPokemon_GiveExperience(BoxPokemon *boxMon, u32 givenExp)
 
     BoxPokemon_Copy(boxMon, boxMonRef);
 
+    // --- HACK LEVEL CAP: SIMULAZIONE ---
+    extern SaveData *gSaveDataPtr;
+    u32 currentCap = GetHardLevelCap(gSaveDataPtr);
+    u32 currentLevel = BoxPokemon_GetLevel(boxMonRef);
+    u16 species = BoxPokemon_GetValue(boxMonRef, MON_DATA_SPECIES, NULL);
+
     exp = BoxPokemon_GetValue(boxMonRef, MON_DATA_EXPERIENCE, NULL);
-    exp += givenExp;
+
+    if (currentLevel < currentCap) {
+        // Calcoliamo quanti punti servono per arrivare esattamente al Cap
+        u32 maxExp = Pokemon_GetSpeciesBaseExpAt(species, currentCap);
+        
+        if (exp + givenExp > maxExp) {
+            exp = maxExp; // Tagliamo l'eccesso!
+        } else {
+            exp += givenExp; // Tutto regolare
+        }
+    }
+    // Se sei già al cap, "exp" rimane quella di partenza e non sale.
+    // -----------------------------------
 
     BoxPokemon_SetValue(boxMonRef, MON_DATA_EXPERIENCE, (u8 *)&exp);
     level = BoxPokemon_GetLevel(boxMonRef);

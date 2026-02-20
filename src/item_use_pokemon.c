@@ -11,11 +11,13 @@
 #include "generated/moves.h"
 #include "generated/species.h"
 
+#include "field_battle_data_transfer.h"
 #include "heap.h"
 #include "item.h"
 #include "move_table.h"
 #include "party.h"
 #include "pokemon.h"
+#include "savedata.h"
 
 #define PP_UP_REQUIREMENT 5 // Moves with fewer max PP can't benefit from PP Ups (e.g. Sketch)
 
@@ -169,9 +171,26 @@ u8 Pokemon_CheckItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, enum HeapID 
     }
 
     if (Item_Get(item, ITEM_PARAM_LEVEL_UP)) {
+        /*
         if (Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL) < MAX_POKEMON_LEVEL) {
             Heap_Free(item);
             return TRUE;
+        }
+        */
+       
+        // --- HACK LEVEL CAP ---
+        // Peschiamo il SaveData globale e calcoliamo il Cap!
+        extern SaveData *gSaveDataPtr; // Metodo d'emergenza se non hai il puntatore pulito, ma vediamo se compila così
+        u32 currentCap = GetHardLevelCap(gSaveDataPtr); 
+        
+        // La caramella funziona SOLO se sei sotto il Cap!
+        if (Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL) < currentCap) {
+            Heap_Free(item);
+            return TRUE;
+        } else {
+            // Sei al cap! La caramella dà "Non ha effetto".
+            Heap_Free(item);
+            return FALSE; 
         }
     }
 
@@ -289,7 +308,11 @@ u8 Pokemon_ApplyItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, u16 location
     vApplyLevel = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
 
     if (Item_Get(item, ITEM_PARAM_LEVEL_UP)) {
-        if (vApplyLevel < MAX_POKEMON_LEVEL) {
+        extern SaveData *gSaveDataPtr;
+        u32 currentCap = GetHardLevelCap(gSaveDataPtr);
+
+        // Riapplichiamo il blocco di sicurezza anche qui!
+        if (vApplyLevel < currentCap) {
             Pokemon_IncreaseValue(mon, MON_DATA_EXPERIENCE, Pokemon_GetExpToNextLevel(mon));
             Pokemon_CalcLevelAndStats(mon);
 

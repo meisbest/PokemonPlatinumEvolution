@@ -36,6 +36,8 @@ static void SaveDataExtra_SetSaveKey(SaveData *saveData, int extraSaveID, u32 ne
 static SaveData *sSaveDataPtr = NULL;
 static BOOL sSaveComplete;
 
+SaveData *gSaveDataPtr = NULL;
+
 SaveData *SaveData_Init(void)
 {
     SaveData *saveData = Heap_Alloc(HEAP_ID_SAVE, sizeof(SaveData));
@@ -94,6 +96,8 @@ SaveData *SaveData_Init(void)
         SaveData_Clear(saveData);
         break;
     }
+
+    gSaveDataPtr = saveData;
 
     return saveData;
 }

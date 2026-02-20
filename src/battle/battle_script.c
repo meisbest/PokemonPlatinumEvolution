@@ -45,6 +45,7 @@
 #include "bg_window.h"
 #include "char_transfer.h"
 #include "dexmode_checker.h"
+#include "field_battle_data_transfer.h"
 #include "flags.h"
 #include "heap.h"
 #include "item.h"
@@ -58,6 +59,7 @@
 #include "pokemon_icon.h"
 #include "pokemon_sprite.h"
 #include "render_window.h"
+#include "savedata.h"
 #include "screen_fade.h"
 #include "sound_chatot.h"
 #include "sound_playback.h"
@@ -9987,6 +9989,25 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
 
                 msg.id = BattleStrings_Text_PokemonGainedABoostedExpPoints; // "{0} gained a boosted {1} Exp. Points!"
             }
+
+            // --- HACK DEL LEVEL CAP CON ANTI-OVERFLOW (VERSIONE PULITA) ---
+            extern SaveData *gSaveDataPtr; // Usiamo il nostro puntatore globale!
+            u32 levelCap = GetHardLevelCap(gSaveDataPtr);
+
+            u32 currentLevel = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
+            u32 currentExp = Pokemon_GetValue(mon, MON_DATA_EXPERIENCE, NULL);
+            u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
+            u32 maxExp = Pokemon_GetSpeciesBaseExpAt(species, levelCap);
+
+            // 1. Sei già al Cap?
+            if (currentLevel >= levelCap || currentExp >= maxExp) {
+                totalExp = 0;
+            } 
+            // 2. Questa kill ti farebbe sfondare?
+            else if (currentExp + totalExp > maxExp) {
+                totalExp = maxExp - currentExp;
+            }
+            // --------------------------------------------------------------
 
             u32 newExp = Pokemon_GetValue(mon, MON_DATA_EXPERIENCE, NULL);
             data->tmpData[GET_EXP_NEW_EXP] = newExp - Pokemon_GetCurrentLevelBaseExp(mon);

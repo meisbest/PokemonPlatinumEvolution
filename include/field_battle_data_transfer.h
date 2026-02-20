@@ -111,5 +111,6 @@ BOOL CheckPlayerWonBattle(u32 battleResult);
 BOOL CheckPlayerLostBattle(u32 battleResult);
 BOOL CheckPlayerDidNotCaptureWildMon(u32 battleResult);
 void FieldBattleDTO_CopyPlayerInfoToTrainerData(FieldBattleDTO *dto);
+u32 GetHardLevelCap(SaveData *saveData);
 
 #endif // POKEPLATINUM_FIELD_BATTLE_DATA_TRANSFER_H
