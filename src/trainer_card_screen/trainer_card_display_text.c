@@ -235,11 +235,7 @@ void TrainerCard_DrawFrontText(Window *windows, const TrainerCard *trainerCard)
     // 4. Stampiamo il valore numerico del Cap allineato a destra
     TrainerCard_DrawNumber(&windows[TRAINER_CARD_WINDOW_SCORE], TRAINER_CARD_WINDOW_PARTIAL_WIDTH * TILE_WIDTH_PIXELS, 0, 0, string, currentCap, 3, PADDING_MODE_SPACES);
     // ----------------------------------------------------
-<<<<<<< HEAD
     
-=======
-
->>>>>>> Level cap
     if (trainerCard->liveTimeDisplay) {
         StringTemplate_SetNumber(template, 0, PlayTime_GetHours(trainerCard->playTime), 3, PADDING_MODE_SPACES, CHARSET_MODE_EN);
         StringTemplate_SetNumber(template, 1, PlayTime_GetMinutes(trainerCard->playTime), 2, PADDING_MODE_ZEROES, CHARSET_MODE_EN);

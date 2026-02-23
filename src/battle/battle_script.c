@@ -9990,13 +9990,8 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
                 msg.id = BattleStrings_Text_PokemonGainedABoostedExpPoints; // "{0} gained a boosted {1} Exp. Points!"
             }
 
-<<<<<<< HEAD
-            // --- HACK DEL LEVEL CAP CON ANTI-OVERFLOW (VERSIONE PULITA) ---
-            extern SaveData *gSaveDataPtr; // Usiamo il nostro puntatore globale!
-=======
             // --- HACK DEL LEVEL CAP ---
             extern SaveData *gSaveDataPtr;
->>>>>>> Level cap
             u32 levelCap = GetHardLevelCap(gSaveDataPtr);
 
             u32 currentLevel = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
@@ -10004,7 +9999,6 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
             u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
             u32 maxExp = Pokemon_GetSpeciesBaseExpAt(species, levelCap);
 
-<<<<<<< HEAD
             // 1. Sei già al Cap?
             if (currentLevel >= levelCap || currentExp >= maxExp) {
                 totalExp = 0;
@@ -10014,17 +10008,6 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
                 totalExp = maxExp - currentExp;
             }
             // --------------------------------------------------------------
-=======
-            // 1. Sei già al Cap? (Livello o Esperienza massima)
-            if (currentLevel >= levelCap || currentExp >= maxExp) {
-                totalExp = 0; // Il gioco capirà di saltare animazione e testo!
-            } 
-            // 2. Non sei al Cap, ma questa kill ti farebbe "sfondare"?
-            else if (currentExp + totalExp > maxExp) {
-                totalExp = maxExp - currentExp; // Taglio chirurgico: ti diamo solo i punti esatti per il Level Up!
-            }
-            // --------------------------
->>>>>>> Level cap
 
             u32 newExp = Pokemon_GetValue(mon, MON_DATA_EXPERIENCE, NULL);
             data->tmpData[GET_EXP_NEW_EXP] = newExp - Pokemon_GetCurrentLevelBaseExp(mon);

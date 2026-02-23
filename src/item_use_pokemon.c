@@ -177,11 +177,7 @@ u8 Pokemon_CheckItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, enum HeapID 
             return TRUE;
         }
         */
-<<<<<<< HEAD
        
-=======
-
->>>>>>> Level cap
         // --- HACK LEVEL CAP ---
         // Peschiamo il SaveData globale e calcoliamo il Cap!
         extern SaveData *gSaveDataPtr; // Metodo d'emergenza se non hai il puntatore pulito, ma vediamo se compila così
