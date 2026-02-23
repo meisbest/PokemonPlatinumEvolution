@@ -21,6 +21,10 @@
 #include "applications/pokemon_summary_screen/main.h"
 #include "field/field_system.h"
 #include "savedata/save_table.h"
+<<<<<<< HEAD
+=======
+
+>>>>>>> Level cap
 #include "badges.h"
 #include "bag.h"
 #include "battle_regulation.h"

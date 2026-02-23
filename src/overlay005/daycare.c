@@ -179,12 +179,27 @@ static int Daycare_MoveToPartyFromDaycareMon(Party *party, DaycareMon *daycareMo
     species = BoxPokemon_GetValue(boxMon, MON_DATA_SPECIES, NULL);
     Pokemon_FromBoxPokemon(boxMon, mon);
 
-    if (Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL) != MAX_POKEMON_LEVEL) {
+    // --- HACK LEVEL CAP: RITIRO ---
+    extern SaveData *gSaveDataPtr;
+    u32 currentCap = GetHardLevelCap(gSaveDataPtr);
+    u32 currentLevel = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
+
+    // Sostituiamo il check "MAX_POKEMON_LEVEL" col nostro Cap!
+    if (currentLevel < currentCap) {
         experience = Pokemon_GetValue(mon, MON_DATA_EXPERIENCE, NULL);
-        experience += DaycareMon_GetSteps(daycareMon);
+        u32 addedExp = DaycareMon_GetSteps(daycareMon);
+        u32 maxExp = Pokemon_GetSpeciesBaseExpAt(species, currentCap);
+
+        if (experience + addedExp > maxExp) {
+            experience = maxExp; // Taglio dell'eccesso!
+        } else {
+            experience += addedExp;
+        }
+
         Pokemon_SetValue(mon, MON_DATA_EXPERIENCE, (u8 *)&experience);
-        ov5_021E63E0(mon);
+        ov5_021E63E0(mon); // Questo è il ciclo che fa imparare le mosse per il level up!
     }
+    // ------------------------------
 
     if (BoxPokemon_HoldsMail(boxMon)) {
         Pokemon_SetValue(mon, MON_DATA_MAIL, DaycareMail_GetMail(daycareMail));
