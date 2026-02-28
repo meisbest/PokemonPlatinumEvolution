@@ -3,6 +3,7 @@
 
 #include "constants/heap.h"
 
+#include "applications/frontier/battle_factory/main.h"
 #include "overlay104/frontier_script_context.h"
 #include "overlay104/frscrcmd.h"
 #include "overlay104/ov104_0222DCE0.h"
@@ -15,7 +16,6 @@
 #include "overlay104/struct_ov104_02234130.h"
 #include "overlay104/struct_ov104_0223ADA0.h"
 #include "overlay104/struct_ov104_0223C4CC.h"
-#include "overlay105/ov105_02241AE0.h"
 
 #include "bg_window.h"
 #include "field_battle_data_transfer.h"
@@ -85,9 +85,9 @@ BOOL FrontierScrCmd_5F(FrontierScriptContext *param0)
     FS_EXTERN_OVERLAY(overlay105);
 
     static const ApplicationManagerTemplate v4 = {
-        ov105_02241AE0,
-        ov105_02241BD8,
-        ov105_02241F54,
+        BattleFactoryApp_Init,
+        BattleFactoryApp_Main,
+        BattleFactoryApp_Exit,
         FS_OVERLAY_ID(overlay105)
     };
 
@@ -144,9 +144,9 @@ BOOL FrontierScrCmd_62(FrontierScriptContext *param0)
     FS_EXTERN_OVERLAY(overlay105);
 
     static const ApplicationManagerTemplate v4 = {
-        ov105_02241AE0,
-        ov105_02241BD8,
-        ov105_02241F54,
+        BattleFactoryApp_Init,
+        BattleFactoryApp_Main,
+        BattleFactoryApp_Exit,
         FS_OVERLAY_ID(overlay105)
     };
 
