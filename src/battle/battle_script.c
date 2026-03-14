@@ -2421,48 +2421,41 @@ static BOOL BtlCmd_CalcExpGain(BattleSystem *battleSys, BattleContext *battleCtx
 
     if ((battlerData->battlerType & BATTLER_TYPE_SOLO_ENEMY) && (battleType & BATTLE_TYPE_NO_EXPERIENCE) == FALSE) {
         int i;
+        int totalEligible = 0;
         int totalMonsGainingExp = 0;
         int totalMonsWithExpShare = 0;
 
         for (i = 0; i < Party_GetCurrentCount(BattleSystem_GetParty(battleSys, BATTLER_US)); i++) {
             Pokemon *mon = BattleSystem_GetPartyPokemon(battleSys, BATTLER_US, i);
 
-            if (Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL) && Pokemon_GetValue(mon, MON_DATA_HP, NULL)) {
-                if (battleCtx->sideGetExpMask[(battleCtx->faintedMon >> 1) & 1] & FlagIndex(i)) {
-                    totalMonsGainingExp++;
-                }
-
-                u16 item = Pokemon_GetValue(mon, MON_DATA_HELD_ITEM, NULL);
-                if (BattleSystem_GetItemData(battleCtx, item, ITEM_PARAM_HOLD_EFFECT) == HOLD_EFFECT_EXP_SHARE) {
-                    totalMonsWithExpShare++;
-                }
+            if (Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL) && 
+                Pokemon_GetValue(mon, MON_DATA_HP, NULL) > 0 && 
+                Pokemon_GetValue(mon, MON_DATA_IS_EGG, NULL) == FALSE) {
+                
+                totalEligible++;
             }
+        }
+
+        // Sicurezza contro crash da divisione per zero
+        if (totalEligible == 0) {
+            totalEligible = 1;
         }
 
         u16 exp = SpeciesData_GetSpeciesValue(battleCtx->battleMons[battleCtx->faintedMon].species, SPECIES_DATA_BASE_EXP_REWARD);
         exp = (exp * battleCtx->battleMons[battleCtx->faintedMon].level) / 7;
 
-        if (totalMonsWithExpShare) {
-            battleCtx->gainedExp = (exp / 2) / totalMonsGainingExp;
-
-            if (battleCtx->gainedExp == 0) {
-                battleCtx->gainedExp = 1;
-            }
-
-            battleCtx->sharedExp = (exp / 2) / totalMonsWithExpShare;
-
-            if (battleCtx->sharedExp == 0) {
-                battleCtx->sharedExp = 1;
-            }
-        } else {
-            battleCtx->gainedExp = exp / totalMonsGainingExp;
-
-            if (battleCtx->gainedExp == 0) {
-                battleCtx->gainedExp = 1;
-            }
-
-            battleCtx->sharedExp = 0;
+        // 3. La Fetta di chi ha lottato (100% della divisione)
+        battleCtx->gainedExp = exp / totalEligible;
+        if (battleCtx->gainedExp == 0) {
+            battleCtx->gainedExp = 1;
         }
+
+        // 4. La Fetta della panchina (50% della divisione)
+        battleCtx->sharedExp = battleCtx->gainedExp / 2;
+        if (battleCtx->sharedExp == 0) {
+            battleCtx->sharedExp = 1;
+        }
+
     } else {
         BattleScript_Iter(battleCtx, jump);
     }
@@ -9932,7 +9925,11 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
         item = Pokemon_GetValue(mon, MON_DATA_HELD_ITEM, NULL);
         itemEffect = Item_LoadParam(item, ITEM_PARAM_HOLD_EFFECT, HEAP_ID_BATTLE);
 
-        if (itemEffect == HOLD_EFFECT_EXP_SHARE || (data->battleCtx->sideGetExpMask[battler] & FlagIndex(slot))) {
+        // IL NUOVO FILTRO GLOBALE: 
+        // Fermati e dai esperienza a QUALSIASI Pokémon che non sia un uovo e non sia esausto!
+        if (Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL) != SPECIES_NONE &&
+            Pokemon_GetValue(mon, MON_DATA_IS_EGG, NULL) == FALSE &&
+            Pokemon_GetValue(mon, MON_DATA_HP, NULL) > 0) {
             break;
         }
     }
@@ -9966,10 +9963,8 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
         if (Pokemon_GetValue(mon, MON_DATA_HP, NULL) && Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL) != MAX_POKEMON_LEVEL) {
             if (data->battleCtx->sideGetExpMask[battler] & FlagIndex(slot)) {
                 totalExp = data->battleCtx->gainedExp;
-            }
-
-            if (itemEffect == HOLD_EFFECT_EXP_SHARE) {
-                totalExp += data->battleCtx->sharedExp;
+            } else {
+                totalExp = data->battleCtx->sharedExp;
             }
 
             if (itemEffect == HOLD_EFFECT_EXP_UP) {
