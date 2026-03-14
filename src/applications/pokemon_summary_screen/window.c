@@ -1165,16 +1165,47 @@ static void DrawSkillsPageWindows(PokemonSummaryScreen *summaryScreen)
     u32 hpWindowWidth = Window_GetWidth(&summaryScreen->extraWindows[SUMMARY_WINDOW_HP]) * 8;
 
     PrintCurrentAndMaxInfo(summaryScreen, 0, PokemonSummary_Text_Slash, PokemonSummary_Text_TemplateCurrentHp, PokemonSummary_Text_TemplateMaxHp, summaryScreen->monData.curHP, summaryScreen->monData.maxHP, 3, hpWindowWidth / 2, 0);
+
+    // --- MAGIA DELLE NATURE COLORATE ---
+    u8 nature = summaryScreen->monData.nature;
+    u8 statBoosted = nature / 5;
+    u8 statLowered = nature % 5;
+
+    // Default a nero
+    TextColor colorAtk = SUMMARY_TEXT_BLACK;
+    TextColor colorDef = SUMMARY_TEXT_BLACK;
+    TextColor colorSpA = SUMMARY_TEXT_BLACK;
+    TextColor colorSpD = SUMMARY_TEXT_BLACK;
+    TextColor colorSpe = SUMMARY_TEXT_BLACK;
+
+    // Se non è una natura neutra, colora!
+    if (statBoosted != statLowered) {
+        // Colori la statistica buffata (Rosso)
+        if (statBoosted == 0) colorAtk = SUMMARY_TEXT_RED;
+        if (statBoosted == 1) colorDef = SUMMARY_TEXT_RED;
+        if (statBoosted == 2) colorSpe = SUMMARY_TEXT_RED;
+        if (statBoosted == 3) colorSpA = SUMMARY_TEXT_RED;
+        if (statBoosted == 4) colorSpD = SUMMARY_TEXT_RED;
+
+        // Colori la statistica nerfata (Blu)
+        if (statLowered == 0) colorAtk = SUMMARY_TEXT_BLUE;
+        if (statLowered == 1) colorDef = SUMMARY_TEXT_BLUE;
+        if (statLowered == 2) colorSpe = SUMMARY_TEXT_BLUE;
+        if (statLowered == 3) colorSpA = SUMMARY_TEXT_BLUE;
+        if (statLowered == 4) colorSpD = SUMMARY_TEXT_BLUE;
+    }
+    // -----------------------------------
+
     SetAndFormatNumberBuf(summaryScreen, PokemonSummary_Text_TemplateAttack, summaryScreen->monData.attack, 3, PADDING_MODE_NONE);
-    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_ATTACK], SUMMARY_TEXT_BLACK, ALIGN_RIGHT);
+    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_ATTACK], colorAtk, ALIGN_RIGHT);
     SetAndFormatNumberBuf(summaryScreen, PokemonSummary_Text_TemplateDefense, summaryScreen->monData.defense, 3, PADDING_MODE_NONE);
-    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_DEFENSE], SUMMARY_TEXT_BLACK, ALIGN_RIGHT);
+    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_DEFENSE], colorDef, ALIGN_RIGHT);
     SetAndFormatNumberBuf(summaryScreen, PokemonSummary_Text_TemplateSpAttack, summaryScreen->monData.spAttack, 3, PADDING_MODE_NONE);
-    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_SP_ATTACK], SUMMARY_TEXT_BLACK, ALIGN_RIGHT);
+    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_SP_ATTACK], colorSpA, ALIGN_RIGHT);
     SetAndFormatNumberBuf(summaryScreen, PokemonSummary_Text_TemplateSpDefense, summaryScreen->monData.spDefense, 3, PADDING_MODE_NONE);
-    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_SP_DEFENSE], SUMMARY_TEXT_BLACK, ALIGN_RIGHT);
+    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_SP_DEFENSE], colorSpD, ALIGN_RIGHT);
     SetAndFormatNumberBuf(summaryScreen, PokemonSummary_Text_TemplateSpeed, summaryScreen->monData.speed, 3, PADDING_MODE_NONE);
-    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_SPEED], SUMMARY_TEXT_BLACK, ALIGN_RIGHT);
+    PrintStringToWindow(summaryScreen, &summaryScreen->extraWindows[SUMMARY_WINDOW_SPEED], colorSpe, ALIGN_RIGHT);
 
     StringTemplate_SetAbilityName(summaryScreen->strFormatter, 0, summaryScreen->monData.ability);
     String *buf = MessageLoader_GetNewString(summaryScreen->msgLoader, PokemonSummary_Text_TemplateAbility);
