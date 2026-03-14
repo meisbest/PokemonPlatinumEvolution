@@ -360,10 +360,16 @@ static BOOL ScrCmd_094(ScriptContext *ctx);
 static BOOL ScrCmd_GetPartyMonForm(ScriptContext *ctx);
 static BOOL ScrCmd_GetRematchTrainerID(ScriptContext *ctx);
 static BOOL ScrCmd_315(ScriptContext *ctx);
-static BOOL ScrCmd_Unused_09C(ScriptContext *ctx);
-static BOOL ScrCmd_Unused_09D(ScriptContext *ctx);
-static BOOL ScrCmd_Unused_09E(ScriptContext *ctx);
-static BOOL ScrCmd_Unused_09F(ScriptContext *ctx);
+//static BOOL ScrCmd_Unused_09C(ScriptContext *ctx);
+//static BOOL ScrCmd_Unused_09D(ScriptContext *ctx);
+//static BOOL ScrCmd_Unused_09E(ScriptContext *ctx);
+BOOL ScrCmd_GetGuruPrice(ScriptContext *ctx);
+BOOL ScrCmd_CheckAbilitySwap(ScriptContext *ctx);
+BOOL ScrCmd_ApplyAbilitySwap(ScriptContext *ctx);
+//static BOOL ScrCmd_Unused_09F(ScriptContext *ctx);
+BOOL ScrCmd_CheckNatureSwap(ScriptContext *ctx);
+BOOL ScrCmd_ApplyNatureSwap(ScriptContext *ctx);
+BOOL ScrCmd_ProcessGuruMoney(ScriptContext *ctx);
 static BOOL ScrCmd_ReturnToField(ScriptContext *ctx);
 static BOOL ScrCmd_WaitForTransition(ScriptContext *ctx);
 static BOOL ScrCmd_0A2(ScriptContext *ctx);
@@ -616,6 +622,9 @@ static BOOL ScrCmd_GetSetNationalDexEnabled(ScriptContext *ctx);
 static BOOL ScrCmd_GetPartyMonEVTotal(ScriptContext *ctx);
 static BOOL ScrCmd_GetDayOfWeek(ScriptContext *ctx);
 static BOOL ScrCmd_239(ScriptContext *ctx);
+BOOL ScrCmd_ResetEVs(ScriptContext *ctx);
+BOOL ScrCmd_SetIV(ScriptContext *ctx);
+BOOL ScrCmd_ModifyEV(ScriptContext *ctx);
 static BOOL ScrCmd_GetSpeciesFootprintType(ScriptContext *ctx);
 static BOOL ScrCmd_PlayPokecenterHealingAnimation(ScriptContext *ctx);
 static BOOL ScrCmd_PlayElevatorAnimation(ScriptContext *ctx);
@@ -923,11 +932,11 @@ const ScrCmdFunc Unk_020EAC58[] = {
     ScrCmd_CheckPartyMonHasMove,
     ScrCmd_FindPartySlotWithMove,
     ScrCmd_GetRematchTrainerID,
-    ScrCmd_Unused_09C,
-    ScrCmd_Unused_09D,
-    ScrCmd_Unused_09E,
-    ScrCmd_Unused_09F,
-    ScrCmd_Dummy0A0,
+    ScrCmd_GetGuruPrice,      // Era 09C
+    ScrCmd_CheckAbilitySwap,  // Era 09D
+    ScrCmd_ApplyAbilitySwap,  // Era 09E
+    ScrCmd_CheckNatureSwap,   // Era 09F
+    ScrCmd_ApplyNatureSwap,   // Era 0A0
     ScrCmd_ReturnToField,
     ScrCmd_0A2,
     ScrCmd_0A3,
@@ -1342,10 +1351,10 @@ const ScrCmdFunc Unk_020EAC58[] = {
     ScrCmd_PlayElevatorAnimation,
     ScrCmd_PlayBoatCutscene,
     ScrCmd_MysteryGiftGive,
-    ScrCmd_Dummy23F,
-    ScrCmd_Dummy240,
-    ScrCmd_Dummy241,
-    ScrCmd_Dummy242,
+    ScrCmd_ResetEVs,          // Era ScrCmd_Dummy23F (Indice 0x023F)
+    ScrCmd_SetIV,             // Era ScrCmd_Dummy240 (Indice 0x0240)
+    ScrCmd_ModifyEV,          // Era ScrCmd_Dummy241 (Indice 0x0241)
+    ScrCmd_ProcessGuruMoney,  // Era 242 (NUOVO!)
     ScrCmd_ChooseCustomMessageWord,
     ScrCmd_ChooseTwoCustomMessageWords,
     ScrCmd_BufferCustomMessageWord,
@@ -3680,6 +3689,7 @@ static BOOL ScrCmd_315(ScriptContext *ctx)
     return FALSE;
 }
 
+/*
 static BOOL ScrCmd_Unused_09C(ScriptContext *ctx)
 {
     return FALSE;
@@ -3694,6 +3704,7 @@ static BOOL ScrCmd_Unused_09E(ScriptContext *ctx)
 {
     return TRUE;
 }
+*/
 
 static BOOL ScrCmd_Unused_09F(ScriptContext *ctx)
 {

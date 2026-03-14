@@ -106,6 +106,337 @@
         "The newspaper there gives me Heart\n",
         "Scales for running errands."
       ]
+    },
+    {
+      "id": "pl_msg_00000140_00018",
+      "en_US": [
+        "Welcome to the Guru’s Dojo!\n",
+        "How can I enhance your Pokémon?\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00019",
+      "en_US": "Which Pokémon needs my help?\r"
+    },
+    {
+      "id": "pl_msg_00000140_00020",
+      "en_US": [
+        "I can awaken its {STRVAR_1 24, 0, 0} Ability!\n",
+        "My services will cost {STRVAR_1 51, 1, 0}.\f",
+        "Do we have a deal?\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00021",
+      "en_US": [
+        "Oh, you are the Pokémon Champion!\n",
+        "I’ll awaken {STRVAR_1 24, 0, 0} for free.\f",
+        "Shall I proceed?\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00022",
+      "en_US": [
+        "Done!\n",
+        "Your Pokémon’s hidden potential\f",
+        "has been fully awakened!\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00023",
+      "en_US": [
+        "I’m sorry, but you don’t have\n",
+        "enough money for my services.\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00024",
+      "en_US": [
+        "Hmm... you lack experience.\n",
+        "Come back when you have 4 Badges.\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00025",
+      "en_US": [
+        "This Pokémon already possesses a\n",
+        "unique Ability.\f",
+        "There’s nothing else I can do.\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00026",
+      "en_US": [
+        "That’s an Egg...\n",
+        "Come back when it hatches!\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00027",
+      "en_US": "Come back if you change your mind!\r"
+    },
+    {
+      "id": "pl_msg_00000140_00028",
+      "en_US": "Change Ability"
+    },
+    {
+      "id": "pl_msg_00000140_00029",
+      "en_US": "Change Nature"
+    },
+    {
+      "id": "pl_msg_00000140_00030",
+      "en_US": "Set IVs"
+    },
+    {
+      "id": "pl_msg_00000140_00031",
+      "en_US": "Set EVs"
+    },
+    {
+      "id": "pl_msg_00000140_00032",
+      "en_US": "Reset EVs"
+    },
+    {
+      "id": "pl_msg_00000140_00033",
+      "en_US": "Cancel"
+    },
+    {
+      "id": "pl_msg_00000140_00034",
+      "en_US": "Which Nature do you want?\r"
+    },
+    {
+      "id": "pl_msg_00000140_00035",
+      "en_US": "Hardy"
+    },
+    {
+      "id": "pl_msg_00000140_00036",
+      "en_US": "Lonely"
+    },
+    {
+      "id": "pl_msg_00000140_00037",
+      "en_US": "Brave"
+    },
+    {
+      "id": "pl_msg_00000140_00038",
+      "en_US": "Adamant"
+    },
+    {
+      "id": "pl_msg_00000140_00039",
+      "en_US": "Naughty"
+    },
+    {
+      "id": "pl_msg_00000140_00040",
+      "en_US": "Bold"
+    },
+    {
+      "id": "pl_msg_00000140_00041",
+      "en_US": "Docile"
+    },
+    {
+      "id": "pl_msg_00000140_00042",
+      "en_US": "Relaxed"
+    },
+    {
+      "id": "pl_msg_00000140_00043",
+      "en_US": "Impish"
+    },
+    {
+      "id": "pl_msg_00000140_00044",
+      "en_US": "Lax"
+    },
+    {
+      "id": "pl_msg_00000140_00045",
+      "en_US": "Timid"
+    },
+    {
+      "id": "pl_msg_00000140_00046",
+      "en_US": "Hasty"
+    },
+    {
+      "id": "pl_msg_00000140_00047",
+      "en_US": "Serious"
+    },
+    {
+      "id": "pl_msg_00000140_00048",
+      "en_US": "Jolly"
+    },
+    {
+      "id": "pl_msg_00000140_00049",
+      "en_US": "Naive"
+    },
+    {
+      "id": "pl_msg_00000140_00050",
+      "en_US": "Modest"
+    },
+    {
+      "id": "pl_msg_00000140_00051",
+      "en_US": "Mild"
+    },
+    {
+      "id": "pl_msg_00000140_00052",
+      "en_US": "Quiet"
+    },
+    {
+      "id": "pl_msg_00000140_00053",
+      "en_US": "Bashful"
+    },
+    {
+      "id": "pl_msg_00000140_00054",
+      "en_US": "Rash"
+    },
+    {
+      "id": "pl_msg_00000140_00055",
+      "en_US": "Calm"
+    },
+    {
+      "id": "pl_msg_00000140_00056",
+      "en_US": "Gentle"
+    },
+    {
+      "id": "pl_msg_00000140_00057",
+      "en_US": "Sassy"
+    },
+    {
+      "id": "pl_msg_00000140_00058",
+      "en_US": "Careful"
+    },
+    {
+      "id": "pl_msg_00000140_00059",
+      "en_US": "Quirky"
+    },
+    {
+      "id": "pl_msg_00000140_00060",
+      "en_US": [
+        "This will cost {STRVAR_1 51, 1, 0}.\n",
+        "Do we have a deal?\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00061",
+      "en_US": "Which stat do you want to modify?\r"
+    },
+    {
+      "id": "pl_msg_00000140_00062",
+      "en_US": "HP"
+    },
+    {
+      "id": "pl_msg_00000140_00063",
+      "en_US": "Attack"
+    },
+    {
+      "id": "pl_msg_00000140_00064",
+      "en_US": "Defense"
+    },
+    {
+      "id": "pl_msg_00000140_00065",
+      "en_US": "Sp. Atk"
+    },
+    {
+      "id": "pl_msg_00000140_00066",
+      "en_US": "Sp. Def"
+    },
+    {
+      "id": "pl_msg_00000140_00067",
+      "en_US": "Speed"
+    },
+    {
+      "id": "pl_msg_00000140_00068",
+      "en_US": "Back"
+    },
+    {
+      "id": "pl_msg_00000140_00069",
+      "en_US": "Which IV potential?\r"
+    },
+    {
+      "id": "pl_msg_00000140_00070",
+      "en_US": "31 (Maximum)"
+    },
+    {
+      "id": "pl_msg_00000140_00071",
+      "en_US": "30 (Hidden Power)"
+    },
+    {
+      "id": "pl_msg_00000140_00072",
+      "en_US": "1 (Minimum Power)"
+    },
+    {
+      "id": "pl_msg_00000140_00073",
+      "en_US": "0 (Zero)"
+    },
+    {
+      "id": "pl_msg_00000140_00074",
+      "en_US": [
+        "Current EV: {STRVAR_1 51, 0, 0}\n",
+        "How should I train it?\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00075",
+      "en_US": "+ 252"
+    },
+    {
+      "id": "pl_msg_00000140_00076",
+      "en_US": "+ 10"
+    },
+    {
+      "id": "pl_msg_00000140_00077",
+      "en_US": "+ 1"
+    },
+    {
+      "id": "pl_msg_00000140_00078",
+      "en_US": "- 1"
+    },
+    {
+      "id": "pl_msg_00000140_00079",
+      "en_US": "- 10"
+    },
+    {
+      "id": "pl_msg_00000140_00080",
+      "en_US": "- 252"
+    },
+    {
+      "id": "pl_msg_00000140_00081",
+      "en_US": [
+        "This stat has reached its limit!\n",
+        "It can’t go any further!\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00082",
+      "en_US": [
+        "To modify this Pokémon’s IVs,\n",
+        "I require a payment of {STRVAR_1 51, 1, 0}.\f",
+        "Is that okay?\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00083",
+      "en_US": [
+        "To train this Pokémon’s EVs,\n",
+        "I require a payment of {STRVAR_1 51, 1, 0}.\f",
+        "Is that okay?\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00084",
+      "en_US": [
+        "Done! Your Pokémon’s EVs have\n",
+        "been completely wiped clean.\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00085",
+      "en_US": [
+        "Payment received!\n",
+        "Let’s get to work!\r"
+      ]
+    },
+    {
+      "id": "pl_msg_00000140_00086",
+      "en_US": "Stat adjusted!\r"
+    },
+    {
+      "id": "pl_msg_00000140_00087",
+      "en_US": "Current EV: {STRVAR_1 51, 0, 0}\r"
     }
   ]
 }

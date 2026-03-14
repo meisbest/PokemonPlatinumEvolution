@@ -887,7 +887,10 @@ static void ProcessMainInput(OptionsMenuData *menuData)
 {
     OptionsMenuEntry *entry = &menuData->entries.asArray[menuData->cursor];
 
-    if (menuData->cursor != ENTRY_CLOSE) {
+    // --- HACK NUZLOCKE: Blocchiamo la modifica dello Stile Lotta ---
+    if (menuData->cursor != ENTRY_CLOSE && menuData->cursor != ENTRY_BATTLE_STYLE) {
+        
+        // Se non sei su Esci e non sei su Stile Lotta, puoi usare le frecce!
         if (JOY_NEW(PAD_KEY_RIGHT)) {
             entry->selected = (entry->selected + 1) % entry->numChoices;
             PrintEntryChoices(menuData, menuData->cursor);
@@ -898,6 +901,7 @@ static void ProcessMainInput(OptionsMenuData *menuData)
             Sound_PlayEffect(SEQ_SE_CONFIRM);
         }
     }
+    // ----------------------------------------------------------------
 
     if (JOY_NEW(PAD_KEY_UP)) {
         menuData->cursor = (menuData->cursor + 7 - 1) % 7;

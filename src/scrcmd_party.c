@@ -4,6 +4,8 @@
 #include <string.h>
 
 #include "constants/heap.h"
+#include "constants/moves.h"
+#include "constants/items.h"
 #include "generated/natures.h"
 #include "generated/species.h"
 
@@ -13,6 +15,7 @@
 #include "overlay005/daycare.h"
 #include "savedata/save_table.h"
 
+#include "bag.h"
 #include "field_script_context.h"
 #include "field_system.h"
 #include "heap.h"
@@ -24,6 +27,8 @@
 #include "pokemon.h"
 #include "ribbon.h"
 #include "save_player.h"
+#include "string_template.h"
+#include "trainer_info.h"
 #include "tv_episode_segment.h"
 #include "unk_02017038.h"
 #include "unk_02054884.h"
@@ -123,6 +128,35 @@ BOOL ScrCmd_CheckPartyMonHasMove(ScriptContext *ctx)
     u16 move = ScriptContext_GetVar(ctx);
     u16 partySlot = ScriptContext_GetVar(ctx);
 
+    // --- HACK QoL: MN DA ZAINO ---
+    u16 hmItem = 0;
+    
+    // Lista VIP delle MN
+    switch(move) {
+        case MOVE_CUT: hmItem = ITEM_HM01; break;
+        //case MOVE_FLY: hmItem = ITEM_HM02; break;
+        //case MOVE_SURF: hmItem = ITEM_HM03; break;
+        case MOVE_STRENGTH: hmItem = ITEM_HM04; break;
+        //case MOVE_DEFOG: hmItem = ITEM_HM05; break;
+        case MOVE_ROCK_SMASH: hmItem = ITEM_HM06; break;
+        case MOVE_WATERFALL: hmItem = ITEM_HM07; break;
+        case MOVE_ROCK_CLIMB: hmItem = ITEM_HM08; break;
+    }
+    
+    // Se la mossa che lo script sta cercando è una MN...
+    if (hmItem != 0) {
+        Bag *bag = SaveData_GetBag(fieldSystem->saveData);
+        
+        // Controlliamo se hai l'oggetto fisicamente nella borsa
+        if (Bag_GetItemQuantity(bag, hmItem, HEAP_ID_FIELD1) > 0) {
+            
+            // Mentiamo spudoratamente allo script!
+            // Gli diciamo: "Sì, il Pokémon nello slot 0 (il tuo leader) conosce la mossa!"
+            *destVar = TRUE; 
+            return FALSE;
+        }
+    }
+
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
     *destVar = FALSE;
 
@@ -145,6 +179,35 @@ BOOL ScrCmd_FindPartySlotWithMove(ScriptContext *ctx)
     FieldSystem *fieldSystem = ctx->fieldSystem;
     u16 *destVar = ScriptContext_GetVarPointer(ctx);
     u16 move = ScriptContext_GetVar(ctx);
+
+    // --- HACK QoL: MN DA ZAINO ---
+    u16 hmItem = 0;
+    
+    // Lista VIP delle MN
+    switch(move) {
+        case MOVE_CUT: hmItem = ITEM_HM01; break;
+        //case MOVE_FLY: hmItem = ITEM_HM02; break;
+        //case MOVE_SURF: hmItem = ITEM_HM03; break;
+        case MOVE_STRENGTH: hmItem = ITEM_HM04; break;
+        //case MOVE_DEFOG: hmItem = ITEM_HM05; break;
+        case MOVE_ROCK_SMASH: hmItem = ITEM_HM06; break;
+        case MOVE_WATERFALL: hmItem = ITEM_HM07; break;
+        case MOVE_ROCK_CLIMB: hmItem = ITEM_HM08; break;
+    }
+    
+    // Se la mossa che lo script sta cercando è una MN...
+    if (hmItem != 0) {
+        Bag *bag = SaveData_GetBag(fieldSystem->saveData);
+        
+        // Controlliamo se hai l'oggetto fisicamente nella borsa
+        if (Bag_GetItemQuantity(bag, hmItem, HEAP_ID_FIELD1) > 0) {
+            
+            // Mentiamo spudoratamente allo script!
+            // Gli diciamo: "Sì, il Pokémon nello slot 0 (il tuo leader) conosce la mossa!"
+            *destVar = 0; 
+            return FALSE;
+        }
+    }
 
     u8 partyCount = Party_GetCurrentCount(SaveData_GetParty(fieldSystem->saveData));
 
@@ -826,5 +889,328 @@ BOOL ScrCmd_CheckPartyHasHeldItem(ScriptContext *ctx)
         }
     }
 
+    return FALSE;
+}
+
+
+// --- SEZIONE GURU LOTTA
+
+BOOL ScrCmd_GetGuruPrice(ScriptContext *ctx)
+{
+    FieldSystem *fieldSystem = ctx->fieldSystem;
+    
+    // Lo script ci passa il servizio (0 = Abilità/IV, 1 = Natura, 2 = EV)
+    u16 serviceType = ScriptContext_ReadHalfWord(ctx);
+    
+    // Lo script ci passa la variabile dove salvare il prezzo finale
+    u16 *priceDest = ScriptContext_GetVarPointer(ctx); 
+
+    TrainerInfo *trainerInfo = SaveData_GetTrainerInfo(fieldSystem->saveData);
+
+    // 1. Ha battuto la lega? Tutto gratis!
+    if (TrainerInfo_IsMainStoryCleared(trainerInfo) == TRUE) {
+        *priceDest = 0;
+        return FALSE;
+    }
+
+    // 2. Contiamo le medaglie
+    int badges = TrainerInfo_BadgeCount(trainerInfo);
+
+    // 3. Ha meno di 4 medaglie? Prezzo "proibitivo" per bloccarlo
+    if (badges < 4) {
+        *priceDest = 65000; // Lo script gestirà il rifiuto se non ha i soldi
+        return FALSE;
+    }
+
+    // 4. Calcolo dello sconto dinamico
+    switch (serviceType) {
+        case 0: // Abilità e IVs (Base 10.000, -2000 a medaglia)
+            *priceDest = 10000 - ((badges - 4) * 2000);
+            break;
+        case 1: // Natura (Base 15.000, -3000 a medaglia)
+            *priceDest = 15000 - ((badges - 4) * 3000);
+            break;
+        case 2: // EVs (Base 35.000, -5000 a medaglia)
+            *priceDest = 35000 - ((badges - 4) * 5000);
+            break;
+        case 3: // Reset EVs
+            *priceDest = 0;
+            break;
+    }
+
+    return FALSE;
+}
+
+BOOL ScrCmd_CheckAbilitySwap(ScriptContext *ctx)
+{
+    FieldSystem *fieldSystem = ctx->fieldSystem;
+    
+    // Lo script ci dice quale Pokémon della squadra ha scelto il giocatore
+    u16 partySlot = ScriptContext_GetVar(ctx);
+    
+    // Variabili di ritorno per lo script
+    u16 *statusVar = ScriptContext_GetVarPointer(ctx); // 0 = OK, 1 = Uovo, 2 = Solo 1 abilità
+    u16 *newAbilityVar = ScriptContext_GetVarPointer(ctx); // L'ID della nuova abilità da stampare a schermo
+
+    Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
+
+    // Controllo Uovo
+    if (Pokemon_GetValue(mon, MON_DATA_IS_EGG, NULL) != FALSE) {
+        *statusVar = 1; 
+        return FALSE;
+    }
+
+    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
+    u32 currAbility = Pokemon_GetValue(mon, MON_DATA_ABILITY, NULL);
+
+    // Leggiamo le abilità base della specie 
+    // (Simile a come il file daycare.c leggeva i gruppi uovo!)
+    u32 abil1 = SpeciesData_GetSpeciesValue(species, SPECIES_DATA_ABILITY_1);
+    u32 abil2 = SpeciesData_GetSpeciesValue(species, SPECIES_DATA_ABILITY_2);
+
+    // Controllo Abilità Unica (Se la 1 è uguale alla 2, o se la 2 è zero)
+    if (abil1 == abil2 || abil2 == 0) { 
+        *statusVar = 2; 
+        return FALSE;
+    }
+
+    // È tutto pronto! Calcoliamo qual è quella nuova
+    *statusVar = 0; 
+    if (currAbility == abil1) {
+        *newAbilityVar = abil2;
+    } else {
+        *newAbilityVar = abil1;
+    }
+
+    StringTemplate **strTemplate = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_STR_TEMPLATE);
+    StringTemplate_SetAbilityName(*strTemplate, 0, *newAbilityVar);
+
+    return FALSE;
+}
+
+BOOL ScrCmd_ApplyAbilitySwap(ScriptContext *ctx)
+{
+    FieldSystem *fieldSystem = ctx->fieldSystem;
+    u16 partySlot = ScriptContext_GetVar(ctx);
+    
+    // FONDAMENTALE: Usare u32 per impedire letture della RAM sporca!
+    u32 newAbility = ScriptContext_GetVar(ctx); 
+
+    Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
+
+    Pokemon_SetValue(mon, MON_DATA_ABILITY, &newAbility);
+    Pokemon_CalcLevelAndStats(mon); // Aggiorniamo le statistiche per sicurezza
+
+    return FALSE;
+}
+
+BOOL ScrCmd_CheckNatureSwap(ScriptContext *ctx)
+{
+    FieldSystem *fieldSystem = ctx->fieldSystem;
+    u16 partySlot = ScriptContext_GetVar(ctx);
+    u16 *statusVar = ScriptContext_GetVarPointer(ctx);
+
+    Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
+
+    if (Pokemon_GetValue(mon, MON_DATA_IS_EGG, NULL) != FALSE) {
+        *statusVar = 1; // È un uovo
+    } else {
+        *statusVar = 0; // Ok!
+    }
+
+    return FALSE;
+}
+
+BOOL ScrCmd_ApplyNatureSwap(ScriptContext *ctx)
+{
+    FieldSystem *fieldSystem = ctx->fieldSystem;
+    u16 partySlot = ScriptContext_GetVar(ctx);
+    u16 desiredNature = ScriptContext_GetVar(ctx);
+
+    Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
+
+    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
+    u32 oldPid = Pokemon_GetValue(mon, MON_DATA_PERSONALITY, NULL);
+    u32 otid = Pokemon_GetValue(mon, MON_DATA_OT_ID, NULL);
+    u32 oldGender = Pokemon_GetValue(mon, MON_DATA_GENDER, NULL);
+    
+    // In Gen 4, lo slot abilità (0 o 1) è il primo bit del PID!
+    u8 abilitySlot = oldPid & 1; 
+
+    u8 genderRatio = SpeciesData_GetSpeciesValue(species, SPECIES_DATA_GENDER_RATIO);
+    u16 tid = otid & 0xFFFF;
+    u16 sid = (otid >> 16) & 0xFFFF;
+
+    u16 oldPLow = oldPid & 0xFFFF;
+    u16 oldPHigh = (oldPid >> 16) & 0xFFFF;
+    u8 isShiny = ((tid ^ sid ^ oldPLow ^ oldPHigh) < 8);
+
+    // LA MAGIA: Salviamo la sequenza di bit (13-17) che regola il rimescolamento dei blocchi!
+    u32 blockShuffleBits = oldPid & 0x3E000;
+
+    u32 newPid;
+    
+    while (1) {
+        newPid = (LCRNG_Next() << 16) | LCRNG_Next();
+        
+        // 1. Iniettiamo la sequenza originale: questo EVITA la corruzione dei dati!
+        newPid = (newPid & ~0x3E000) | blockShuffleBits;
+
+        // 2. Controllo Natura
+        if ((newPid % 25) != desiredNature) continue;
+        
+        // 3. Controllo Slot Abilità
+        if ((newPid & 1) != abilitySlot) continue;
+
+        // 4. Controllo Sesso
+        u8 newGender;
+        if (genderRatio == 255) newGender = 2;
+        else if (genderRatio == 254) newGender = 1;
+        else if (genderRatio == 0) newGender = 0;
+        else newGender = ((newPid & 0xFF) >= genderRatio) ? 0 : 1; 
+        
+        if (newGender != oldGender) continue;
+
+        // 5. Controllo Cromaticità
+        u16 pLow = newPid & 0xFFFF;
+        u16 pHigh = (newPid >> 16) & 0xFFFF;
+        u8 newShiny = ((tid ^ sid ^ pLow ^ pHigh) < 8);
+        if (newShiny != isShiny) continue;
+
+        // Sopravvissuto! Abbiamo il DNA perfetto.
+        break; 
+    }
+
+    Pokemon_SetValue(mon, MON_DATA_PERSONALITY, &newPid);
+    Pokemon_CalcLevelAndStats(mon);
+
+    return FALSE;
+}
+
+BOOL ScrCmd_ResetEVs(ScriptContext *ctx)
+{
+    FieldSystem *fieldSystem = ctx->fieldSystem;
+    u16 partySlot = ScriptContext_GetVar(ctx);
+    Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
+
+    u32 zero = 0;
+    Pokemon_SetValue(mon, MON_DATA_HP_EV, &zero);
+    Pokemon_SetValue(mon, MON_DATA_ATK_EV, &zero);
+    Pokemon_SetValue(mon, MON_DATA_DEF_EV, &zero);
+    Pokemon_SetValue(mon, MON_DATA_SPEED_EV, &zero);
+    Pokemon_SetValue(mon, MON_DATA_SPATK_EV, &zero);
+    Pokemon_SetValue(mon, MON_DATA_SPDEF_EV, &zero);
+
+    Pokemon_CalcLevelAndStats(mon);
+    return FALSE;
+}
+
+// --- 2. IMPOSTA IVs (0 - 31) ---
+BOOL ScrCmd_SetIV(ScriptContext *ctx)
+{
+    FieldSystem *fieldSystem = ctx->fieldSystem;
+    u16 partySlot = ScriptContext_GetVar(ctx);
+    u16 statIndex = ScriptContext_GetVar(ctx); // 0=HP, 1=Atk, 2=Def, 3=SpA, 4=SpD, 5=Spe
+    u16 value = ScriptContext_ReadHalfWord(ctx);
+
+    Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
+
+    int monData = MON_DATA_HP_IV;
+    switch(statIndex) {
+        case 0: monData = MON_DATA_HP_IV; break;
+        case 1: monData = MON_DATA_ATK_IV; break;
+        case 2: monData = MON_DATA_DEF_IV; break;
+        case 3: monData = MON_DATA_SPATK_IV; break;
+        case 4: monData = MON_DATA_SPDEF_IV; break;
+        case 5: monData = MON_DATA_SPEED_IV; break;
+    }
+
+    u32 val32 = value;
+    if (val32 > 31) val32 = 31; // Limite di sicurezza
+    Pokemon_SetValue(mon, monData, &val32);
+    Pokemon_CalcLevelAndStats(mon);
+    return FALSE;
+}
+
+// --- 3. MODIFICA INTELLIGENTE EVs ---
+BOOL ScrCmd_ModifyEV(ScriptContext *ctx)
+{
+    FieldSystem *fieldSystem = ctx->fieldSystem;
+    u16 partySlot = ScriptContext_GetVar(ctx);
+    u16 statIndex = ScriptContext_GetVar(ctx);
+    u16 isAdd = ScriptContext_ReadHalfWord(ctx); // 1 = Aggiungi, 0 = Sottrai
+    u16 amount = ScriptContext_ReadHalfWord(ctx); // Se 0 legge e basta
+    u16 *statusVar = ScriptContext_GetVarPointer(ctx); // 0 = Ok, 1 = Bloccato dal Limite
+
+    Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
+
+    int monData = MON_DATA_HP_EV;
+    switch(statIndex) {
+        case 0: monData = MON_DATA_HP_EV; break;
+        case 1: monData = MON_DATA_ATK_EV; break;
+        case 2: monData = MON_DATA_DEF_EV; break;
+        case 3: monData = MON_DATA_SPATK_EV; break;
+        case 4: monData = MON_DATA_SPDEF_EV; break;
+        case 5: monData = MON_DATA_SPEED_EV; break;
+    }
+
+    u32 currentEV = Pokemon_GetValue(mon, monData, NULL);
+
+    if (amount == 0) {
+        *statusVar = currentEV;
+        return FALSE;
+    }
+
+    u32 totalEV = Pokemon_GetValue(mon, MON_DATA_HP_EV, NULL) +
+                  Pokemon_GetValue(mon, MON_DATA_ATK_EV, NULL) +
+                  Pokemon_GetValue(mon, MON_DATA_DEF_EV, NULL) +
+                  Pokemon_GetValue(mon, MON_DATA_SPATK_EV, NULL) +
+                  Pokemon_GetValue(mon, MON_DATA_SPDEF_EV, NULL) +
+                  Pokemon_GetValue(mon, MON_DATA_SPEED_EV, NULL);
+
+    *statusVar = 0; // Tutto OK di default
+
+    if (isAdd) {
+        u32 availableStat = (currentEV < 252) ? (252 - currentEV) : 0;
+        u32 availableTotal = (totalEV < 510) ? (510 - totalEV) : 0;
+        u32 maxAdd = (availableStat < availableTotal) ? availableStat : availableTotal;
+
+        if (amount > maxAdd) {
+            amount = maxAdd;
+            *statusVar = 1; // Ha sbattuto contro il limite!
+        }
+        u32 newVal = currentEV + amount;
+        Pokemon_SetValue(mon, monData, &newVal);
+    } else {
+        if (amount > currentEV) {
+            amount = currentEV;
+            *statusVar = 1; // Non può scendere sotto 0!
+        }
+        u32 newVal = currentEV - amount;
+        Pokemon_SetValue(mon, monData, &newVal);
+    }
+
+    Pokemon_CalcLevelAndStats(mon);
+    return FALSE;
+}
+
+BOOL ScrCmd_ProcessGuruMoney(ScriptContext *ctx)
+{
+    FieldSystem *fieldSystem = ctx->fieldSystem;
+    u16 price = ScriptContext_GetVar(ctx);
+    u16 actionType = ScriptContext_ReadHalfWord(ctx); // 0 = Controlla, 1 = Paga
+    u16 *statusVar = ScriptContext_GetVarPointer(ctx);
+
+    TrainerInfo *trainerInfo = SaveData_GetTrainerInfo(fieldSystem->saveData);
+    u32 currentMoney = TrainerInfo_Money(trainerInfo);
+
+    if (currentMoney >= price) {
+        if (actionType == 1) { // Se è 1, preleva anche i soldi!
+            TrainerInfo_SetMoney(trainerInfo, currentMoney - price);
+        }
+        *statusVar = 1; // Tutto ok
+    } else {
+        *statusVar = 0; // Soldi insufficienti
+    }
     return FALSE;
 }
