@@ -2465,8 +2465,8 @@
     .short \valueOrVarID
     .endm
 
-    .macro ScrCmd_1AC
-    .short SCRCMD_1AC
+    .macro HatchEgg
+    .short SCRCMD_HATCHEGG
     .endm
 
     .macro Dummy1AD dummy
