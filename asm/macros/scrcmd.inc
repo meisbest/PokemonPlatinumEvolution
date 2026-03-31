@@ -46,6 +46,7 @@
 #include "constants/items.h"
 #include "constants/map_object.h"
 #include "constants/overworld_weather.h"
+#include "constants/moves.h"
 #include "constants/pokemon.h"
 #include "constants/regi_ruins.h"
 #include "constants/roamer_states.h"
@@ -3012,8 +3013,8 @@
     .short \gender
     .endm
 
-    .macro ScrCmd_209
-    .short SCRCMD_209
+    .macro RemovePokemonPreview
+    .short SCRCMD_REMOVEPOKEMONPREVIEW
     .endm
 
     .macro ScrCmd_20A arg0

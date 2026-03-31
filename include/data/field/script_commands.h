@@ -545,7 +545,7 @@ const ScrCmdFunc gFieldScriptCommands[] = {
     ScriptCommandTableEntry(SCRCMD_STARTGREATMARSHLOOKOUT,                               ScrCmd_StartGreatMarshLookout)
     ScriptCommandTableEntry(SCRCMD_GETCURNETID,                                          ScrCmd_GetCurNetID)
     ScriptCommandTableEntry(SCRCMD_DRAWPOKEMONPREVIEW,                                   ScrCmd_DrawPokemonPreview)
-    ScriptCommandTableEntry(SCRCMD_209,                                                  ScrCmd_209)
+    ScriptCommandTableEntry(SCRCMD_REMOVEPOKEMONPREVIEW,                                 ScrCmd_RemovePokemonPreview)
     ScriptCommandTableEntry(SCRCMD_20A,                                                  ScrCmd_20A)
     ScriptCommandTableEntry(SCRCMD_20B,                                                  ScrCmd_20B)
     ScriptCommandTableEntry(SCRCMD_MESSAGEFROMTRAINERTYPE,                               ScrCmd_MessageFromTrainerType)
