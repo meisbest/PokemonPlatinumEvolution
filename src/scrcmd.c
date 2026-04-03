@@ -761,7 +761,11 @@ static const WindowTemplate sYesNoWindowTemplate = {
     .baseTile = 0x21F,
 };
 
-#include "data/field/script_commands.h"
+const ScrCmdFunc gFieldScriptCommands[] = {
+#include "data/scripts/scrcmd.h"
+};
+
+const u32 gNumFieldScriptCommands = NELEMS(gFieldScriptCommands);
 
 static BOOL ScrCmd_Noop(ScriptContext *ctx)
 {
