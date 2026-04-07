@@ -4156,9 +4156,9 @@
     .short \z
     .endm
 
-    .macro ScrCmd_2B6 arg0, arg1
+    .macro ScrCmd_2B6 localID, arg1
     .short SCRCMD_2B6
-    .short \arg0
+    .short \localID
     .byte \arg1
     .endm
 

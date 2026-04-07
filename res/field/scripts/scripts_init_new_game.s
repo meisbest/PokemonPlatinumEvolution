@@ -104,7 +104,7 @@ _0006:
     InitSizeContestRecord
     RandomizeJubilifeLottery
     InitDailyRandomLevel
-    SetFlag FLAG_UNK_0x024D
+    SetFlag FLAG_HIDE_IRON_ISLAND_HOUSE_BYRON
     SetFlag FLAG_HIDE_CANALAVE_CITY_SAILOR_ELDRITCH_HOUSE_SAILOR_ELDRITCH
     SetFlag FLAG_UNK_0x0252
     SetFlag FLAG_UNK_0x02CA
