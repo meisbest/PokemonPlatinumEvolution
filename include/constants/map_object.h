@@ -40,7 +40,7 @@
 #define MAP_OBJ_STATUS_25                          (1 << 25)
 #define MAP_OBJ_STATUS_26                          (1 << 26)
 #define MAP_OBJ_DO_NOT_SINK_INTO_TERRAIN           (1 << 27)
-#define MAP_OBJ_STATUS_28                          (1 << 28)
+#define MAP_OBJ_STATUS_ON_ELEVATED_BRIDGE          (1 << 28)
 #define MAP_OBJ_DYNAMIC_HEIGHT_CALCULATION_ENABLED (1 << 29)
 
 #define MAP_OBJ_UNK_A0_00 0
