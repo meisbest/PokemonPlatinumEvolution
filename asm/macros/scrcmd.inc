@@ -55,8 +55,7 @@
 #include "constants/tv_broadcast.h"
 #include "constants/battle.h"
 
-#define INC_AS_ASM
-#include "data/field/script_commands.h"
+#include "data/scripts/scrcmd.h"
 #include "macros/movement.inc"
 
     .set FALSE, 0
