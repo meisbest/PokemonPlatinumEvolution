@@ -317,7 +317,7 @@ static void PlayerAvatar_RequestStateSurf(PlayerAvatar *playerAvatar)
     }
 
     if (distortionState == AVATAR_DISTORTION_STATE_NONE) {
-        v5 = SurfMountRenderer_HandleSurfBegin(mapObj, 0, 0, v1, 1);
+        v5 = SurfMountRenderer_HandleSurfBegin(mapObj, 0, 0, v1, TRUE);
         v0 = PLAYER_STATE_SURFING;
     } else {
         v5 = DistWorldSurfMountRenderer_HandleSurfBegin(playerAvatar, 0, 0, 0, v1, 1, distortionState);
@@ -681,7 +681,7 @@ static BOOL FieldTask_UseSurf(FieldTask *task)
         if (PlayerAvatar_MapDistortionState(taskEnv->playerAvatar) == AVATAR_DISTORTION_STATE_NONE) {
             int playerXPos = Player_GetXPos(taskEnv->playerAvatar) + MapObject_GetDxFromDir(taskEnv->direction);
             int playerZPos = Player_GetZPos(taskEnv->playerAvatar) + MapObject_GetDzFromDir(taskEnv->direction);
-            taskEnv->unk_28 = SurfMountRenderer_HandleSurfBegin(taskEnv->surfMount, playerXPos, playerZPos, taskEnv->direction, 0);
+            taskEnv->unk_28 = SurfMountRenderer_HandleSurfBegin(taskEnv->surfMount, playerXPos, playerZPos, taskEnv->direction, FALSE);
         } else {
             int mountXPos = MapObject_GetX(taskEnv->surfMount);
             int mountYPos = (MapObject_GetY(taskEnv->surfMount) / 2);
@@ -728,7 +728,7 @@ static BOOL FieldTask_UseSurf(FieldTask *task)
         if (PlayerAvatar_MapDistortionState(taskEnv->playerAvatar) == AVATAR_DISTORTION_STATE_NONE) {
             int moveState;
 
-            SurfMountRenderer_Reset(taskEnv->unk_28, 1);
+            SurfMountRenderer_SetSyncPos(taskEnv->unk_28, TRUE);
             moveState = Player_MoveStateFromGender(0x2, PlayerAvatar_Gender(taskEnv->playerAvatar));
             PlayerAvatar_Redraw(taskEnv->playerAvatar, moveState);
         } else {
@@ -805,7 +805,7 @@ static BOOL ov5_021E03C8(FieldTask *param0)
             enum AvatarDistortionState distortionState = PlayerAvatar_MapDistortionState(v0->playerAvatar);
 
             if (distortionState == AVATAR_DISTORTION_STATE_NONE) {
-                SurfMountRenderer_Reset(v0->unk_14, 0);
+                SurfMountRenderer_SetSyncPos(v0->unk_14, FALSE);
                 v1 = Player_MoveStateFromGender(0x0, PlayerAvatar_Gender(v0->playerAvatar));
             } else {
                 DistWorldSurfMountRenderer_ClearFlags(v0->unk_14, DIST_WORLD_SURF_MOUNT_RENDERER_FLAG_MASK_TICK);
