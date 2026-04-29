@@ -27,14 +27,13 @@
 #include "overlay005/dist_world_surf_mount_renderer.h"
 #include "overlay005/field_effect_manager.h"
 #include "overlay005/fieldmap.h"
+#include "overlay005/fog_manager.h"
 #include "overlay005/land_data.h"
 #include "overlay005/land_data_manager_decl.h"
 #include "overlay005/map_object_anim_cmd.h"
-#include "overlay005/ov5_021D57BC.h"
 #include "overlay005/ov5_021EB1A0.h"
 #include "overlay005/ov5_021ECE40.h"
 #include "overlay005/ov5_021F348C.h"
-#include "overlay005/struct_ov5_021D57D8_decl.h"
 #include "overlay005/struct_ov5_021ED0A4.h"
 #include "overlay009/camera_configuration.h"
 #include "overlay009/struct_ov9_0224F6EC_decl.h"
@@ -262,6 +261,11 @@
 #define CASCADE_UP_CASCADE_MOUNT_POSITION_FIX_Z_THRESHOLD (FX32_ONE * 10)
 #define CASCADE_UP_BOBBING_DELTA                          512
 #define CASCADE_UP_BOBBING_MAX                            (FX32_ONE * 4)
+
+#define FOG_OFFSET  0x7600
+#define FOG_COLOR   COLOR_BLACK
+#define FOG_ALPHA   16
+#define FOG_DENSITY 88
 
 enum FloatingPlatformKind {
     FLOATING_PLATFORM_KIND_FLOOR = 0,
@@ -1446,8 +1450,8 @@ static void FreeSkyClouds(DistWorldSkyClouds *clouds);
 static void Task_SkyCloudSpritesUpdate(SysTask *sysTask, void *sysTaskParam);
 static Sprite *CreateSkyCloudSprite(DistWorldSkyClouds *clouds, const VecFx32 *pos, u32 charResID, u32 plttResID, u32 cellResID, u32 animResID, int headerPriority, int listPriority);
 static void InitSkyCloudAnimators(DistWorldSystem *system, FieldEffectManager *fieldEffMan, DistWorldSkyClouds *clouds);
-static void ov9_0224B3A8(DistWorldSystem *param0);
-static void ov9_0224B3F4(DistWorldSystem *param0);
+static void InitFog(DistWorldSystem *system);
+static void Dummy0224B3F4(DistWorldSystem *system);
 static void InitGhostPropManager(DistWorldSystem *system, DistWorldGhostPropManager *ghostPropMan, const DistWorldGhostPropHeader *header, const DistWorldGhostPropTemplate *ghostPropTemplateList, int mapHeaderID, u32 hiddenGhostPropGroups);
 static void InitActiveGhostPropManager(DistWorldSystem *system, BOOL useDefaultVisibility);
 static void InitInactiveGhostPropManager(DistWorldSystem *system);
@@ -1711,7 +1715,7 @@ void DistWorld_DynamicMapFeaturesInit(FieldSystem *fieldSystem)
     ov9_0224A1E4(dwSystem, (4 + 2));
     InitPropRenderBuffers(dwSystem);
     InitSkyBackground(dwSystem);
-    ov9_0224B3A8(dwSystem);
+    InitFog(dwSystem);
     InitSkyClouds(dwSystem, &dwSystem->skyClouds, dwSystem->etcNARC);
     InitSkyBackgroundDarkness(dwSystem);
     CameraInit(dwSystem);
@@ -1753,7 +1757,7 @@ void DistWorld_DynamicMapFeaturesFree(FieldSystem *fieldSystem)
     CameraFree(v0);
     Dummy0224F760(v0);
     FreeSkyClouds(&v0->skyClouds);
-    ov9_0224B3F4(v0);
+    Dummy0224B3F4(v0);
     FinishSkyBackground(v0);
     FreePropRenderBuffers(v0);
     ov9_0224A334(v0);
@@ -3344,29 +3348,26 @@ static const OverworldAnimManagerFuncs sSkyCloudsAnimFuncs = {
     DistWorldSkyCloudAnimator_AnimRender
 };
 
-static void ov9_0224B3A8(DistWorldSystem *param0)
+static void InitFog(DistWorldSystem *system)
 {
-    UnkStruct_ov5_021D57D8 *v0 = param0->fieldSystem->unk_48;
+    FogManager *fogMan = system->fieldSystem->fogMan;
 
-    ov5_021D57FC(v0, 0xffffffff, 1, GX_FOGBLEND_COLOR_ALPHA, 6, 0x7600);
-    ov5_021D5834(v0, 0xffffffff, (GX_RGB(0, 0, 0)), 16);
+    FogManager_ApplyParameters(fogMan, FOG_PARAMETER_ALL, TRUE, GX_FOGBLEND_COLOR_ALPHA, GX_FOGSLOPE_0x0200, FOG_OFFSET);
+    FogManager_ApplyColor(fogMan, FOG_PARAMETER_ALL, FOG_COLOR, FOG_ALPHA);
 
-    {
-        int v1 = 0;
-        char v2[32];
+    int i = 0;
+    char densityTable[G3X_FOG_DENSITY_TABLE_SIZE];
 
-        do {
-            v2[v1] = (88 / 32) * v1;
-            v1++;
-        } while (v1 < 32);
+    do {
+        densityTable[i] = (FOG_DENSITY / G3X_FOG_DENSITY_TABLE_SIZE) * i;
+        i++;
+    } while (i < G3X_FOG_DENSITY_TABLE_SIZE);
 
-        ov5_021D585C(v0, v2);
-    }
+    FogManager_ApplyDensityTable(fogMan, densityTable);
 }
 
-static void ov9_0224B3F4(DistWorldSystem *param0)
+static void Dummy0224B3F4(DistWorldSystem *system)
 {
-    return;
 }
 
 static void InitGhostPropManager(DistWorldSystem *system, DistWorldGhostPropManager *ghostPropMan, const DistWorldGhostPropHeader *header, const DistWorldGhostPropTemplate *ghostPropTemplateList, int mapHeaderID, u32 hiddenGhostPropGroups)
