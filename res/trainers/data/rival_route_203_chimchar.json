@@ -19,7 +19,15 @@
                 "MOVE_GROWL"
             ],
             "iv_scale": 30,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_PIPLUP",
@@ -31,7 +39,15 @@
                 "MOVE_GROWL"
             ],
             "iv_scale": 30,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

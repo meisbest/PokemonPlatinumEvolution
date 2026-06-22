@@ -26,7 +26,15 @@
                 "MOVE_U_TURN"
             ],
             "iv_scale": 250,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_ROSERADE",
@@ -40,7 +48,15 @@
                 "MOVE_GRASS_WHISTLE"
             ],
             "iv_scale": 250,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_HERACROSS",
@@ -54,7 +70,15 @@
                 "MOVE_STONE_EDGE"
             ],
             "iv_scale": 250,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_RAPIDASH",
@@ -68,7 +92,15 @@
                 "MOVE_WILL_O_WISP"
             ],
             "iv_scale": 250,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_SNORLAX",
@@ -82,7 +114,15 @@
                 "MOVE_ZEN_HEADBUTT"
             ],
             "iv_scale": 250,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_EMPOLEON",
@@ -96,7 +136,15 @@
                 "MOVE_ICE_BEAM"
             ],
             "iv_scale": 250,
-            "ball_seal": 24
+            "ball_seal": 24,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

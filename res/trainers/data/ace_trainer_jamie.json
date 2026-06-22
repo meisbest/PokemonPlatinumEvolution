@@ -21,7 +21,15 @@
                 "MOVE_MAGNET_RISE"
             ],
             "iv_scale": 50,
-            "ball_seal": 11
+            "ball_seal": 11,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

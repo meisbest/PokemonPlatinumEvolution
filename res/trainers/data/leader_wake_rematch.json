@@ -24,7 +24,15 @@
                 "MOVE_ENDURE"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_QUAGSIRE",
@@ -38,7 +46,15 @@
                 "MOVE_SURF"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_GYARADOS",
@@ -52,7 +68,15 @@
                 "MOVE_GIGA_IMPACT"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_FLOATZEL",
@@ -66,7 +90,15 @@
                 "MOVE_AQUA_JET"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_LUDICOLO",
@@ -80,7 +112,15 @@
                 "MOVE_FOCUS_BLAST"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

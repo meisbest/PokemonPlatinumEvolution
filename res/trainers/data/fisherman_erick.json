@@ -19,7 +19,15 @@
                 "MOVE_SUPERSONIC"
             ],
             "iv_scale": 10,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_SEAKING",
@@ -33,7 +41,15 @@
                 "MOVE_SUPERSONIC"
             ],
             "iv_scale": 10,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_GYARADOS",
@@ -45,7 +61,15 @@
                 "MOVE_BITE"
             ],
             "iv_scale": 10,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

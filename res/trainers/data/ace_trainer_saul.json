@@ -21,7 +21,15 @@
                 "MOVE_PAYBACK"
             ],
             "iv_scale": 50,
-            "ball_seal": 12
+            "ball_seal": 12,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

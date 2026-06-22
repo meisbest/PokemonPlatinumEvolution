@@ -21,7 +21,15 @@
                 "MOVE_DOUBLE_TEAM"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_ROSERADE",
@@ -35,7 +43,15 @@
                 "MOVE_GRASS_WHISTLE"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_HERACROSS",
@@ -49,7 +65,15 @@
                 "MOVE_HORN_ATTACK"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_RAPIDASH",
@@ -63,7 +87,15 @@
                 "MOVE_TAIL_WHIP"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_EMPOLEON",
@@ -77,7 +109,15 @@
                 "MOVE_FURY_ATTACK"
             ],
             "iv_scale": 100,
-            "ball_seal": 10
+            "ball_seal": 10,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

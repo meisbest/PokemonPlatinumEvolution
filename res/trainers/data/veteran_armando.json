@@ -21,7 +21,15 @@
                 "MOVE_DARK_PULSE"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_MIGHTYENA",
@@ -35,7 +43,15 @@
                 "MOVE_TAKE_DOWN"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_LICKITUNG",
@@ -49,7 +65,15 @@
                 "MOVE_FIRE_BLAST"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

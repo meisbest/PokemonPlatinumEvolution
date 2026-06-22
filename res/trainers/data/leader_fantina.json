@@ -24,7 +24,15 @@
                 "MOVE_FUTURE_SIGHT"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_HAUNTER",
@@ -38,7 +46,15 @@
                 "MOVE_CONFUSE_RAY"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_MISMAGIUS",
@@ -52,7 +68,15 @@
                 "MOVE_CONFUSE_RAY"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

@@ -21,7 +21,15 @@
                 "MOVE_FIRE_PUNCH"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_TROPIUS",
@@ -35,7 +43,15 @@
                 "MOVE_SILVER_WIND"
             ],
             "iv_scale": 50,
-            "ball_seal": 19
+            "ball_seal": 19,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

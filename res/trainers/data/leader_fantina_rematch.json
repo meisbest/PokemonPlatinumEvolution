@@ -24,7 +24,15 @@
                 "MOVE_WILL_O_WISP"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_DRIFBLIM",
@@ -38,7 +46,15 @@
                 "MOVE_BATON_PASS"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_DUSKNOIR",
@@ -52,7 +68,15 @@
                 "MOVE_PROTECT"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_MISMAGIUS",
@@ -66,7 +90,15 @@
                 "MOVE_THUNDERBOLT"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_GENGAR",
@@ -80,7 +112,15 @@
                 "MOVE_THUNDER"
             ],
             "iv_scale": 200,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

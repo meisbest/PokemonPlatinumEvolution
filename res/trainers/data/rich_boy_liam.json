@@ -16,7 +16,15 @@
             "item": "ITEM_RARE_CANDY",
             "moves": null,
             "iv_scale": 250,
-            "ball_seal": 26
+            "ball_seal": 26,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

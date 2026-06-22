@@ -19,7 +19,15 @@
                 "MOVE_CURSE"
             ],
             "iv_scale": 10,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_DRIFLOON",
@@ -32,7 +40,15 @@
                 "MOVE_STOCKPILE"
             ],
             "iv_scale": 10,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

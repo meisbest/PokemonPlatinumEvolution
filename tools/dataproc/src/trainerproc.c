@@ -190,6 +190,18 @@ Container proc_trainer(datafile_t *df, enum TrainerID trainer) {
             .cbSeal  = dp_u16(dp_objmemb(party_member, "ball_seal")),
         };
 
+        if (dp_hasmemb(party_member, "ev_flags")) {
+            static const char * const ev_stat_names[6] = {
+                "hp", "attack", "defense", "speed", "special_attack", "special_defense"
+            };
+            datanode_t ev_node = dp_objmemb(party_member, "ev_flags");
+            for (size_t k = 0; k < 6; k++) {
+                if (dp_hasmemb(ev_node, ev_stat_names[k]) && dp_bool(dp_objmemb(ev_node, ev_stat_names[k]))) {
+                    trparty.party[i].evFlags |= (u16)(1 << k);
+                }
+            }
+        }
+
         if (party_has_items) trparty.party[i].item = dp_u16(dp_lookup(dp_objmemb(party_member, "item"), "enum Item"));
         if (party_has_moves) {
             datanode_t moves      = dp_objmemb(party_member, "moves");

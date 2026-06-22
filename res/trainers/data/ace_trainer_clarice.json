@@ -21,7 +21,15 @@
                 "MOVE_PROTECT"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_NINETALES",
@@ -35,7 +43,15 @@
                 "MOVE_EXTRASENSORY"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_MAGNEZONE",
@@ -49,7 +65,15 @@
                 "MOVE_HYPER_BEAM"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

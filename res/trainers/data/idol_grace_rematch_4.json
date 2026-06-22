@@ -14,7 +14,15 @@
             "item": null,
             "moves": null,
             "iv_scale": 0,
-            "ball_seal": 2
+            "ball_seal": 2,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_CLEFAIRY",
@@ -23,7 +31,15 @@
             "item": null,
             "moves": null,
             "iv_scale": 40,
-            "ball_seal": 2
+            "ball_seal": 2,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_CLEFAIRY",
@@ -32,7 +48,15 @@
             "item": null,
             "moves": null,
             "iv_scale": 80,
-            "ball_seal": 2
+            "ball_seal": 2,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_CLEFAIRY",
@@ -41,7 +65,15 @@
             "item": null,
             "moves": null,
             "iv_scale": 120,
-            "ball_seal": 2
+            "ball_seal": 2,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_CLEFAIRY",
@@ -50,7 +82,15 @@
             "item": null,
             "moves": null,
             "iv_scale": 160,
-            "ball_seal": 2
+            "ball_seal": 2,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_CLEFAIRY",
@@ -59,7 +99,15 @@
             "item": null,
             "moves": null,
             "iv_scale": 200,
-            "ball_seal": 2
+            "ball_seal": 2,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

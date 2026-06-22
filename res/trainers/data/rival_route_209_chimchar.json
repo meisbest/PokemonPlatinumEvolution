@@ -21,7 +21,15 @@
                 "MOVE_DOUBLE_TEAM"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_ROSELIA",
@@ -35,7 +43,15 @@
                 "MOVE_STUN_SPORE"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_PONYTA",
@@ -49,7 +65,15 @@
                 "MOVE_GROWL"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_PRINPLUP",
@@ -63,7 +87,15 @@
                 "MOVE_GROWL"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

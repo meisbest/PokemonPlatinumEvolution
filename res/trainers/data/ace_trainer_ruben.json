@@ -21,7 +21,15 @@
                 "MOVE_RAZOR_LEAF"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_GYARADOS",
@@ -35,7 +43,15 @@
                 "MOVE_ICE_FANG"
             ],
             "iv_scale": 50,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

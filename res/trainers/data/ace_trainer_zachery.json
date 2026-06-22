@@ -21,7 +21,15 @@
                 "MOVE_IRON_TAIL"
             ],
             "iv_scale": 60,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_MAGNETON",
@@ -34,7 +42,15 @@
                 "MOVE_MIRROR_SHOT"
             ],
             "iv_scale": 60,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

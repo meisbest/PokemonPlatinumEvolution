@@ -18,7 +18,15 @@
                 "MOVE_FORESIGHT"
             ],
             "iv_scale": 40,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_MEDITITE",
@@ -30,7 +38,15 @@
                 "MOVE_FORCE_PALM"
             ],
             "iv_scale": 40,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_MACHOKE",
@@ -42,7 +58,15 @@
                 "MOVE_FORESIGHT"
             ],
             "iv_scale": 40,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

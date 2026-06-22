@@ -19,7 +19,15 @@
                 "MOVE_ATTRACT"
             ],
             "iv_scale": 0,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_MEDICHAM",
@@ -33,7 +41,15 @@
                 "MOVE_LIGHT_SCREEN"
             ],
             "iv_scale": 0,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_SEAKING",
@@ -47,7 +63,15 @@
                 "MOVE_CAPTIVATE"
             ],
             "iv_scale": 0,
-            "ball_seal": 15
+            "ball_seal": 15,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

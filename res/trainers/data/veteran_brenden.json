@@ -21,7 +21,15 @@
                 "MOVE_TOXIC_SPIKES"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_GYARADOS",
@@ -35,7 +43,15 @@
                 "MOVE_DRAGON_PULSE"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_HIPPOWDON",
@@ -49,7 +65,15 @@
                 "MOVE_REST"
             ],
             "iv_scale": 100,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

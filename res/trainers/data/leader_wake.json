@@ -24,7 +24,15 @@
                 "MOVE_TWISTER"
             ],
             "iv_scale": 150,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_QUAGSIRE",
@@ -38,7 +46,15 @@
                 "MOVE_YAWN"
             ],
             "iv_scale": 150,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         },
         {
             "species": "SPECIES_FLOATZEL",
@@ -52,7 +68,15 @@
                 "MOVE_AQUA_JET"
             ],
             "iv_scale": 150,
-            "ball_seal": 0
+            "ball_seal": 0,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [

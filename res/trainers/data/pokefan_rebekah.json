@@ -17,7 +17,15 @@
             "item": "ITEM_SITRUS_BERRY",
             "moves": null,
             "iv_scale": 0,
-            "ball_seal": 6
+            "ball_seal": 6,
+            "ev_flags": {
+                "hp": false,
+                "attack": false,
+                "defense": false,
+                "speed": false,
+                "special_attack": false,
+                "special_defense": false
+            }
         }
     ],
     "messages": [
