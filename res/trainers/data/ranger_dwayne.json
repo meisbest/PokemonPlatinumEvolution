@@ -24,7 +24,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_GOLDUCK",
@@ -41,7 +43,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_DONPHAN",
@@ -58,7 +62,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         }
     ],
     "messages": [

@@ -28,7 +28,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_HAUNTER",
@@ -50,7 +52,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_GENGAR",
@@ -72,7 +76,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         }
     ],
     "messages": [

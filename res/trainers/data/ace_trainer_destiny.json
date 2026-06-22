@@ -29,7 +29,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_RAICHU",
@@ -51,7 +53,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         }
     ],
     "messages": [

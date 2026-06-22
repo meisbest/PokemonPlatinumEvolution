@@ -32,7 +32,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_SCIZOR",
@@ -54,7 +56,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_VESPIQUEN",
@@ -76,7 +80,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_HERACROSS",
@@ -98,7 +104,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_DRAPION",
@@ -120,7 +128,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         }
     ],
     "messages": [

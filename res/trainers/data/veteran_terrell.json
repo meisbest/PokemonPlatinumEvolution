@@ -29,7 +29,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_RHYDON",
@@ -51,7 +53,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         },
         {
             "species": "SPECIES_MAGMAR",
@@ -73,7 +77,9 @@
                 "speed": false,
                 "special_attack": false,
                 "special_defense": false
-            }
+            },
+            "nature": null,
+            "ability": null
         }
     ],
     "messages": [

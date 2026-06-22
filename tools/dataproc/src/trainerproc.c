@@ -22,6 +22,7 @@ static enum_template_t enums[] = {
     include_enum("generated/ai_flags.h",              "enum AIFlag"),
     include_enum("generated/items.h",                 "enum Item"),
     include_enum("generated/moves.h",                 "enum Move"),
+    include_enum("generated/natures.h",               "enum Nature"),
     include_enum("generated/species.h",               "enum Species"),
     include_enum("generated/trainer_classes.h",       "enum TrainerClass"),
     include_enum("generated/trainer_message_types.h", "enum TrainerMessageType"),
@@ -200,6 +201,18 @@ Container proc_trainer(datafile_t *df, enum TrainerID trainer) {
                     trparty.party[i].evFlags |= (u16)(1 << k);
                 }
             }
+        }
+
+        {
+            datanode_t nature_node = dp_objmemb(party_member, "nature");
+            trparty.party[i].nature = (nature_node.type == DATAPROC_T_STRING)
+                ? (u8)dp_u8(dp_lookup(nature_node, "enum Nature"))
+                : TRAINER_MON_NATURE_NONE;
+
+            datanode_t ability_node = dp_objmemb(party_member, "ability");
+            trparty.party[i].abilitySlot = (ability_node.type == DATAPROC_T_INT)
+                ? dp_u8(ability_node)
+                : TRAINER_MON_ABILITY_NONE;
         }
 
         if (party_has_items) trparty.party[i].item = dp_u16(dp_lookup(dp_objmemb(party_member, "item"), "enum Item"));

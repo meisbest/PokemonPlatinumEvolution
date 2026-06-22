@@ -11,8 +11,10 @@
 
 #define TRAINER_MON_FORM_SHIFT 10
 
-#define MAX_TRAINER_ITEMS 4
-#define MAX_IV_SCALE      255
+#define MAX_TRAINER_ITEMS        4
+#define MAX_IV_SCALE             255
+#define TRAINER_MON_NATURE_NONE  25
+#define TRAINER_MON_ABILITY_NONE 0xFF
 
 enum TrainerDataType {
     TRDATATYPE_BASE = 0,
@@ -36,6 +38,8 @@ typedef struct TrainerMonBase {
     u16 level;
     u16 species;
     u16 evFlags;
+    u8  nature;
+    u8  abilitySlot;
     u16 cbSeal;
 } TrainerMonBase;
 
@@ -44,6 +48,8 @@ typedef struct TrainerMonWithMoves {
     u16 level;
     u16 species;
     u16 evFlags;
+    u8  nature;
+    u8  abilitySlot;
     u16 moves[LEARNED_MOVES_MAX];
     u16 cbSeal;
 } TrainerMonWithMoves;
@@ -53,6 +59,8 @@ typedef struct TrainerMonWithItem {
     u16 level;
     u16 species;
     u16 evFlags;
+    u8  nature;
+    u8  abilitySlot;
     u16 item;
     u16 cbSeal;
 } TrainerMonWithItem;
@@ -62,6 +70,8 @@ typedef struct TrainerMonWithMovesAndItem {
     u16 level;
     u16 species;
     u16 evFlags;
+    u8  nature;
+    u8  abilitySlot;
     u16 item;
     u16 moves[LEARNED_MOVES_MAX];
     u16 cbSeal;

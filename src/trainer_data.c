@@ -2,6 +2,7 @@
 
 #include "constants/battle.h"
 #include "constants/pokemon.h"
+#include "generated/natures.h"
 #include "generated/trainer_message_types.h"
 
 #include "struct_defs/trainer.h"
@@ -22,6 +23,7 @@
 
 static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID heapID);
 static void TrainerData_ApplyEvFlags(Pokemon *mon, u16 evFlags);
+static void TrainerData_ApplyAbilitySlot(Pokemon *mon, u16 species, u8 abilitySlot);
 
 void Trainer_Encounter(FieldBattleDTO *dto, const SaveData *saveData, enum HeapID heapID)
 {
@@ -200,6 +202,17 @@ static void TrainerData_ApplyEvFlags(Pokemon *mon, u16 evFlags)
     Pokemon_CalcLevelAndStats(mon);
 }
 
+static void TrainerData_ApplyAbilitySlot(Pokemon *mon, u16 species, u8 abilitySlot)
+{
+    u32 abilityVal;
+    if (abilitySlot == TRAINER_MON_ABILITY_NONE) {
+        return;
+    }
+    abilityVal = SpeciesData_GetSpeciesValue(species,
+        abilitySlot == 0 ? SPECIES_DATA_ABILITY_1 : SPECIES_DATA_ABILITY_2);
+    Pokemon_SetValue(mon, MON_DATA_ABILITY, &abilityVal);
+}
+
 /**
  * @brief Build the party for a trainer as loaded in the FieldBattleDTO struct.
  *
@@ -245,10 +258,14 @@ static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID
             }
 
             rnd = (rnd << 8) + genderMod;
+            if (trmon[i].nature != TRAINER_MON_NATURE_NONE) {
+                rnd += ((u32)trmon[i].nature - rnd % NATURE_COUNT + NATURE_COUNT) % NATURE_COUNT;
+            }
             ivs = trmon[i].ivScale * MAX_IVS_SINGLE_STAT / MAX_IV_SCALE;
 
             Pokemon_InitWith(mon, species, trmon[i].level, ivs, TRUE, rnd, OTID_NOT_SHINY, 0);
             TrainerData_ApplyEvFlags(mon, trmon[i].evFlags);
+            TrainerData_ApplyAbilitySlot(mon, species, trmon[i].abilitySlot);
             Pokemon_SetBallSeal(trmon[i].cbSeal, mon, heapID);
             Pokemon_SetValue(mon, MON_DATA_FORM, &form);
             Party_AddPokemon(dto->parties[battler], mon);
@@ -271,10 +288,14 @@ static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID
             }
 
             rnd = (rnd << 8) + genderMod;
+            if (trmon[i].nature != TRAINER_MON_NATURE_NONE) {
+                rnd += ((u32)trmon[i].nature - rnd % NATURE_COUNT + NATURE_COUNT) % NATURE_COUNT;
+            }
             ivs = trmon[i].ivScale * MAX_IVS_SINGLE_STAT / MAX_IV_SCALE;
 
             Pokemon_InitWith(mon, species, trmon[i].level, ivs, TRUE, rnd, OTID_NOT_SHINY, 0);
             TrainerData_ApplyEvFlags(mon, trmon[i].evFlags);
+            TrainerData_ApplyAbilitySlot(mon, species, trmon[i].abilitySlot);
 
             for (j = 0; j < 4; j++) {
                 Pokemon_SetMoveSlot(mon, trmon[i].moves[j], j);
@@ -302,10 +323,14 @@ static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID
             }
 
             rnd = (rnd << 8) + genderMod;
+            if (trmon[i].nature != TRAINER_MON_NATURE_NONE) {
+                rnd += ((u32)trmon[i].nature - rnd % NATURE_COUNT + NATURE_COUNT) % NATURE_COUNT;
+            }
             ivs = trmon[i].ivScale * MAX_IVS_SINGLE_STAT / MAX_IV_SCALE;
 
             Pokemon_InitWith(mon, species, trmon[i].level, ivs, TRUE, rnd, OTID_NOT_SHINY, 0);
             TrainerData_ApplyEvFlags(mon, trmon[i].evFlags);
+            TrainerData_ApplyAbilitySlot(mon, species, trmon[i].abilitySlot);
             Pokemon_SetValue(mon, MON_DATA_HELD_ITEM, &trmon[i].item);
             Pokemon_SetBallSeal(trmon[i].cbSeal, mon, heapID);
             Pokemon_SetValue(mon, MON_DATA_FORM, &form);
@@ -329,10 +354,14 @@ static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID
             }
 
             rnd = (rnd << 8) + genderMod;
+            if (trmon[i].nature != TRAINER_MON_NATURE_NONE) {
+                rnd += ((u32)trmon[i].nature - rnd % NATURE_COUNT + NATURE_COUNT) % NATURE_COUNT;
+            }
             ivs = trmon[i].ivScale * MAX_IVS_SINGLE_STAT / MAX_IV_SCALE;
 
             Pokemon_InitWith(mon, species, trmon[i].level, ivs, TRUE, rnd, OTID_NOT_SHINY, 0);
             TrainerData_ApplyEvFlags(mon, trmon[i].evFlags);
+            TrainerData_ApplyAbilitySlot(mon, species, trmon[i].abilitySlot);
             Pokemon_SetValue(mon, MON_DATA_HELD_ITEM, &trmon[i].item);
 
             for (j = 0; j < 4; j++) {
