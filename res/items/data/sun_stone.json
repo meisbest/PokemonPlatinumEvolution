@@ -12,7 +12,7 @@
     "palette": "sun_stone_NCLR"
   },
   "gbaID": "GBA_ITEM_SUN_STONE",
-  "price": 2100,
+  "price": 4000,
   "effectParam": 0,
   "holdEffect": "HOLD_EFFECT_NONE",
   "pluckEffect": "PLUCK_EFFECT_NONE",

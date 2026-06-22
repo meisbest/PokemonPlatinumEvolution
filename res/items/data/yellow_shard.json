@@ -12,7 +12,7 @@
     "palette": "yellow_shard_NCLR"
   },
   "gbaID": "GBA_ITEM_YELLOW_SHARD",
-  "price": 200,
+  "price": 100,
   "effectParam": 0,
   "holdEffect": "HOLD_EFFECT_NONE",
   "pluckEffect": "PLUCK_EFFECT_NONE",

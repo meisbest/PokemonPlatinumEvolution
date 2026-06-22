@@ -7,9 +7,11 @@
 #include "applications/trainer_case/defs.h"
 
 #include "bg_window.h"
+#include "field_battle_data_transfer.h"
 #include "font.h"
 #include "message.h"
 #include "play_time.h"
+#include "savedata.h"
 #include "string_gf.h"
 #include "string_template.h"
 #include "text.h"
@@ -186,6 +188,7 @@ void TrainerCard_DrawFrontText(Window windows[], const TrainerCase *trainerCase)
 
     for (i = TRAINER_CARD_WINDOW_ID; i < TRAINER_CARD_WINDOW_HOF_DEBUT; i++) {
         if (i != TRAINER_CARD_WINDOW_POKEDEX || i == TRAINER_CARD_WINDOW_POKEDEX && trainerCase->pokedexObtained) {
+            if (i == TRAINER_CARD_WINDOW_SCORE) continue; // HACK LEVEL CAP: Saltiamo l'etichetta originale "Punteggio"
             MessageLoader_GetString(messageLoader, sTrainerCardTextFields[i], string);
             Text_AddPrinterWithParamsAndColor(&windows[i], FONT_SYSTEM, string, 0, 0, TEXT_SPEED_INSTANT, TEXT_COLOR(1, 2, 0), NULL);
         }
@@ -216,7 +219,29 @@ void TrainerCard_DrawFrontText(Window windows[], const TrainerCase *trainerCase)
         Text_AddPrinterWithParamsAndColor(&windows[TRAINER_CARD_WINDOW_POKEDEX], FONT_SYSTEM, string, xOffset, 0, TEXT_SPEED_INSTANT, TEXT_COLOR(1, 2, 0), NULL);
     }
 
-    TrainerCard_DrawNumber(&windows[TRAINER_CARD_WINDOW_SCORE], TRAINER_CARD_WINDOW_PARTIAL_WIDTH * TILE_WIDTH_PIXELS, 0, 0, string, trainerCase->score, 9, PADDING_MODE_SPACES);
+    //TrainerCard_DrawNumber(&windows[TRAINER_CARD_WINDOW_SCORE], TRAINER_CARD_WINDOW_PARTIAL_WIDTH * TILE_WIDTH_PIXELS, 0, 0, string, trainerCard->score, 9, PADDING_MODE_SPACES);
+    // --- HACK LEVEL CAP: Stampiamo etichetta e numero ---
+    extern SaveData *gSaveDataPtr;
+    u32 currentCap = GetHardLevelCap(gSaveDataPtr);
+
+    // Dividiamo le due parole in due array separati
+    charcode_t lvText[] = { 0x0136, 0x0140, 0xFFFF }; // "LV"
+    charcode_t capText[] = { 0x012D, 0x012B, 0x013A, 0xFFFF }; // "CAP"
+    
+    // 1. Stampiamo "LV" a sinistra (X = 0)
+    String_CopyChars(string, lvText);
+    Text_AddPrinterWithParamsAndColor(&windows[TRAINER_CARD_WINDOW_SCORE], FONT_SYSTEM, string, 0, 0, TEXT_SPEED_INSTANT, TEXT_COLOR(1, 2, 0), NULL);
+
+    // 2. Calcoliamo quanto spazio occupa la scritta "LV" in pixel
+    u32 lvWidth = Font_CalcStringWidth(FONT_SYSTEM, string, 0);
+
+    // 3. Stampiamo "CAP" spostandoci a destra della larghezza di "LV" + 4 pixel di spazio!
+    String_CopyChars(string, capText);
+    Text_AddPrinterWithParamsAndColor(&windows[TRAINER_CARD_WINDOW_SCORE], FONT_SYSTEM, string, lvWidth + 4, 0, TEXT_SPEED_INSTANT, TEXT_COLOR(1, 2, 0), NULL);
+
+    // 4. Stampiamo il valore numerico del Cap allineato a destra
+    TrainerCard_DrawNumber(&windows[TRAINER_CARD_WINDOW_SCORE], TRAINER_CARD_WINDOW_PARTIAL_WIDTH * TILE_WIDTH_PIXELS, 0, 0, string, currentCap, 3, PADDING_MODE_SPACES);
+    // ----------------------------------------------------
 
     if (trainerCase->liveTimeDisplay) {
         StringTemplate_SetNumber(template, 0, PlayTime_GetHours(trainerCase->playTime), 3, PADDING_MODE_SPACES, CHARSET_MODE_EN);
