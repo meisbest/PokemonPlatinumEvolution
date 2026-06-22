@@ -2,20 +2,14 @@
 #include "res/text/bank/great_marsh_2.h"
 
 
-    ScriptEntry _000A
-    ScriptEntry _001D
+    ScriptEntry GreatMarsh2_ParasolLady
+    ScriptEntry GreatMarsh2_SignboardArea2
     ScriptEntryEnd
 
-_000A:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+GreatMarsh2_ParasolLady:
+    NPCMessage GreatMarsh2_Text_PokemonDifferDayToDay
     End
 
-_001D:
-    ShowLandmarkSign 1
+GreatMarsh2_SignboardArea2:
+    ShowLandmarkSign GreatMarsh2_Text_SignArea2
     End

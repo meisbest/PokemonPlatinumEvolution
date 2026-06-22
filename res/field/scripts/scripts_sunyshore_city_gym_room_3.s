@@ -1,4 +1,5 @@
 #include "macros/scrcmd.inc"
+#include "constants/sunyshore_gym_buttons.h"
 #include "res/text/bank/sunyshore_city_gym_room_3.h"
 
 
@@ -14,19 +15,19 @@ SunyshoreGymRoom3_Init:
     End
 
 SunyshoreGymRoom3_TopButtons:
-    SunyshoreGymButton 0
+    PressSunyshoreGymButton SUNYSHORE_GYM_BUTTON_NORMAL
     End
 
 SunyshoreGymRoom3_BottomButtons:
-    SunyshoreGymButton 2
+    PressSunyshoreGymButton SUNYSHORE_GYM_BUTTON_DOUBLE
     End
 
 SunyshoreGymRoom3_Volkner:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfBadgeAcquired BADGE_ID_BEACON, SunyshoreGymRoom3_VolknerAlreadyHaveBeaconBadge
-    CreateJournalEvent LOCATION_EVENT_GYM_WAS_TOO_TOUGH, 156, 0, 0, 0
+    CreateJournalEvent LOCATION_EVENT_GYM_WAS_TOO_TOUGH, MAP_HEADER_SUNYSHORE_CITY_GYM_ROOM_3
     Message SunyshoreGymRoom3_Text_VolknerIntro
     CloseMessage
     StartTrainerBattle TRAINER_LEADER_VOLKNER
@@ -35,8 +36,8 @@ SunyshoreGymRoom3_Volkner:
     Message SunyshoreGymRoom3_Text_BeatVolkner
     BufferPlayerName 0
     Message SunyshoreGymRoom3_Text_VolknerReceiveBeaconBadge
-    PlaySound SEQ_BADGE
-    WaitSound
+    PlayFanfare SEQ_BADGE
+    WaitFanfare
     GiveBadge BADGE_ID_BEACON
     IncrementTrainerScore2 TRAINER_SCORE_EVENT_BADGE_EARNED
     SetTrainerFlag TRAINER_ACE_TRAINER_ZACHERY
@@ -49,7 +50,7 @@ SunyshoreGymRoom3_Volkner:
     SetTrainerFlag TRAINER_SCHOOL_KID_TIERA
     SetVar VAR_SUNYSHORE_STATE, 2
     // BUG: TRAINER_LEADER_ROARK should be TRAINER_LEADER_VOLKNER
-    CreateJournalEvent LOCATION_EVENT_BEAT_GYM_LEADER, 156, TRAINER_LEADER_ROARK, 0, 0
+    CreateJournalEvent LOCATION_EVENT_BEAT_GYM_LEADER, MAP_HEADER_SUNYSHORE_CITY_GYM_ROOM_3, TRAINER_LEADER_ROARK
     Message SunyshoreGymRoom3_Text_VolknerExplainBeaconBadge
     GoTo SunyshoreGymRoom3_VolknerTryGiveTM57
 
@@ -62,7 +63,7 @@ SunyshoreGymRoom3_VolknerTryGiveTM57:
     BufferItemName 0, VAR_0x8004
     BufferTMHMMoveName 1, VAR_0x8004
     Message SunyshoreGymRoom3_Text_VolknerExplainTM57
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -76,7 +77,7 @@ SunyshoreGymRoom3_VolknerCannotGiveTM57:
 SunyshoreGymRoom3_VolknerAlreadyHaveBeaconBadge:
     GoToIfUnset FLAG_OBTAINED_VOLKNER_TM57, SunyshoreGymRoom3_VolknerTryGiveTM57
     Message SunyshoreGymRoom3_Text_Afterbadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End

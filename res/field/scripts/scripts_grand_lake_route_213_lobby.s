@@ -1,69 +1,64 @@
 #include "macros/scrcmd.inc"
 #include "res/text/bank/grand_lake_route_213_lobby.h"
+#include "res/field/events/events_grand_lake_route_213_lobby.h"
 
 
-    ScriptEntry _0012
-    ScriptEntry _0014
-    ScriptEntry _004C
-    ScriptEntry _005F
+    ScriptEntry GrandLakeRoute213Lobby_OnTransition
+    ScriptEntry GrandLakeRoute213Lobby_Policeman
+    ScriptEntry GrandLakeRoute213Lobby_AceTrainerF
+    ScriptEntry GrandLakeRoute213Lobby_Looker
     ScriptEntryEnd
 
-_0012:
+GrandLakeRoute213Lobby_OnTransition:
     End
 
-_0014:
-    PlayFanfare SEQ_SE_CONFIRM
+GrandLakeRoute213Lobby_Policeman:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message 0
+    Message GrandLakeRoute213Lobby_Text_YouMayRest
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
-    PlaySound SEQ_ASA
-    WaitSound
+    PlayFanfare SEQ_ASA
+    WaitFanfare
     HealParty
     FadeScreenIn
     WaitFadeScreen
-    Message 1
-    WaitABXPadPress
+    Message GrandLakeRoute213Lobby_Text_RestoredYourPokemon
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_004C:
-    PlayFanfare SEQ_SE_CONFIRM
+GrandLakeRoute213Lobby_AceTrainerF:
+    NPCMessage GrandLakeRoute213Lobby_Text_HotelIsSoRomantic
+    End
+
+GrandLakeRoute213Lobby_Looker:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
+    GoToIfSet FLAG_TALKED_TO_GRAND_LAKE_ROUTE_213_LOBBY_LOOKER, GrandLakeRoute213Lobby_IWillSearchInside
+    SetFlag FLAG_TALKED_TO_GRAND_LAKE_ROUTE_213_LOBBY_LOOKER
     FacePlayer
-    Message 2
-    WaitABXPadPress
+    Message GrandLakeRoute213Lobby_Text_GoSearchOutside
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_005F:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    GoToIfSet FLAG_UNK_0x00FD, _0081
-    SetFlag FLAG_UNK_0x00FD
-    FacePlayer
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
-    End
-
-_0081:
-    ApplyMovement 2, _009C
+GrandLakeRoute213Lobby_IWillSearchInside:
+    ApplyMovement LOCALID_LOOKER, GrandLakeRoute213Lobby_Movement_LookerFaceEast
     WaitMovement
-    Message 4
+    Message GrandLakeRoute213Lobby_Text_BraggingIsNotNecessary
     FacePlayer
-    Message 5
-    WaitABXPadPress
+    Message GrandLakeRoute213Lobby_Text_IWillSearchInside
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
     .balign 4, 0
-_009C:
+GrandLakeRoute213Lobby_Movement_LookerFaceEast:
     FaceEast
     EndMovement

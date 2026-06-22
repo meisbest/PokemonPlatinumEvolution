@@ -27,6 +27,7 @@
 #include "comm_player_manager.h"
 #include "communication_information.h"
 #include "communication_system.h"
+#include "coordinates.h"
 #include "field_system.h"
 #include "field_task.h"
 #include "game_records.h"
@@ -38,6 +39,7 @@
 #include "math_util.h"
 #include "menu.h"
 #include "narc.h"
+#include "network_icon.h"
 #include "pltt_transfer.h"
 #include "pokedex.h"
 #include "render_oam.h"
@@ -60,16 +62,15 @@
 #include "terrain_collision_manager.h"
 #include "text.h"
 #include "trainer_info.h"
-#include "tv_episode_segment.h"
+#include "tv_segment.h"
 #include "underground.h"
-#include "unk_020393C8.h"
 #include "vars_flags.h"
 #include "vram_transfer.h"
 
-#include "res/graphics/mining/animations/animations.naix.h"
-#include "res/graphics/mining/interface/interface.naix.h"
-#include "res/graphics/mining/objects/objects.naix.h"
-#include "res/graphics/trap_effects/trap_effects.naix.h"
+#include "res/graphics/mining/animations/animations.naix"
+#include "res/graphics/mining/interface/interface.naix"
+#include "res/graphics/mining/objects/objects.naix"
+#include "res/graphics/trap_effects/trap_effects.naix"
 #include "res/text/bank/underground_common.h"
 
 #define MAX_BURIED_OBJECTS 8
@@ -803,7 +804,7 @@ void MiningEnv_Free(void)
     }
 }
 
-BOOL Mining_CheckForMiningSpotInteract(int netID, Coordinates *coordinates)
+BOOL Mining_CheckForMiningSpotInteract(int netID, CoordinatesU16 *coordinates)
 {
     MiningSpot *miningSpot = Mining_GetMiningSpotAtCoordinates(coordinates->x, coordinates->z);
     u8 buffer = netID;
@@ -1129,7 +1130,7 @@ static void Mining_ConfirmStartMiningTask(SysTask *sysTask, void *unused)
         u8 confirmResult;
         if (input == MENU_NOTHING_CHOSEN) {
             return;
-        } else if (input == 0) {
+        } else if (input == MENU_YES) {
             confirmResult = TRUE;
         } else {
             confirmResult = FALSE;
@@ -1501,7 +1502,7 @@ static void Mining_GameTask(SysTask *sysTask, void *data)
         ctx->state++;
         break;
     case MINING_STATE_FADE_IN_START:
-        sub_02039734();
+        NetworkIcon_Init();
         StartScreenFade(FADE_MAIN_ONLY, FADE_TYPE_CIRCLE_IN, FADE_TYPE_CIRCLE_IN, COLOR_BLACK, 6, 1, HEAP_ID_MINING);
         GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG0, TRUE);
         GXLayers_EngineAToggleLayers(GX_PLANEMASK_BG1, TRUE);
@@ -1633,7 +1634,7 @@ static void Mining_GameTask(SysTask *sysTask, void *data)
     case MINING_STATE_FADE_IN_END:
         if (FieldSystem_IsRunningFieldMap(fieldSystem)) {
             fieldSystem->ugTopScreenCtx = UndergroundTopScreen_StartTask(fieldSystem);
-            sub_02039734();
+            NetworkIcon_Init();
             CommPlayerMan_PauseFieldSystem();
             HBlankSystem_Stop(ctx->fieldSystem->unk_04->hBlankSystem);
             StartScreenFade(FADE_MAIN_THEN_SUB, FADE_TYPE_CIRCLE_IN, FADE_TYPE_TOP_HALF_CIRCLE_IN, COLOR_BLACK, 6, 1, HEAP_ID_FIELD1);
@@ -2636,7 +2637,7 @@ static BOOL Mining_ProcessNextDugUpItem(MiningGameContext *ctx)
             if (Spheres_IsMiningItemSphere(itemID)) {
                 UndergroundRecord_AddNumSpheresDug(undergroundRecord, 1);
             } else {
-                FieldSystem_SaveTVEpisodeSegment_UndergroundTreasuresCorner(sMiningEnv->fieldSystem, itemID, 1);
+                FieldSystem_SaveTVSegment_UndergroundTreasuresCorner(sMiningEnv->fieldSystem, itemID, 1);
 
                 // possible bug: rare bones count toward the fossil total
                 if ((itemID >= MINING_TREASURE_HELIX_FOSSIL) && ((MINING_TREASURE_RARE_BONE + 1) > itemID) || (itemID == MINING_TREASURE_ARMOR_FOSSIL) || (itemID == MINING_TREASURE_SKULL_FOSSIL)) {

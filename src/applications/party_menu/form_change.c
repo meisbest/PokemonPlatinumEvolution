@@ -25,7 +25,7 @@
 #include "text.h"
 #include "unk_0202419C.h"
 
-#include "res/graphics/party_menu/form_changes/form_change_effects.naix.h"
+#include "res/graphics/party_menu/form_changes/form_change_effects.naix"
 #include "res/text/bank/party_menu.h"
 
 static void PartyMenuFormChange_Free(PartyMenuApplication *app);
@@ -79,7 +79,7 @@ BOOL PartyMenuFormChange_ChangeForm(PartyMenuApplication *app)
             break;
         case SPECIES_ROTOM:
         default:
-            GF_ASSERT(0);
+            GF_ASSERT(FALSE);
             break;
         }
 

@@ -2,83 +2,41 @@
 #include "res/text/bank/sunyshore_city_west_house.h"
 
 
-    ScriptEntry _001E
-    ScriptEntry _0031
-    ScriptEntry _0044
-    ScriptEntry _0057
-    ScriptEntry _006A
-    ScriptEntry _007D
-    ScriptEntry _0090
+    ScriptEntry SunyshoreCityWestHouse_BattleGirl
+    ScriptEntry SunyshoreCityWestHouse_Clown
+    ScriptEntry SunyshoreCityWestHouse_Youngster1
+    ScriptEntry SunyshoreCityWestHouse_Youngster2
+    ScriptEntry SunyshoreCityWestHouse_Youngster3
+    ScriptEntry SunyshoreCityWestHouse_GymGuide
+    ScriptEntry SunyshoreCityWestHouse_PokemonBreederF
     ScriptEntryEnd
 
-_001E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+SunyshoreCityWestHouse_BattleGirl:
+    NPCMessage SunyshoreCityWestHouse_Text_GoneUndergroundLately
     End
 
-_0031:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+SunyshoreCityWestHouse_Clown:
+    NPCMessage SunyshoreCityWestHouse_Text_SpheresUndergroundLikeGems
     End
 
-_0044:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+SunyshoreCityWestHouse_Youngster1:
+    NPCMessage SunyshoreCityWestHouse_Text_BuriedSpheresGrow
     End
 
-_0057:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+SunyshoreCityWestHouse_Youngster2:
+    NPCMessage SunyshoreCityWestHouse_Text_GetFlagsFromFriends
     End
 
-_006A:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 4
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+SunyshoreCityWestHouse_Youngster3:
+    NPCMessage SunyshoreCityWestHouse_Text_GoUndergroundHaveFun
     End
 
-_007D:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 5
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+SunyshoreCityWestHouse_GymGuide:
+    NPCMessage SunyshoreCityWestHouse_Text_DefusedByTouch
     End
 
-_0090:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 6
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+SunyshoreCityWestHouse_PokemonBreederF:
+    NPCMessage SunyshoreCityWestHouse_Text_UndergroundManByronRelated
     End
 
     .balign 4, 0

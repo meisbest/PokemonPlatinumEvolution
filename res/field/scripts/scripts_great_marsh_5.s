@@ -2,20 +2,14 @@
 #include "res/text/bank/great_marsh_5.h"
 
 
-    ScriptEntry _000A
-    ScriptEntry _001D
+    ScriptEntry GreatMarsh5_Youngster
+    ScriptEntry GreatMarsh5_SignboardArea5
     ScriptEntryEnd
 
-_000A:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+GreatMarsh5_Youngster:
+    NPCMessage GreatMarsh5_Text_IRecommendQuickTrams
     End
 
-_001D:
-    ShowLandmarkSign 1
+GreatMarsh5_SignboardArea5:
+    ShowLandmarkSign GreatMarsh5_Text_SignArea5
     End

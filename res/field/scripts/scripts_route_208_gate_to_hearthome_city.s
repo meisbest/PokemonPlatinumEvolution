@@ -2,42 +2,21 @@
 #include "res/text/bank/route_208_gate_to_hearthome_city.h"
 
 
-    ScriptEntry _000E
-    ScriptEntry _0021
-    ScriptEntry _0034
+    ScriptEntry Route208GateToHearthomeCity_PokemonBreederM
+    ScriptEntry Route208GateToHearthomeCity_MiddleAgedWoman
+    ScriptEntry Route208GateToHearthomeCity_Clefairy
     ScriptEntryEnd
 
-_000E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route208GateToHearthomeCity_PokemonBreederM:
+    NPCMessage Route208GateToHearthomeCity_Text_HearthomeCityGreatPlace
     End
 
-_0021:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route208GateToHearthomeCity_MiddleAgedWoman:
+    NPCMessage Route208GateToHearthomeCity_Text_YouSayHearthomeISayContests
     End
 
-_0034:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    WaitFanfare SEQ_SE_CONFIRM
-    PlayCry SPECIES_CLEFAIRY
-    Message 2
-    WaitCry
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route208GateToHearthomeCity_Clefairy:
+    PokemonCryAndMessage SPECIES_CLEFAIRY, Route208GateToHearthomeCity_Text_ClefairyCryPippii
     End
 
     .balign 4, 0

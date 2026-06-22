@@ -1,45 +1,43 @@
 #include "macros/scrcmd.inc"
 #include "res/text/bank/valor_cavern.h"
-
-#define LOCALID_AZELF  0
-#define LOCALID_SATURN 1
+#include "res/field/events/events_valor_cavern.h"
 
 
-    ScriptEntry _0012
-    ScriptEntry _0042
+    ScriptEntry ValorCavern_OnTransition
+    ScriptEntry ValorCavern_OnLoad
     ScriptEntry ValorCavern_Azelf
-    ScriptEntry ValorCavern_CommanderSaturn
+    ScriptEntry ValorCavern_Saturn
     ScriptEntryEnd
 
-_0012:
+ValorCavern_OnTransition:
     SetFlag FLAG_FIRST_ARRIVAL_VALOR_CAVERN
-    GoToIfUnset FLAG_GALACTIC_LEFT_LAKE_VALOR, ValorCavern_SetWarpEventPosLakeWithGalactic
-    GoToIfSet FLAG_GALACTIC_LEFT_LAKE_VALOR, ValorCavern_SetWarpEventPosLakeWithWater
+    GoToIfUnset FLAG_GALACTIC_LEFT_LAKE_VALOR, ValorCavern_RemoveWarpLakeValorNormal
+    GoToIfSet FLAG_GALACTIC_LEFT_LAKE_VALOR, ValorCavern_RemoveWarpLakeValorDrained
     End
 
-ValorCavern_SetWarpEventPosLakeWithGalactic:
+ValorCavern_RemoveWarpLakeValorNormal:
     SetWarpEventPos 1, 10, 29
     End
 
-ValorCavern_SetWarpEventPosLakeWithWater:
+ValorCavern_RemoveWarpLakeValorDrained:
     SetWarpEventPos 0, 10, 29
     End
 
-_0042:
+ValorCavern_OnLoad:
     SetFlag FLAG_FIRST_ARRIVAL_VALOR_CAVERN
     CallIfSet FLAG_MAP_LOCAL, ValorCavern_RemoveAzelf
-    GoToIfUnset FLAG_GALACTIC_LEFT_LAKE_VALOR, ValorCavern_SetWarpEventPosLakeWithGalactic
-    GoToIfSet FLAG_GALACTIC_LEFT_LAKE_VALOR, ValorCavern_SetWarpEventPosLakeWithWater
+    GoToIfUnset FLAG_GALACTIC_LEFT_LAKE_VALOR, ValorCavern_RemoveWarpLakeValorNormal
+    GoToIfSet FLAG_GALACTIC_LEFT_LAKE_VALOR, ValorCavern_RemoveWarpLakeValorDrained
     End
 
 ValorCavern_RemoveAzelf:
-    SetFlag FLAG_AZELF_DISAPPEARED
+    SetFlag FLAG_HIDE_VALOR_CAVERN_AZELF
     RemoveObject LOCALID_AZELF
     ClearFlag FLAG_MAP_LOCAL
     Return
 
 ValorCavern_Azelf:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     PlayCry SPECIES_AZELF
@@ -58,7 +56,7 @@ ValorCavern_Azelf:
 
 ValorCavern_AzelfDisappeared:
     Message ValorCavern_Text_AzelfDisappeared
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -68,13 +66,13 @@ ValorCavern_LostBattleAzelf:
     ReleaseAll
     End
 
-ValorCavern_CommanderSaturn:
-    PlayFanfare SEQ_SE_CONFIRM
+ValorCavern_Saturn:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     Message ValorCavern_Text_SaturnMissionIsProceeding
     CloseMessage
     FacePlayer
-    ApplyMovement LOCALID_SATURN, _013C
+    ApplyMovement LOCALID_SATURN, ValorCavern_Movement_SaturnExclamationMark
     WaitMovement
     WaitTime 30, VAR_RESULT
     Message ValorCavern_Text_SaturnBattleIntro
@@ -95,7 +93,7 @@ ValorCavern_CommanderSaturn:
     End
 
     .balign 4, 0
-_013C:
+ValorCavern_Movement_SaturnExclamationMark:
     EmoteExclamationMark
     EndMovement
 

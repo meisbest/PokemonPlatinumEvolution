@@ -2,14 +2,14 @@
 #include "res/text/bank/solaceon_ruins_maniac_tunnel_room.h"
 
 
-    ScriptEntry _0006
+    ScriptEntry SolaceonRuinsManiacTunnnelRoom_Inscription
     ScriptEntryEnd
 
-_0006:
-    PlayFanfare SEQ_SE_CONFIRM
+SolaceonRuinsManiacTunnnelRoom_Inscription:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    MessageUnown 0
-    WaitABXPadPress
+    MessageUnown SolaceonRuinsManiacTunnnelRoom_Text_Interrobang
+    WaitButton
     CloseMessage
     ReleaseAll
     End

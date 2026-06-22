@@ -15,6 +15,7 @@
 #include "overlay066/struct_ov66_02231300.h"
 
 #include "bg_window.h"
+#include "comm_manager.h"
 #include "font.h"
 #include "game_options.h"
 #include "game_records.h"
@@ -25,6 +26,7 @@
 #include "menu.h"
 #include "message.h"
 #include "narc.h"
+#include "network_icon.h"
 #include "overlay_manager.h"
 #include "render_window.h"
 #include "rtc.h"
@@ -36,8 +38,6 @@
 #include "string_template.h"
 #include "system.h"
 #include "text.h"
-#include "unk_020366A0.h"
-#include "unk_020393C8.h"
 
 typedef struct {
     StringTemplate *unk_00;
@@ -228,7 +228,7 @@ int ov67_0225C820(ApplicationManager *appMan, int *param1)
         UnkStruct_ov66_0222E71C *v3;
 
         v3 = ov66_0222E3BC(v1->unk_04);
-        sub_0203878C(v0->saveData, v3);
+        CommManager_LoginWifiPlaza(v0->saveData, v3);
     }
 
         ov67_0225D210(&v0->unk_70, 23);
@@ -236,23 +236,23 @@ int ov67_0225C820(ApplicationManager *appMan, int *param1)
         (*param1)++;
         break;
     case 5:
-        if (sub_020383E8() || sub_0203881C()) {
+        if (CommManager_CheckWifiError() || CommManager_IsWifiPlazaError()) {
             ov67_0225D310(&v0->unk_70);
             (*param1) = 9;
         }
 
-        if (sub_02038804() == 1) {
+        if (CommManager_GetWifiPlazaLoginSuccess() == 1) {
             ov66_0222F16C(v1->unk_04);
             (*param1)++;
         }
         break;
     case 6:
-        if (sub_020383E8() || sub_0203881C()) {
+        if (CommManager_CheckWifiError() || CommManager_IsWifiPlazaError()) {
             ov67_0225D310(&v0->unk_70);
             (*param1) = 9;
         }
 
-        if (sub_02038294()) {
+        if (CommManager_IsLoginBattleWifi()) {
             ov67_0225D310(&v0->unk_70);
 
             {
@@ -274,8 +274,8 @@ int ov67_0225C820(ApplicationManager *appMan, int *param1)
         UnkStruct_ov65_0222F6EC *v5;
         int v6, v7;
 
-        if (sub_020383E8()) {
-            v5 = sub_020382F8();
+        if (CommManager_CheckWifiError()) {
+            v5 = CommManager_GetUnk34();
             v6 = ov66_022316F4(v5->unk_00, v5->unk_04);
             v7 = v5->unk_00;
         } else {
@@ -296,8 +296,8 @@ int ov67_0225C820(ApplicationManager *appMan, int *param1)
             int v8;
             int v9;
 
-            if (sub_020383E8()) {
-                UnkStruct_ov65_0222F6EC *v10 = sub_020382F8();
+            if (CommManager_CheckWifiError()) {
+                UnkStruct_ov65_0222F6EC *v10 = CommManager_GetUnk34();
 
                 v8 = ov66_02231718(v10->unk_00, v10->unk_04);
 
@@ -324,7 +324,7 @@ int ov67_0225C820(ApplicationManager *appMan, int *param1)
 
         switch (v11) {
         case 0:
-            sub_020387E8();
+            CommManager_LogoutWifiPlaza();
             (*param1) = 13;
             break;
         case 0xfffffffe:
@@ -333,7 +333,7 @@ int ov67_0225C820(ApplicationManager *appMan, int *param1)
         }
     } break;
     case 13:
-        if (CommMan_IsInitialized() == 0) {
+        if (CommManager_IsInitialized() == 0) {
             (*param1) = 4;
         }
         break;
@@ -341,11 +341,11 @@ int ov67_0225C820(ApplicationManager *appMan, int *param1)
         ov67_0225D294(&v0->unk_40);
         ov67_0225D294(&v0->unk_70);
         ov67_0225D294(&v0->unk_A0);
-        sub_020387E8();
+        CommManager_LogoutWifiPlaza();
         (*param1)++;
         break;
     case 15:
-        if (CommMan_IsInitialized() == 0) {
+        if (CommManager_IsInitialized() == 0) {
             ov67_0225D294(&v0->unk_40);
             ov67_0225D294(&v0->unk_70);
             (*param1) = 7;
@@ -361,7 +361,7 @@ int ov67_0225C820(ApplicationManager *appMan, int *param1)
         }
         break;
     default:
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         break;
     }
 
@@ -412,7 +412,7 @@ int ov67_0225CB8C(ApplicationManager *appMan, int *param1)
     ov67_0225D188(&v0->unk_10, v0->unk_0C, 1, 674, 5, 1, 22, 2, ((((1 + (18 + 12)) + 9) + (27 * 4)) + (23 * 16)) + (6 * 4), v0->saveData, 112);
     ov67_0225D37C(&v0->unk_10, 21);
 
-    sub_02039734();
+    NetworkIcon_Init();
     SetVBlankCallback(ov67_0225CE28, v0);
     DisableHBlank();
 
@@ -437,7 +437,7 @@ int ov67_0225CC6C(ApplicationManager *appMan, int *param1)
     case 2:
         ov67_0225D210(&v0->unk_40, 26);
 
-        if (sub_020383E8() || sub_0203881C()) {
+        if (CommManager_CheckWifiError() || CommManager_IsWifiPlazaError()) {
             (*param1) = 5;
             ov67_0225D2EC(&v0->unk_40);
         } else {
@@ -461,11 +461,11 @@ int ov67_0225CC6C(ApplicationManager *appMan, int *param1)
         }
         break;
     case 5:
-        sub_020387E8();
+        CommManager_LogoutWifiPlaza();
         (*param1) = 6;
         break;
     case 6:
-        if (CommMan_IsInitialized() == 0) {
+        if (CommManager_IsInitialized() == 0) {
             ov67_0225D310(&v0->unk_70);
             ov66_0222F198(v1->unk_04);
             (*param1) = 7;

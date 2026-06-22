@@ -8,7 +8,7 @@
 #include "journal.h"
 #include "savedata.h"
 
-typedef struct {
+typedef struct FieldFrontierDTO {
     void *unk_00;
     const Options *options;
     SaveData *saveData;
@@ -16,10 +16,10 @@ typedef struct {
     BagCursor *bagCursor;
     int unk_14;
     int unk_18;
-    int unk_1C;
-    u8 *unk_20;
-    u8 unk_24;
+    int mapHeaderID;
+    u8 *subscreenCursorOn;
+    u8 sceneID;
     FieldSystem *fieldSystem;
-} UnkStruct_ov104_02230BE4;
+} FieldFrontierDTO;
 
 #endif // POKEPLATINUM_STRUCT_OV104_02230BE4_H

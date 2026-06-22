@@ -2,113 +2,88 @@
 #include "res/text/bank/galactic_hq_2f.h"
 
 
-    ScriptEntry _001E
-    ScriptEntry _007A
-    ScriptEntry _008B
-    ScriptEntry _009C
-    ScriptEntry _00AD
-    ScriptEntry _00CF
-    ScriptEntry _00BE
+    ScriptEntry GalacticHQ2F_Bed
+    ScriptEntry GalacticHQ2F_BgSignNapRoom
+    ScriptEntry GalacticHQ2F_BgSignTVRoom
+    ScriptEntry GalacticHQ2F_BgSignCredo
+    ScriptEntry GalacticHQ2F_KitchenSink
+    ScriptEntry GalacticHQ2F_Report
+    ScriptEntry GalacticHQ2F_Refrigerator
     ScriptEntryEnd
 
-_001E:
-    PlayFanfare SEQ_SE_CONFIRM
+GalacticHQ2F_Bed:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    Message 0
+    Message GalacticHQ2F_Text_TakeARest
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_YES, _003E
-    GoTo _0074
+    GoToIfEq VAR_RESULT, MENU_YES, GalacticHQ2F_TakeARest
+    GoTo GalacticHQ2F_BedEnd
 
-_003E:
+GalacticHQ2F_TakeARest:
     BufferPlayerName 0
-    Message 1
+    Message GalacticHQ2F_Text_FellAsleep
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
-    PlaySound SEQ_ASA
-    WaitSound
+    PlayFanfare SEQ_ASA
+    WaitFanfare
     HealParty
     FadeScreenIn
     WaitFadeScreen
     BufferPlayerName 0
-    Message 2
-    WaitABXPadPress
+    Message GalacticHQ2F_Text_PokemonBecameFullyHealed
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_0074:
+GalacticHQ2F_BedEnd:
     CloseMessage
     ReleaseAll
     End
 
-_007A:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 7
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+GalacticHQ2F_BgSignNapRoom:
+    EventMessage GalacticHQ2F_Text_TeamGalacticNapRoom
     End
 
-_008B:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 8
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+GalacticHQ2F_BgSignTVRoom:
+    EventMessage GalacticHQ2F_Text_TeamGalacticTVRoom
     End
 
-_009C:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 9
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+GalacticHQ2F_BgSignCredo:
+    EventMessage GalacticHQ2F_Text_TeamGalacticCredo
     End
 
-_00AD:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 10
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+GalacticHQ2F_KitchenSink:
+    EventMessage GalacticHQ2F_Text_KitchenSinkNotice
     End
 
-_00BE:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 11
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+GalacticHQ2F_Refrigerator:
+    EventMessage GalacticHQ2F_Text_RefrigeratorNotice
     End
 
-_00CF:
-    PlayFanfare SEQ_SE_CONFIRM
+GalacticHQ2F_Report:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message 3
+    Message GalacticHQ2F_Text_ReadReport
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_NO, _010A
-    Message 5
+    GoToIfEq VAR_RESULT, MENU_NO, GalacticHQ2F_PutReportBack
+    Message GalacticHQ2F_Text_StatuePlateText1
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_NO, _010A
-    Message 6
-    GoTo _010A
+    GoToIfEq VAR_RESULT, MENU_NO, GalacticHQ2F_PutReportBack
+    Message GalacticHQ2F_Text_StatuePlateText2
+    GoTo GalacticHQ2F_PutReportBack
     End
 
-_010A:
+GalacticHQ2F_PutReportBack:
     BufferPlayerName 0
-    Message 4
-    GoTo _0118
+    Message GalacticHQ2F_Text_PutReportBack
+    GoTo GalacticHQ2F_ReportEnd
     End
 
-_0118:
-    WaitABXPadPress
+GalacticHQ2F_ReportEnd:
+    WaitButton
     CloseMessage
     ReleaseAll
     End

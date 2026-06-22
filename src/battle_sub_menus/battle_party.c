@@ -3,7 +3,7 @@
 #include "constants/contests.h"
 #include "constants/moves.h"
 #include "constants/pokemon.h"
-#include "generated/contest_effects.h"
+#include "generated/move_contest_effects.h"
 
 #include "struct_decls/battle_system.h"
 
@@ -34,11 +34,11 @@
 #include "sprite_system.h"
 #include "string_gf.h"
 #include "string_template.h"
+#include "sys_task_extensions.h"
 #include "sys_task_manager.h"
 #include "system.h"
 #include "text.h"
 #include "touch_screen.h"
-#include "unk_0200679C.h"
 #include "unk_0208C098.h"
 #include "unk_02094EDC.h"
 
@@ -243,7 +243,7 @@ void BattlePartyTask_Start(BattlePartyContext *context)
     battleParty->palette = BattleSystem_GetPaletteData(context->battleSys);
     battleParty->currentState = TASK_STATE_INITIALIZE;
     battleParty->partySlotLearningMove = context->selectedPartyIndex;
-    battleParty->hasVisitedContestHall = BattleSystem_GetVisistedContestHall(context->battleSys);
+    battleParty->hasVisitedContestHall = BattleSystem_GetVisitedContestHall(context->battleSys);
     battleParty->battlerSlot = BattleSystem_GetBattlerType(context->battleSys, context->battler);
 }
 
@@ -1542,7 +1542,7 @@ static void DrawEmptyAppealPts(BattleParty *battleParty)
 
 static void DrawMoveContestStats(BattleParty *battleParty, enum BattlePartyScreen screen)
 {
-    enum ContestEffects contestEffect;
+    enum MoveContestEffect contestEffect;
     u16 selectedMove;
     s8 appealPts;
 

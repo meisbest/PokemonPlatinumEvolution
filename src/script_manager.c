@@ -3,6 +3,7 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "constants/approach_type.h"
 #include "constants/battle.h"
 #include "generated/bg_event_types.h"
 #include "generated/map_headers.h"
@@ -10,6 +11,7 @@
 #include "data/field/hidden_items.h"
 #include "field/field_system.h"
 
+#include "field_script_context.h"
 #include "field_task.h"
 #include "heap.h"
 #include "map_header.h"
@@ -24,14 +26,12 @@
 #include "trainer_data.h"
 #include "vars_flags.h"
 
-#include "constdata/const_020EAB80.h"
-#include "constdata/const_020EAC58.h"
-#include "res/field/scripts/scr_seq.naix.h"
+#include "res/field/scripts/scr_seq.naix"
 
 // clang-format off
 #define SCRIPT_RANGE_TABLE(Entry) \
     Entry(SCRIPT_ID_OFFSET_SCRATCH_OFF_CARDS,              scripts_scratch_off_cards,              TEXT_BANK_SCRATCH_OFF_CARDS) \
-    Entry(SCRIPT_ID_OFFSET_BATTLE_TOWER_RECORDS,           scripts_battle_tower_records,           TEXT_BANK_BATTLE_TOWER_RECORDS) \
+    Entry(SCRIPT_ID_OFFSET_BATTLE_FRONTIER_RECORDS,        scripts_battle_frontier_records,        TEXT_BANK_BATTLE_FRONTIER_RECORDS) \
     Entry(SCRIPT_ID_OFFSET_POKEMON_CENTER_DAILY_TRAINERS,  scripts_pokemon_center_daily_trainers,  TEXT_BANK_POKEMON_CENTER_DAILY_TRAINERS) \
     Entry(SCRIPT_ID_OFFSET_COUNTERPART_TALK,               scripts_counterpart_talk,               TEXT_BANK_COUNTERPART_TALK) \
     Entry(SCRIPT_ID_OFFSET_MYSTERY_GIFT_DELIVERYMAN,       scripts_mystery_gift_deliveryman,       TEXT_BANK_MYSTERY_GIFT_DELIVERYMAN) \
@@ -39,16 +39,16 @@
     Entry(SCRIPT_ID_OFFSET_TV_BROADCAST,                   scripts_tv_broadcast,                   TEXT_BANK_TV_PROGRAMS) \
     Entry(SCRIPT_ID_OFFSET_FIELD_MOVES,                    scripts_field_moves,                    TEXT_BANK_FIELD_MOVES) \
     Entry(SCRIPT_ID_OFFSET_POKEDEX_RATINGS,                scripts_pokedex_ratings,                TEXT_BANK_POKEDEX_RATINGS) \
-    Entry(9900,                                            scripts_unk_0397,                       TEXT_BANK_COMMON_STRINGS) \
-    Entry(SCRIPT_ID_OFFSET_CONTEST_REGISTRATION,           scripts_contest_registration,           TEXT_BANK_CONTEST_REGISTRATION) \
+    Entry(SCRIPT_ID_OFFSET_UNUSED_0397,                    scripts_unused_0397,                    TEXT_BANK_COMMON_STRINGS) \
+    Entry(SCRIPT_ID_OFFSET_CONTESTS,                       scripts_contests,                       TEXT_BANK_CONTEST_COMMON) \
     Entry(SCRIPT_ID_OFFSET_FOLLOWER_PARTNERS,              scripts_follower_partners,              TEXT_BANK_FOLLOWER_PARTNERS) \
     Entry(SCRIPT_ID_OFFSET_INIT_NEW_GAME,                  scripts_init_new_game,                  TEXT_BANK_COMMON_STRINGS) \
     Entry(SCRIPT_ID_OFFSET_DAY_CARE_COMMON,                scripts_day_care_common,                TEXT_BANK_DAY_CARE_COMMON) \
     Entry(SCRIPT_ID_OFFSET_POFFIN_COMMON,                  scripts_poffin_common,                  TEXT_BANK_POFFIN_COMMON) \
     Entry(SCRIPT_ID_OFFSET_GROUP_CONNECTION,               scripts_group_connection,               TEXT_BANK_GROUP_CONNECTION) \
-    Entry(SCRIPT_ID_OFFSET_POKEMON_CENTER_B1F_ATTENDANTS,  scripts_pokemon_center_b1f_attendants,  TEXT_BANK_POKEMON_CENTER_B1F_ATTENDANTS) \
+    Entry(SCRIPT_ID_OFFSET_POKEMON_CENTER_B1F_COMMON,      scripts_pokemon_center_b1f_common,      TEXT_BANK_POKEMON_CENTER_B1F_COMMON) \
     Entry(SCRIPT_ID_OFFSET_COMMUNICATION_CLUB,             scripts_communication_club,             TEXT_BANK_COMMUNICATION_CLUB) \
-    Entry(SCRIPT_ID_OFFSET_POKEMON_CENTER_2F_ATTENDANTS,   scripts_pokemon_center_2f_attendants,   TEXT_BANK_POKEMON_CENTER_2F_ATTENDANTS) \
+    Entry(SCRIPT_ID_OFFSET_POKEMON_CENTER_2F_COMMON,       scripts_pokemon_center_2f_common,       TEXT_BANK_POKEMON_CENTER_2F_COMMON) \
     Entry(SCRIPT_ID_OFFSET_POKE_RADAR,                     scripts_poke_radar,                     TEXT_BANK_BAG) \
     Entry(SCRIPT_ID_OFFSET_VS_SEEKER,                      scripts_vs_seeker,                      TEXT_BANK_VS_SEEKER) \
     Entry(SCRIPT_ID_OFFSET_RECORD_CHATOT_CRY,              scripts_record_chatot_cry,              TEXT_BANK_RECORD_CHATOT_CRY) \
@@ -85,7 +85,7 @@ void ScriptManager_Set(FieldSystem *fieldSystem, u16 scriptID, MapObject *object
     FieldSystem_CreateTask(fieldSystem, FieldTask_RunScript, scriptManager);
 }
 
-void ScriptManager_SetApproachingTrainer(FieldSystem *fieldSystem, MapObject *object, int sightRange, int direction, int scriptID, int trainerID, int param6, int approachNum)
+void ScriptManager_SetApproachingTrainer(FieldSystem *fieldSystem, MapObject *object, int sightRange, int direction, int scriptID, int trainerID, enum ApproachType approachType, int approachNum)
 {
     ScriptManager *scriptManager = FieldTask_GetEnv(fieldSystem->task);
     ApproachingTrainer *trainer = &scriptManager->trainers[approachNum];
@@ -94,7 +94,7 @@ void ScriptManager_SetApproachingTrainer(FieldSystem *fieldSystem, MapObject *ob
     trainer->direction = direction;
     trainer->scriptID = scriptID;
     trainer->trainerID = trainerID;
-    trainer->unk_10 = param6;
+    trainer->approachType = approachType;
     trainer->object = object;
 }
 
@@ -189,7 +189,7 @@ static void ScriptManager_Init(FieldSystem *fieldSystem, ScriptManager *scriptMa
 {
     u16 *targetID = ScriptManager_GetMemberPtr(scriptManager, SCRIPT_DATA_TARGET_OBJECT_ID);
 
-    scriptManager->playerDir = PlayerAvatar_GetDir(fieldSystem->playerAvatar);
+    scriptManager->playerDir = PlayerAvatar_GetFacingDir(fieldSystem->playerAvatar);
     scriptManager->targetObject = object;
     scriptManager->scriptID = scriptID;
     scriptManager->saveType = saveType;
@@ -209,7 +209,7 @@ ScriptContext *ScriptContext_CreateAndStart(FieldSystem *fieldSystem, u16 script
 
     GF_ASSERT(ctx != NULL);
 
-    ScriptContext_Init(ctx, Unk_020EAC58, Unk_020EAB80);
+    ScriptContext_Init(ctx, gFieldScriptCommands, gNumFieldScriptCommands);
     ScriptContext_LoadAndStart(fieldSystem, ctx, scriptID, 0);
 
     return ctx;
@@ -335,7 +335,7 @@ void *ScriptManager_GetMemberPtr(ScriptManager *scriptManager, u32 member)
         return &trainer->trainerID;
     case SCRIPT_MANAGER_TRAINER_0_TYPE:
         trainer = &scriptManager->trainers[0];
-        return &trainer->unk_10;
+        return &trainer->approachType;
     case SCRIPT_MANAGER_TRAINER_0_MAP_OBJECT:
         trainer = &scriptManager->trainers[0];
         return &trainer->object;
@@ -356,7 +356,7 @@ void *ScriptManager_GetMemberPtr(ScriptManager *scriptManager, u32 member)
         return &trainer->trainerID;
     case SCRIPT_MANAGER_TRAINER_1_TYPE:
         trainer = &scriptManager->trainers[1];
-        return &trainer->unk_10;
+        return &trainer->approachType;
     case SCRIPT_MANAGER_TRAINER_1_MAP_OBJECT:
         trainer = &scriptManager->trainers[1];
         return &trainer->object;
@@ -404,8 +404,8 @@ void FieldSystem_ShowStartMenu(FieldSystem *fieldSystem)
 {
     ScriptManager *scriptManager = FieldTask_GetEnv(fieldSystem->task);
 
-    if (sub_0203A9C8(fieldSystem) == TRUE) {
-        scriptManager->function = StartMenu_Open;
+    if (FieldSystem_IsInValidLocation(fieldSystem) == TRUE) {
+        scriptManager->function = StartMenu_OpenFromScript;
     }
 }
 
@@ -653,8 +653,8 @@ HiddenItemTilePosition *FieldSystem_GetNearbyHiddenItems(FieldSystem *fieldSyste
         return hiddenItems;
     }
 
-    playerX = Player_GetXPos(fieldSystem->playerAvatar);
-    playerZ = Player_GetZPos(fieldSystem->playerAvatar);
+    playerX = PlayerAvatar_GetXPos(fieldSystem->playerAvatar);
+    playerZ = PlayerAvatar_GetZPos(fieldSystem->playerAvatar);
     playerMinX = playerX - 7;
     playerMaxX = playerX + 7;
     playerMinZ = playerZ - 7;

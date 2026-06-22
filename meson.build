@@ -1,6 +1,6 @@
 project('pokeplatinum', ['c', 'cpp', 'nasm'],
     version: '1.0',
-    meson_version: '>=1.5.0',
+    meson_version: '>=1.10.0',
     default_options : [
         'buildtype=plain',
         'warning_level=0'
@@ -64,7 +64,7 @@ add_global_arguments(c_args,
 pokeplatinum_args = [
     '-DPM_KEEP_ASSERTS',
     '-DGAME_VERSION=VERSION_PLATINUM',
-    '-DGAME_LANGUAGE=ENGLISH'
+    '-DGAME_LANGUAGE=LANGUAGE_ENGLISH'
 ]
 
 if get_option('gdb_debugging')
@@ -128,9 +128,7 @@ nitrodwc_dep = dependency('NitroDWC',
 )
 
 libvct_dep = dependency('libvct')
-libcrypto_dep = dependency('libcrypto')
 libsyscall_dep = dependency('libsyscall')
-ppwlobby_dep = dependency('ppwlobby')
 
 ############################################################
 ###                       CONSTS                         ###
@@ -161,34 +159,48 @@ subdir('lib')
 ############################################################
 subdir('res')
 
-# Phony-like target to build all generated data files
-alias_target('data', nitrofs_files)
-
 ############################################################
 ###                     ARM9 BINARY                      ###
 ############################################################
 subdir('src')
-subdir('asm')
+
+trainer_ai_o = custom_target(
+    'trainer_ai_script.o',
+    output: 'trainer_ai_script.o',
+    input: files('src/battle/trainer_ai/script.s'),
+    command: [
+        arm_none_eabi_gcc_exe,
+        '-I', meson.global_source_root() / 'include',
+        '-I', meson.global_source_root() / 'asm',
+        '-I', meson.global_build_root(),
+        '-x', 'assembler-with-cpp',
+        '-MD', '-MF', '@DEPFILE@',
+        '-c', '-o', '@OUTPUT@',
+        '@INPUT@',
+    ],
+    depfile: '@BASENAME@.d',
+)
 
 main = executable('main',
     sources: [
         pokeplatinum_c,
-        pokeplatinum_asm,
         c_consts_generators,
         naix_headers,
         h_headers,
         embed_headers,
     ],
+    objects: trainer_ai_o,
     c_args: [
         pokeplatinum_args,
         '-thumb'
     ],
-    nasm_args: asm_args,
     c_pch: 'include/pch/global_pch.h',
     include_directories: [
         public_includes,
+        libcrypto_public_includes,
         libgds_public_includes,
         libspl_public_includes,
+        ppw_public_includes,
     ],
     dependencies: [
         nitrosdk_dep,
@@ -196,13 +208,14 @@ main = executable('main',
         nitrowifi_dep,
         nitrodwc_dep,
         libvct_dep,
-        libcrypto_dep,
         libsyscall_dep,
-	    ppwlobby_dep
     ],
     link_with: [
+        libcrypto_ov97,
+        libcrypto_static,
         libgds,
-        libspl
+        libspl,
+        ppwlobby_libs
     ],
     link_args: [
         link_args,

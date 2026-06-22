@@ -6,7 +6,6 @@
 
 #include "constants/graphics.h"
 
-#include "overlay005/struct_ov5_021DE5D0.h"
 #include "overlay065/struct_ov65_0222F6EC.h"
 #include "overlay066/ov66_0222DDF0.h"
 #include "overlay066/ov66_02231428.h"
@@ -35,6 +34,7 @@
 #include "bg_window.h"
 #include "cell_transfer.h"
 #include "char_transfer.h"
+#include "comm_manager.h"
 #include "enums.h"
 #include "error_handling.h"
 #include "font.h"
@@ -46,6 +46,7 @@
 #include "list_menu.h"
 #include "message.h"
 #include "narc.h"
+#include "network_icon.h"
 #include "overlay_manager.h"
 #include "pltt_transfer.h"
 #include "pokemon.h"
@@ -72,8 +73,6 @@
 #include "trainer_info.h"
 #include "type_icon.h"
 #include "unk_0202419C.h"
-#include "unk_020366A0.h"
-#include "unk_020393C8.h"
 #include "vram_transfer.h"
 
 typedef struct {
@@ -695,9 +694,9 @@ int ov70_0225DB90(ApplicationManager *appMan, int *param1)
         ov70_0225F024(&v0->unk_428);
         ov70_0225F100(&v0->unk_404);
 
-        if (sub_020383E8()) {
+        if (CommManager_CheckWifiError()) {
             ov70_0225F184(&v0->unk_3F4, &v0->unk_340);
-        } else if (sub_0203881C()) {
+        } else if (CommManager_IsWifiPlazaError()) {
             ov70_0225F1C0(&v0->unk_3F4, &v0->unk_340, ov66_022326DC());
         } else {
             ov70_0225F1F0(&v0->unk_3F4, &v0->unk_340, ov66_0222DFF8(v0->unk_34));
@@ -1294,7 +1293,7 @@ static void ov70_0225E4EC(UnkStruct_ov70_0225E4EC *param0, SaveData *saveData, u
         ReserveVramForWirelessIconChars(NNS_G2D_VRAM_TYPE_2DMAIN, GX_OBJVRAMMODE_CHAR_1D_32K);
         ReserveSlotsForWirelessIconPalette(NNS_G2D_VRAM_TYPE_2DMAIN);
 
-        sub_02039734();
+        NetworkIcon_Init();
         param0->unk_04 = SpriteList_InitRendering(24, &param0->unk_08, heapID);
         SetSubScreenViewRect(&param0->unk_08, 0, 256 * FX32_ONE);
 
@@ -1905,7 +1904,7 @@ static void ov70_0225F184(UnkStruct_ov70_0225F114 *param0, UnkStruct_ov70_0225F2
 {
     u32 v0;
     String *v1;
-    UnkStruct_ov65_0222F6EC *v2 = sub_020382F8();
+    UnkStruct_ov65_0222F6EC *v2 = CommManager_GetUnk34();
     v0 = ov66_022316F4(v2->unk_00, v2->unk_04);
 
     ov70_0225F2A8(param1, v2->unk_00, 5, 0, 2);
@@ -2007,7 +2006,7 @@ static void ov70_0225F318(UnkStruct_ov70_0225F208 *param0, u32 param1, u32 param
 
 static void ov70_0225F32C(UnkStruct_ov70_0225F208 *param0, u32 param1, u16 param2)
 {
-    StringTemplate_SetCustomMessageWord(param0->unk_00, param1, param2);
+    StringTemplate_SetEasyChatWord(param0->unk_00, param1, param2);
 }
 
 static void ov70_0225F338(UnkStruct_ov70_0225F208 *param0)
@@ -2224,7 +2223,7 @@ static void ov70_0225F418(UnkStruct_ov70_0225F350 *param0, UnkStruct_ov70_0225DE
             v14 = ov66_0222EBA4(v0, ov66_0222E338(v0));
 
             if (v14 == 0xffffffff) {
-                GF_ASSERT(0);
+                GF_ASSERT(FALSE);
 
                 v14 = 0;
             }
@@ -2707,39 +2706,39 @@ static void ov70_02260048(UnkStruct_ov70_0225FA84 *param0, UnkStruct_ov70_0225E4
 
 static void ov70_02260080(UnkStruct_ov70_0225FA84 *param0, UnkStruct_ov70_0225E4EC *param1, NARC *param2, u32 heapID, u32 param4)
 {
-    u32 v0;
+    enum TrainerClass trainerClass;
     u16 v1, v2;
     u32 v3;
-    UnkStruct_ov5_021DE5D0 v4;
+    TrainerClassGraphicIndex v4;
 
     GF_ASSERT(param0->unk_68 == NULL);
 
     for (v3 = 0; v3 < 18; v3++) {
         if (Unk_ov70_0226D724[v3].unk_00 == param4) {
-            v0 = Unk_ov70_0226D724[v3].unk_02;
+            trainerClass = Unk_ov70_0226D724[v3].unk_02;
             v1 = Unk_ov70_0226D724[v3].unk_04;
             v2 = Unk_ov70_0226D724[v3].unk_06;
         }
     }
 
-    sub_02076AAC(v0, 2, &v4);
+    SpriteSystem_SetTrainerClassGraphicsIndex(trainerClass, FACE_FRONT, &v4);
 
     {
         BOOL v5;
 
-        param0->unk_6C[0] = SpriteResourceCollection_AddTiles(param1->unk_194[0], v4.narcID, v4.unk_04, 0, 101, NNS_G2D_VRAM_TYPE_2DSUB, heapID);
+        param0->unk_6C[0] = SpriteResourceCollection_AddTiles(param1->unk_194[0], v4.narcID, v4.tiles, 0, 101, NNS_G2D_VRAM_TYPE_2DSUB, heapID);
         v5 = SpriteTransfer_RequestCharAtEnd(param0->unk_6C[0]);
         GF_ASSERT(v5);
 
-        param0->unk_6C[1] = SpriteResourceCollection_AddPalette(param1->unk_194[1], v4.narcID, v4.unk_08, 0, 101, NNS_G2D_VRAM_TYPE_2DSUB, 1, heapID);
+        param0->unk_6C[1] = SpriteResourceCollection_AddPalette(param1->unk_194[1], v4.narcID, v4.palette, 0, 101, NNS_G2D_VRAM_TYPE_2DSUB, 1, heapID);
         ov70_02260268(SpriteResource_GetPaletteFade(param0->unk_6C[1]));
         v5 = SpriteTransfer_RequestPlttFreeSpace(param0->unk_6C[1]);
         GF_ASSERT(v5);
 
         SpriteResource_ReleaseData(param0->unk_6C[1]);
 
-        param0->unk_6C[2] = SpriteResourceCollection_Add(param1->unk_194[2], v4.narcID, v4.unk_0C, 0, 101, 2, heapID);
-        param0->unk_6C[3] = SpriteResourceCollection_Add(param1->unk_194[3], v4.narcID, v4.unk_10, 0, 101, 3, heapID);
+        param0->unk_6C[2] = SpriteResourceCollection_Add(param1->unk_194[2], v4.narcID, v4.cells, 0, 101, 2, heapID);
+        param0->unk_6C[3] = SpriteResourceCollection_Add(param1->unk_194[3], v4.narcID, v4.anims, 0, 101, 3, heapID);
     }
 
     {

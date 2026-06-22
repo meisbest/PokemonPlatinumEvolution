@@ -5,7 +5,7 @@
 
 #include "constants/heap.h"
 #include "constants/narc.h"
-#include "generated/string_padding_mode.h"
+#include "constants/string.h"
 
 #include "main_menu/main_menu_util.h"
 #include "main_menu/mystery_gift_app.h"
@@ -15,6 +15,7 @@
 
 #include "bg_window.h"
 #include "buffer_manager.h"
+#include "comm_manager.h"
 #include "communication_information.h"
 #include "communication_system.h"
 #include "font.h"
@@ -27,6 +28,7 @@
 #include "message.h"
 #include "message_util.h"
 #include "mystery_gift.h"
+#include "network_icon.h"
 #include "overlay_manager.h"
 #include "palette.h"
 #include "pokemon_icon.h"
@@ -48,10 +50,8 @@
 #include "trainer_info.h"
 #include "unk_02033200.h"
 #include "unk_020363E8.h"
-#include "unk_020366A0.h"
-#include "unk_020393C8.h"
 
-#include "res/graphics/main_menu/main_menu_graphics.naix.h"
+#include "res/graphics/main_menu/main_menu_graphics.naix"
 #include "res/text/bank/mystery_gift_menu.h"
 
 FS_EXTERN_OVERLAY(main_menu);
@@ -195,7 +195,7 @@ typedef struct WonderCardFlipAnimManager {
 } WonderCardFlipAnimManager;
 
 typedef struct WonderCardsAppWindowTemplate {
-    int screen;
+    enum WonderCardsAppScreen screen;
     int tilemapLeft;
     int tilemapTop;
     int width;
@@ -1123,9 +1123,9 @@ static void ProcessStateTransitionMenuInput(ApplicationManager *appMan, enum Won
     u32 input = ListMenu_ProcessInput(appData->listMenu);
 
     switch (input) {
-    case LIST_NOTHING_CHOSEN:
+    case MENU_NOTHING_CHOSEN:
         break;
-    case LIST_CANCEL:
+    case MENU_CANCEL:
         Sound_PlayEffect(SEQ_SE_CONFIRM);
 
         if (onCancelStateTransition) {
@@ -1215,7 +1215,7 @@ static BOOL WonderCardsApp_Init(ApplicationManager *appMan, int *unused)
     appData->numPlayerConnections = 1;
 
     MainMenuUtil_Init(HEAP_ID_WONDER_CARDS_APP);
-    Heap_Create(HEAP_ID_SYSTEM, HEAP_ID_91, 0x300);
+    Heap_Create(HEAP_ID_SYSTEM, HEAP_ID_NETWORK_ICON, HEAP_SIZE_NETWORK_ICON);
 
     return TRUE;
 }
@@ -1542,7 +1542,7 @@ static int WonderCardsApp_Main(ApplicationManager *appMan, enum WonderCardsAppSt
         break;
     case WC_APP_STATE_PREPARE_FOR_SHARING:
         PrepareSelectedWCForSharing(appData);
-        sub_02039734();
+        NetworkIcon_Init();
         DoScreenTransitionToState(appData, FADE_TYPE_BRIGHTNESS_IN, WC_APP_STATE_WAIT_FOR_PLAYERS, state);
         break;
     case WC_APP_STATE_WAIT_FOR_PLAYERS: {
@@ -1578,7 +1578,7 @@ static int WonderCardsApp_Main(ApplicationManager *appMan, enum WonderCardsAppSt
         DoScreenTransitionToState(appData, FADE_TYPE_BRIGHTNESS_IN, WC_APP_STATE_SHOW_WONDERCARD_ACTIONS, state);
         break;
     case WC_APP_STATE_WAIT_FOR_COMM_MAN_EXIT:
-        if (CommMan_IsInitialized() == FALSE) {
+        if (CommManager_IsInitialized() == FALSE) {
             *state = appData->queuedState;
         }
         break;
@@ -1836,7 +1836,7 @@ static BOOL WonderCardsApp_Exit(ApplicationManager *appMan, int *unused)
     Bg_FreeTilemapBuffer(appData->bgConfig, BG_LAYER_MAIN_3);
     Heap_Free(appData->bgConfig);
     EnqueueApplication(FS_OVERLAY_ID(main_menu), &gMysteryGiftAppTemplate);
-    Heap_Destroy(HEAP_ID_91);
+    Heap_Destroy(HEAP_ID_NETWORK_ICON);
     ApplicationManager_FreeData(appMan);
     Heap_Destroy(HEAP_ID_WONDER_CARDS_APP);
 

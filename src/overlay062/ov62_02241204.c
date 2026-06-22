@@ -3,7 +3,6 @@
 #include <nitro.h>
 #include <string.h>
 
-#include "struct_decls/pokedexdata_decl.h"
 #include "struct_decls/struct_0202F41C_decl.h"
 #include "struct_defs/struct_02030A80.h"
 #include "struct_defs/struct_0208C06C.h"
@@ -38,6 +37,7 @@
 #include "gx_layers.h"
 #include "heap.h"
 #include "message.h"
+#include "network_icon.h"
 #include "palette.h"
 #include "pokedex.h"
 #include "save_player.h"
@@ -52,7 +52,6 @@
 #include "unk_02012744.h"
 #include "unk_0202F1D4.h"
 #include "unk_02030A80.h"
-#include "unk_020393C8.h"
 #include "unk_0208B284.h"
 #include "unk_0208BA78.h"
 
@@ -1752,8 +1751,8 @@ static BOOL ov62_02242D90(UnkStruct_0208C06C *param0)
 
     switch (param0->unk_08) {
     case 0:
-        if (sub_0202F250()) {
-            sub_0202F22C();
+        if (BattleRecording_Exists()) {
+            BattleRecording_Free();
         }
 
         v0->unk_4E0 = Unk_ov62_02249298;
@@ -2988,8 +2987,8 @@ static BOOL ov62_02244720(UnkStruct_0208C06C *param0)
             Bg_ClearTilemap(param0->unk_14.unk_10, 3);
             Bg_ClearTilemap(param0->unk_14.unk_10, 7);
 
-            if (sub_0202F250() == 1) {
-                sub_0202F22C();
+            if (BattleRecording_Exists() == 1) {
+                BattleRecording_Free();
             }
         } else {
             PaletteData_BlendMulti(param0->unk_14.unk_14, 1, 0x2, v0->unk_08, param0->unk_14.unk_44);
@@ -3258,8 +3257,8 @@ static BOOL ov62_02244CD4(UnkStruct_0208C06C *param0)
                 Bg_ClearTilemap(param0->unk_14.unk_10, 3);
                 Bg_ClearTilemap(param0->unk_14.unk_10, 7);
 
-                if (sub_0202F250() == 1) {
-                    sub_0202F22C();
+                if (BattleRecording_Exists() == 1) {
+                    BattleRecording_Free();
                 }
             } else {
                 PaletteData_BlendMulti(param0->unk_14.unk_14, 1, 0x2, v0->unk_08, param0->unk_14.unk_44);
@@ -3502,7 +3501,7 @@ static BOOL ov62_0224536C(UnkStruct_0208C06C *param0)
             return 0;
         }
 
-        sub_0202F22C();
+        BattleRecording_Free();
         ov62_02231B8C(param0);
 
         if (ov61_0222BB48(ov62_0224112C(param0), &v1) == 1) {
@@ -3835,7 +3834,7 @@ static void ov62_02245994(u32 param0, enum TouchScreenButtonState param1, void *
     case 1:
         ov62_02234520(v0);
 
-        if (sub_0202F250()) {
+        if (BattleRecording_Exists()) {
             ov62_0222FB60(v0, 20);
         } else {
             v1->unk_0C = 20;
@@ -3845,7 +3844,7 @@ static void ov62_02245994(u32 param0, enum TouchScreenButtonState param1, void *
     case 2:
         ov62_02234520(v0);
 
-        if (sub_0202F250()) {
+        if (BattleRecording_Exists()) {
             ov62_0222FB60(v0, 22);
         } else {
             v1->unk_0C = 22;
@@ -4303,7 +4302,7 @@ static BOOL ov62_0224613C(UnkStruct_0208C06C *param0)
         ov62_022444A0(param0);
         ov62_0223146C(param0);
         ov62_02234540(param0, 0);
-        sub_020397C8(1, HEAP_ID_102);
+        NetworkIcon_CreateOnSubScreen(1, HEAP_ID_102);
         ov62_0223376C(param0, 1);
         param0->unk_08++;
         break;
@@ -4326,8 +4325,8 @@ static BOOL ov62_0224613C(UnkStruct_0208C06C *param0)
             Bg_ClearTilemap(param0->unk_14.unk_10, 3);
             Bg_ClearTilemap(param0->unk_14.unk_10, 7);
 
-            if (sub_0202F250() == 1) {
-                sub_0202F22C();
+            if (BattleRecording_Exists() == 1) {
+                BattleRecording_Free();
             }
         } else {
             PaletteData_BlendMulti(param0->unk_14.unk_14, 1, 0x2, v0->unk_08, param0->unk_14.unk_44);

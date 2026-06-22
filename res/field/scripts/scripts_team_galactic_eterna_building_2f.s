@@ -2,38 +2,21 @@
 #include "res/text/bank/team_galactic_eterna_building_2f.h"
 
 
-    ScriptEntry _000E
-    ScriptEntry _0021
-    ScriptEntry _0034
+    ScriptEntry TeamGalacticEternaBuilding2F_GruntM
+    ScriptEntry TeamGalacticEternaBuilding2F_GruntF
+    ScriptEntry TeamGalacticEternaBuilding2F_BgSign
     ScriptEntryEnd
 
-_000E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+TeamGalacticEternaBuilding2F_GruntM:
+    NPCMessage TeamGalacticEternaBuilding2F_Text_WorkingToFindEnergySources
     End
 
-_0021:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+TeamGalacticEternaBuilding2F_GruntF:
+    NPCMessage TeamGalacticEternaBuilding2F_Text_ResearchOnFormsOfEnergy
     End
 
-_0034:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+TeamGalacticEternaBuilding2F_BgSign:
+    EventMessage TeamGalacticEternaBuilding2F_Text_MakeProgressTogether
     End
 
     .balign 4, 0

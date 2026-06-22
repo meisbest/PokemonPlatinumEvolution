@@ -2,7 +2,7 @@
     "bg_events": [],
     "object_events": [
         {
-            "id": "AMITY_SQUARE_RECEPTIONIST_0",
+            "id": "LOCALID_RECEPTIONIST_WEST",
             "graphics_id": "OBJ_EVENT_GFX_RECEPTIONIST",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -17,7 +17,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_RECEPTIONIST_1",
+            "id": "LOCALID_RECEPTIONIST_EAST",
             "graphics_id": "OBJ_EVENT_GFX_RECEPTIONIST",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -32,11 +32,11 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_POKEBALL_2",
+            "id": "LOCALID_ITEM_TM45",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x0429",
+            "hidden_flag": "FLAG_OBTAINED_AMITY_SQUARE_TM45",
             "script": 7051,
             "initial_dir": 0,
             "data": [],
@@ -47,11 +47,11 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_POKEBALL_3",
+            "id": "LOCALID_ITEM_TM43",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x042A",
+            "hidden_flag": "FLAG_OBTAINED_AMITY_SQUARE_TM43",
             "script": 7052,
             "initial_dir": 0,
             "data": [],
@@ -62,11 +62,11 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_POKEBALL_4",
+            "id": "LOCALID_ITEM_SPOOKY_PLATE",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x042B",
+            "hidden_flag": "FLAG_OBTAINED_AMITY_SQUARE_SPOOKY_PLATE",
             "script": 7053,
             "initial_dir": 0,
             "data": [],
@@ -77,11 +77,11 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_COUNTERPART_5",
-            "graphics_id": "OBJ_EVENT_GFX_COUNTERPART",
+            "id": "LOCALID_FOLLOWER_MON",
+            "graphics_id": "OBJ_EVENT_GFX_VAR_0",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x02A1",
+            "hidden_flag": "FLAG_HIDE_AMITY_SQUARE_FOLLOWER_MON",
             "script": 6,
             "initial_dir": 0,
             "data": [],
@@ -92,7 +92,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_POKEMON_BREEDER_M_6",
+            "id": "LOCALID_POKEMON_BREEDER_M",
             "graphics_id": "OBJ_EVENT_GFX_POKEMON_BREEDER_M",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -107,7 +107,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_DRIFLOON_7",
+            "id": "LOCALID_DRIFLOON",
             "graphics_id": "OBJ_EVENT_GFX_DRIFLOON",
             "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -122,7 +122,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_HAPPINY_8",
+            "id": "LOCALID_HAPPINY",
             "graphics_id": "OBJ_EVENT_GFX_HAPPINY",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -137,7 +137,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_POKEMON_BREEDER_F_9",
+            "id": "LOCALID_POKEMON_BREEDER_F",
             "graphics_id": "OBJ_EVENT_GFX_POKEMON_BREEDER_F",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -152,7 +152,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_COLLECTOR_10",
+            "id": "LOCALID_COLLECTOR",
             "graphics_id": "OBJ_EVENT_GFX_COLLECTOR",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -167,7 +167,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_PIKACHU_11",
+            "id": "LOCALID_PIKACHU",
             "graphics_id": "OBJ_EVENT_GFX_PIKACHU",
             "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -182,7 +182,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_TWIN_12",
+            "id": "LOCALID_TWIN",
             "graphics_id": "OBJ_EVENT_GFX_TWIN",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -197,7 +197,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_CLEFAIRY_13",
+            "id": "LOCALID_CLEFAIRY",
             "graphics_id": "OBJ_EVENT_GFX_CLEFAIRY",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -212,11 +212,11 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_POKEBALL_14",
+            "id": "LOCALID_ITEM_AMULET_COIN",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x04F0",
+            "hidden_flag": "FLAG_OBTAINED_AMITY_SQUARE_AMULET_COIN",
             "script": 7250,
             "initial_dir": 0,
             "data": [],
@@ -227,7 +227,7 @@
             "y": 0
         },
         {
-            "id": "AMITY_SQUARE_COLLECTOR_15",
+            "id": "LOCALID_GIFT_MAN",
             "graphics_id": "OBJ_EVENT_GFX_COLLECTOR",
             "movement_type": "MOVEMENT_TYPE_LOOK_SOUTH",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -316,7 +316,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -326,7 +326,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -336,7 +336,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -346,7 +346,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -356,7 +356,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -366,7 +366,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -376,7 +376,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -386,7 +386,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -396,7 +396,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -406,7 +406,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -416,7 +416,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -426,7 +426,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -436,7 +436,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -446,7 +446,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -456,7 +456,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -466,7 +466,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -476,7 +476,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -486,7 +486,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -496,7 +496,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -506,7 +506,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -516,7 +516,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -526,7 +526,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -536,7 +536,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -546,7 +546,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -556,7 +556,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -566,7 +566,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         },
         {
@@ -576,7 +576,7 @@
             "y": 0,
             "width": 1,
             "length": 1,
-            "var": "VAR_UNK_0x40AC",
+            "var": "VAR_AMITY_SQUARE_STATE",
             "value": 0
         }
     ]

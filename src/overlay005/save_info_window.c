@@ -7,13 +7,12 @@
 #include "constants/narc.h"
 #include "generated/map_headers.h"
 
-#include "struct_decls/pokedexdata_decl.h"
-
 #include "applications/poketch/poketch_system.h"
 #include "overlay005/ov5_021EA714.h"
 #include "overlay005/save_info_window.h"
 
 #include "bg_window.h"
+#include "comm_manager.h"
 #include "field_overworld_state.h"
 #include "font.h"
 #include "location.h"
@@ -27,7 +26,6 @@
 #include "string_gf.h"
 #include "text.h"
 #include "trainer_info.h"
-#include "unk_020366A0.h"
 
 static void FieldSystem_SaveObjectsAndLocation(FieldSystem *fieldSystem);
 
@@ -198,16 +196,16 @@ static void FieldSystem_SaveObjectsAndLocation(FieldSystem *fieldSystem)
     FieldSystem_SaveObjects(fieldSystem);
     FieldSystem_SendPoketchEvent(fieldSystem, POKETCH_EVENT_SAVE, 0);
 
-    fieldSystem->location->x = Player_GetXPos(fieldSystem->playerAvatar);
-    fieldSystem->location->z = Player_GetZPos(fieldSystem->playerAvatar);
+    fieldSystem->location->x = PlayerAvatar_GetXPos(fieldSystem->playerAvatar);
+    fieldSystem->location->z = PlayerAvatar_GetZPos(fieldSystem->playerAvatar);
     fieldSystem->location->warpId = WARP_ID_NONE;
-    fieldSystem->location->faceDirection = PlayerAvatar_GetDir(fieldSystem->playerAvatar);
+    fieldSystem->location->faceDirection = PlayerAvatar_GetFacingDir(fieldSystem->playerAvatar);
 }
 
 void FieldSystem_SaveStateIfCommunicationOff(FieldSystem *fieldSystem)
 {
     if (fieldSystem == NULL) {
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         return;
     }
 
@@ -218,7 +216,7 @@ void FieldSystem_SaveStateIfCommunicationOff(FieldSystem *fieldSystem)
         return;
     }
 
-    if (sub_02038EB4() == TRUE) {
+    if (CommManager_IsInitializedNotPoketch() == TRUE) {
         return;
     }
 

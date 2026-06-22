@@ -3,64 +3,64 @@
 
 
     ScriptEntry FollowerPartners_Rival
-    ScriptEntry _00F9
+    ScriptEntry FollowerPartners_DummyFollower_Unused
     ScriptEntry FollowerPartners_Cheryl
     ScriptEntry FollowerPartners_Buck
-    ScriptEntry FollowerPartners_Mira
+    ScriptEntry FollowerPartners_Mira_Unused
     ScriptEntry FollowerPartners_Marley
     ScriptEntryEnd
 
 FollowerPartners_Rival:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfGe VAR_FOLLOWER_RIVAL_STATE, 3, FollowerPartners_Rival_PostStarterMessage
     BufferPlayerName 1
-    Message FollowerPartners_Text_Rival_HeyPlayerYouCanChooseFirst
-    WaitABXPadPress
+    Message FollowerPartners_Text_Rival_YouCanChooseFirst
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 FollowerPartners_Rival_PostStarterMessage:
-    GoToIfGe VAR_FOLLOWER_RIVAL_TIMES_TALKED, 5, FollowerPartners_Rival_HeyThatsEnoughTalkingAlready
-    GoToIfEq VAR_FOLLOWER_RIVAL_TIMES_TALKED, 4, FollowerPartners_Rival_HeyDoYouKnowAboutTheChampion
-    GoToIfEq VAR_FOLLOWER_RIVAL_TIMES_TALKED, 3, FollowerPartners_Rival_ThatLakeHasAMiragePokemonLivingInIt
+    GoToIfGe VAR_FOLLOWER_RIVAL_TIMES_TALKED, 5, FollowerPartners_Rival_EnoughTalkingAlready
+    GoToIfEq VAR_FOLLOWER_RIVAL_TIMES_TALKED, 4, FollowerPartners_Rival_DoYouKnowAboutChampion
+    GoToIfEq VAR_FOLLOWER_RIVAL_TIMES_TALKED, 3, FollowerPartners_Rival_LakeHasMiragePokemon
     GoToIfEq VAR_FOLLOWER_RIVAL_TIMES_TALKED, 2, FollowerPartners_Rival_DoYouBelieveIt
-    GoToIfEq VAR_FOLLOWER_RIVAL_TIMES_TALKED, 1, FollowerPartners_Rival_PokemonAllHaveDifferentMovesHuh
+    GoToIfEq VAR_FOLLOWER_RIVAL_TIMES_TALKED, 1, FollowerPartners_Rival_PokemonHaveDifferentMoves
     BufferRivalName 0
     Message FollowerPartners_Text_Rival_ThatPokemonBattle
-    WaitABXPadPress
+    WaitButton
     GoTo FollowerPartners_Rival_IncreaseTimesTalked
     End
 
 FollowerPartners_Rival_Unused:
     BufferRivalName 0
     Message FollowerPartners_Text_Rival_AllRightLetsMoveOut
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-FollowerPartners_Rival_HeyThatsEnoughTalkingAlready:
+FollowerPartners_Rival_EnoughTalkingAlready:
     BufferRivalName 0
-    Message FollowerPartners_Text_Rival_HeyThatsEnoughTalkingAlready
-    WaitABXPadPress
+    Message FollowerPartners_Text_Rival_EnoughTalkingAlready
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-FollowerPartners_Rival_HeyDoYouKnowAboutTheChampion:
+FollowerPartners_Rival_DoYouKnowAboutChampion:
     BufferRivalName 0
-    Message FollowerPartners_Text_Rival_HeyDoYouKnowAboutTheChampion
-    WaitABXPadPress
+    Message FollowerPartners_Text_Rival_DoYouKnowAboutChampion
+    WaitButton
     GoTo FollowerPartners_Rival_IncreaseTimesTalked
     End
 
-FollowerPartners_Rival_ThatLakeHasAMiragePokemonLivingInIt:
+FollowerPartners_Rival_LakeHasMiragePokemon:
     BufferRivalName 0
-    Message FollowerPartners_Text_Rival_ThatLakeHasAMiragePokemonLivingInIt
-    WaitABXPadPress
+    Message FollowerPartners_Text_Rival_LakeHasMiragePokemon
+    WaitButton
     GoTo FollowerPartners_Rival_IncreaseTimesTalked
     End
 
@@ -68,14 +68,14 @@ FollowerPartners_Rival_DoYouBelieveIt:
     BufferRivalName 0
     BufferRivalStarterSpeciesName 1
     Message FollowerPartners_Text_Rival_DoYouBelieveIt
-    WaitABXPadPress
+    WaitButton
     GoTo FollowerPartners_Rival_IncreaseTimesTalked
     End
 
-FollowerPartners_Rival_PokemonAllHaveDifferentMovesHuh:
+FollowerPartners_Rival_PokemonHaveDifferentMoves:
     BufferRivalName 0
-    Message FollowerPartners_Text_Rival_PokemonAllHaveDifferentMovesHuh
-    WaitABXPadPress
+    Message FollowerPartners_Text_Rival_PokemonHaveDifferentMoves
+    WaitButton
     GoTo FollowerPartners_Rival_IncreaseTimesTalked
     End
 
@@ -85,136 +85,136 @@ FollowerPartners_Rival_IncreaseTimesTalked:
     ReleaseAll
     End
 
-_00F9:
-    PlayFanfare SEQ_SE_CONFIRM
+FollowerPartners_DummyFollower_Unused:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    GoToIfGe VAR_UNK_0x40CB, 2, _0126
-    GoToIfEq VAR_UNK_0x40CB, 1, _0131
+    GoToIfGe VAR_FOLLOWER_UNUSED_TIMES_TALKED, 2, FollowerPartners_DummyFollowerTalkedGe2Times_Unused
+    GoToIfEq VAR_FOLLOWER_UNUSED_TIMES_TALKED, 1, FollowerPartners_DummyFollowerTalked1Time_Unused
     BufferRivalName 0
-    GoTo _013C
+    GoTo FollowerPartners_DummyFollowerTalked0Times_Unused
     End
 
-_0126:
+FollowerPartners_DummyFollowerTalkedGe2Times_Unused:
     BufferRivalName 0
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_0131:
+FollowerPartners_DummyFollowerTalked1Time_Unused:
     BufferRivalName 0
-    GoTo _013C
+    GoTo FollowerPartners_DummyFollowerTalked0Times_Unused
     End
 
-_013C:
-    WaitABXPadPress
+FollowerPartners_DummyFollowerTalked0Times_Unused:
+    WaitButton
     CloseMessage
-    AddVar VAR_UNK_0x40CB, 1
+    AddVar VAR_FOLLOWER_UNUSED_TIMES_TALKED, 1
     ReleaseAll
     End
 
 FollowerPartners_Cheryl:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    GoToIfGe VAR_FOLLOWER_CHERYL_TIMES_TALKED, 2, FollowerPartners_Cheryl_PlayerBattlingWithYouMakesMeFeelElated
-    GoToIfEq VAR_FOLLOWER_CHERYL_TIMES_TALKED, 1, FollowerPartners_Cheryl_MyPokemonIsAnExcellentHealer
+    GoToIfGe VAR_FOLLOWER_CHERYL_TIMES_TALKED, 2, FollowerPartners_Cheryl_BattlingWithYouMakesMeElated
+    GoToIfEq VAR_FOLLOWER_CHERYL_TIMES_TALKED, 1, FollowerPartners_Cheryl_MyPokemonIsExcellentHealer
     BufferPlayerName 0
-    Message FollowerPartners_Text_Cheryl_ItsStartlingToSeeTwoWildPokemon
+    Message FollowerPartners_Text_Cheryl_StartlingToSeeTwoPokemon
     GoTo FollowerPartners_Cheryl_IncreaseTimesTalked
     End
 
-FollowerPartners_Cheryl_MyPokemonIsAnExcellentHealer:
-    Message FollowerPartners_Text_Cheryl_MyPokemonIsAnExcellentHealer
+FollowerPartners_Cheryl_MyPokemonIsExcellentHealer:
+    Message FollowerPartners_Text_Cheryl_MyPokemonIsExcellentHealer
     GoTo FollowerPartners_Cheryl_IncreaseTimesTalked
     End
 
-FollowerPartners_Cheryl_PlayerBattlingWithYouMakesMeFeelElated:
+FollowerPartners_Cheryl_BattlingWithYouMakesMeElated:
     BufferPlayerName 0
-    Message FollowerPartners_Text_Cheryl_PlayerBattlingWithYouMakesMeFeelElated
-    WaitABXPadPress
+    Message FollowerPartners_Text_Cheryl_BattlingWithYouMakesMeElated
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 FollowerPartners_Cheryl_IncreaseTimesTalked:
     AddVar VAR_FOLLOWER_CHERYL_TIMES_TALKED, 1
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 FollowerPartners_Buck:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    GoToIfGe VAR_FOLLOWER_BUCK_TIMES_TALKED, 3, FollowerPartners_Buck_ItMightBeCoolBeingAGymLeaderOrEliteFour
-    GoToIfEq VAR_FOLLOWER_BUCK_TIMES_TALKED, 2, FollowerPartners_Buck_MyBigBrothersOneOfTheEliteFour
-    GoToIfEq VAR_FOLLOWER_BUCK_TIMES_TALKED, 1, FollowerPartners_Buck_TheresNoLawThatSaysIHaveToBeTough
+    GoToIfGe VAR_FOLLOWER_BUCK_TIMES_TALKED, 3, FollowerPartners_Buck_ItMightBeCool
+    GoToIfEq VAR_FOLLOWER_BUCK_TIMES_TALKED, 2, FollowerPartners_Buck_MyBigBrothersEliteFour
+    GoToIfEq VAR_FOLLOWER_BUCK_TIMES_TALKED, 1, FollowerPartners_Buck_NoLawIHaveToBeTough
     BufferPlayerName 0
     Message FollowerPartners_Text_Buck_ThisIsWhereIRaisedMyPokemon
     GoTo FollowerPartners_Buck_IncreaseTimesTalked
     End
 
-FollowerPartners_Buck_TheresNoLawThatSaysIHaveToBeTough:
-    Message FollowerPartners_Text_Buck_TheresNoLawThatSaysIHaveToBeTough
+FollowerPartners_Buck_NoLawIHaveToBeTough:
+    Message FollowerPartners_Text_Buck_NoLawIHaveToBeTough
     GoTo FollowerPartners_Buck_IncreaseTimesTalked
     End
 
-FollowerPartners_Buck_MyBigBrothersOneOfTheEliteFour:
-    Message FollowerPartners_Text_Buck_MyBigBrothersOneOfTheEliteFour
+FollowerPartners_Buck_MyBigBrothersEliteFour:
+    Message FollowerPartners_Text_Buck_MyBigBrothersEliteFour
     GoTo FollowerPartners_Buck_IncreaseTimesTalked
     End
 
-FollowerPartners_Buck_ItMightBeCoolBeingAGymLeaderOrEliteFour:
-    Message FollowerPartners_Text_Buck_ItMightBeCoolBeingAGymLeaderOrEliteFour
-    WaitABXPadPress
+FollowerPartners_Buck_ItMightBeCool:
+    Message FollowerPartners_Text_Buck_ItMightBeCool
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 FollowerPartners_Buck_IncreaseTimesTalked:
     AddVar VAR_FOLLOWER_BUCK_TIMES_TALKED, 1
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-FollowerPartners_Mira:
-    PlayFanfare SEQ_SE_CONFIRM
+FollowerPartners_Mira_Unused:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    GoToIfGe VAR_FOLLOWER_MIRA_TIMES_TALKED, 2, FollowerPartners_Mira_PlayerDidYouGetToBeSoGood
-    GoToIfEq VAR_FOLLOWER_MIRA_TIMES_TALKED, 1, FollowerPartners_Mira_ThisCaveItsSoEasyToGetConfusedHere
+    GoToIfGe VAR_FOLLOWER_MIRA_TIMES_TALKED, 2, FollowerPartners_Mira_IWillTryLikeYou_Unused
+    GoToIfEq VAR_FOLLOWER_MIRA_TIMES_TALKED, 1, FollowerPartners_Mira_EasyToGetConfused_Unused
     BufferPlayerName 0
-    Message FollowerPartners_Text_Mira_ILikeHelpfulPokemonMovesLikeGrowlAndMinimize
-    GoTo FollowerPartners_Mira_IncreaseTimesTalked
+    Message FollowerPartners_Text_Mira_ILikeHelpfulMoves
+    GoTo FollowerPartners_Mira_IncreaseTimesTalked_Unused
     End
 
-FollowerPartners_Mira_ThisCaveItsSoEasyToGetConfusedHere:
-    Message FollowerPartners_Text_Mira_ThisCaveItsSoEasyToGetConfusedHere
-    GoTo FollowerPartners_Mira_IncreaseTimesTalked
+FollowerPartners_Mira_EasyToGetConfused_Unused:
+    Message FollowerPartners_Text_Mira_EasyToGetConfused
+    GoTo FollowerPartners_Mira_IncreaseTimesTalked_Unused
     End
 
-FollowerPartners_Mira_PlayerDidYouGetToBeSoGood:
+FollowerPartners_Mira_IWillTryLikeYou_Unused:
     BufferPlayerName 0
-    Message FollowerPartners_Text_Mira_PlayerDidYouGetToBeSoGood
-    WaitABXPadPress
+    Message FollowerPartners_Text_Mira_IWillTryLikeYou
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-FollowerPartners_Mira_IncreaseTimesTalked:
+FollowerPartners_Mira_IncreaseTimesTalked_Unused:
     AddVar VAR_FOLLOWER_MIRA_TIMES_TALKED, 1
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
     End
 
 FollowerPartners_Marley:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfGe VAR_FOLLOWER_MARLEY_TIMES_TALKED, 1, FollowerPartners_Marley_ThePokemonAmongFlowers
@@ -225,14 +225,14 @@ FollowerPartners_Marley:
 
 FollowerPartners_Marley_ThePokemonAmongFlowers:
     Message FollowerPartners_Text_Marley_ThePokemonAmongFlowers
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 FollowerPartners_Marley_IncreaseTimesTalked:
     AddVar VAR_FOLLOWER_MARLEY_TIMES_TALKED, 1
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End

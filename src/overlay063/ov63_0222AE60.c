@@ -448,7 +448,7 @@ UnkStruct_ov63_0222BB38 *ov63_0222B0C0(UnkStruct_ov63_0222AE60 *param0, const Un
     v1.priority = param1->unk_04;
     v1.heapID = heapID;
 
-    if ((param0->unk_10[v2].unk_0C == NNS_G2D_VRAM_TYPE_MAX) || (param0->unk_10[v2].unk_0C == NNS_G2D_VRAM_TYPE_2DMAIN)) {
+    if ((param0->unk_10[v2].unk_0C == NNS_G2D_VRAM_TYPE_2DBOTH) || (param0->unk_10[v2].unk_0C == NNS_G2D_VRAM_TYPE_2DMAIN)) {
         v1.vramType = NNS_G2D_VRAM_TYPE_2DMAIN;
     } else {
         v1.vramType = NNS_G2D_VRAM_TYPE_2DSUB;
@@ -481,7 +481,7 @@ UnkStruct_ov63_0222BB38 *ov63_0222B0C0(UnkStruct_ov63_0222AE60 *param0, const Un
         v1.priority = param0->unk_227C;
         v1.heapID = heapID;
 
-        if ((param0->unk_10[v2].unk_0C == NNS_G2D_VRAM_TYPE_MAX) || (param0->unk_10[v2].unk_0C == NNS_G2D_VRAM_TYPE_2DMAIN)) {
+        if ((param0->unk_10[v2].unk_0C == NNS_G2D_VRAM_TYPE_2DBOTH) || (param0->unk_10[v2].unk_0C == NNS_G2D_VRAM_TYPE_2DMAIN)) {
             v1.vramType = NNS_G2D_VRAM_TYPE_2DMAIN;
         } else {
             v1.vramType = NNS_G2D_VRAM_TYPE_2DSUB;
@@ -686,7 +686,7 @@ static u32 ov63_0222B450(u32 param0)
         }
     }
 
-    GF_ASSERT(0);
+    GF_ASSERT(FALSE);
     return 0;
 }
 
@@ -983,7 +983,7 @@ static UnkStruct_ov63_0222BB38 *ov63_0222BB00(UnkStruct_ov63_0222AE60 *param0)
         }
     }
 
-    GF_ASSERT(0);
+    GF_ASSERT(FALSE);
     return NULL;
 }
 

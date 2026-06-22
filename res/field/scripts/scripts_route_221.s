@@ -2,42 +2,30 @@
 #include "res/text/bank/route_221.h"
 
 
-    ScriptEntry _002E
-    ScriptEntry _0041
-    ScriptEntry _0054
-    ScriptEntry _0012
+    ScriptEntry Route221_WorkerWest
+    ScriptEntry Route221_WorkerEast
+    ScriptEntry Route221_SignboardPalPark
+    ScriptEntry Route221_OnTransition
     ScriptEntryEnd
 
-_0012:
+Route221_OnTransition:
     GetNationalDexEnabled VAR_MAP_LOCAL_0
-    GoToIfEq VAR_MAP_LOCAL_0, 0, _002C
-    SetFlag FLAG_UNK_0x027F
-    SetFlag FLAG_UNK_0x0280
-_002C:
+    GoToIfEq VAR_MAP_LOCAL_0, FALSE, Route221_OnTransitionEnd
+    SetFlag FLAG_HIDE_ROUTE_221_WORKER_WEST
+    SetFlag FLAG_HIDE_ROUTE_221_WORKER_EAST
+Route221_OnTransitionEnd:
     End
 
-_002E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route221_WorkerWest:
+    NPCMessage Route221_Text_PalParkIsntOpenYet
     End
 
-_0041:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route221_WorkerEast:
+    NPCMessage Route221_Text_GettingPalParkReady
     End
 
-_0054:
-    ShowLandmarkSign 2
+Route221_SignboardPalPark:
+    ShowLandmarkSign Route221_Text_SignPalPark
     End
 
     .balign 4, 0

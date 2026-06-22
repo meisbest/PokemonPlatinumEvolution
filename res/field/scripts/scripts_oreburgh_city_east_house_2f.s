@@ -2,60 +2,48 @@
 #include "res/text/bank/oreburgh_city_east_house_2f.h"
 
 
-    ScriptEntry _0012
-    ScriptEntry _0025
-    ScriptEntry _0081
-    ScriptEntry _0083
+    ScriptEntry OreburghCityEastHouse2F_Gentleman
+    ScriptEntry OreburghCityEastHouse2F_Youngster
+    ScriptEntry OreburghCityEastHouse2F_Dummy3
+    ScriptEntry OreburghCityEastHouse2F_ScientistM
     ScriptEntryEnd
 
-_0012:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+OreburghCityEastHouse2F_Gentleman:
+    NPCMessage OreburghCityEastHouse2F_Text_OperatedWithUtmostCare
     End
 
-_0025:
-    PlayFanfare SEQ_SE_CONFIRM
+OreburghCityEastHouse2F_Youngster:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    GoToIfSet FLAG_UNK_0x010A, _006C
-    Message 1
+    GoToIfSet FLAG_RECEIVED_OREBURGH_CITY_EAST_HOUSE_2F_GREAT_BALL, OreburghCityEastHouse2F_IThinkAboutBestPokeBalls
+    Message OreburghCityEastHouse2F_Text_HereHaveThis
     SetVar VAR_0x8004, ITEM_GREAT_BALL
     SetVar VAR_0x8005, 1
-    GoToIfCannotFitItem VAR_0x8004, VAR_0x8005, VAR_RESULT, _0077
+    GoToIfCannotFitItem VAR_0x8004, VAR_0x8005, VAR_RESULT, OreburghCityEastHouse2F_BagIsFull
     Common_GiveItemQuantity
-    SetFlag FLAG_UNK_0x010A
-    GoTo _006C
+    SetFlag FLAG_RECEIVED_OREBURGH_CITY_EAST_HOUSE_2F_GREAT_BALL
+    GoTo OreburghCityEastHouse2F_IThinkAboutBestPokeBalls
     End
 
-_006C:
-    Message 2
-    WaitABXPadPress
+OreburghCityEastHouse2F_IThinkAboutBestPokeBalls:
+    Message OreburghCityEastHouse2F_Text_IThinkAboutBestPokeBalls
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_0077:
+OreburghCityEastHouse2F_BagIsFull:
     Common_MessageBagIsFull
     CloseMessage
     ReleaseAll
     End
 
-_0081:
+OreburghCityEastHouse2F_Dummy3:
     End
 
-_0083:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+OreburghCityEastHouse2F_ScientistM:
+    NPCMessage OreburghCityEastHouse2F_Text_FullyAutomatedSystem
     End
 
     .balign 4, 0

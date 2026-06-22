@@ -31,7 +31,7 @@
 #include "touch_screen_actions.h"
 #include "unk_02012744.h"
 
-#include "res/graphics/pokedex/zukan.naix.h"
+#include "res/graphics/pokedex/zukan.naix"
 #include "res/text/bank/pokedex.h"
 
 typedef struct {
@@ -2221,7 +2221,7 @@ static void ov21_021DB428(UnkStruct_ov21_021D9B24 *param0, UnkStruct_ov21_021D95
         v0 = 4;
         break;
     default:
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         break;
     }
 

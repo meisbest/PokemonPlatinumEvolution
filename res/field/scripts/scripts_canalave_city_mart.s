@@ -10,43 +10,31 @@
     ScriptEntryEnd
 
 CanalaveCityMart_CommonVendor:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Common_VendorGreeting
-    CloseMessageWithoutErasing
-    PokeMartCommon
-    ReleaseAll
+    PokeMartCommonWithGreeting
     End
 
 CanalaveCityMart_SpecialtyVendor:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Common_VendorGreeting
-    CloseMessageWithoutErasing
-    PokeMartSpecialties MART_SPECIALTIES_ID_CANALAVE
-    ReleaseAll
+    PokeMartSpecialtiesWithGreeting MART_SPECIALTIES_ID_CANALAVE
     End
 
 CanalaveCityMart_Lady:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     BufferItemName 0, ITEM_MAX_POTION //Unused?
     Message CanalaveCityMart_Text_ThatsTheRepeatBall
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 CanalaveCityMart_Pokefan:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     BufferItemName 0, ITEM_X_ATTACK //Unused?
     Message CanalaveCityMart_Text_ShouldTakeReviveToIronIsland
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End

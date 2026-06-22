@@ -2,39 +2,21 @@
 #include "res/text/bank/fight_area_middle_house.h"
 
 
-    ScriptEntry _000E
-    ScriptEntry _0021
-    ScriptEntry _0034
+    ScriptEntry FightAreaMiddleHouse_PokefanM
+    ScriptEntry FightAreaMiddleHouse_SchoolKidM
+    ScriptEntry FightAreaMiddleHouse_Youngster
     ScriptEntryEnd
 
-_000E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+FightAreaMiddleHouse_PokefanM:
+    NPCMessage FightAreaMiddleHouse_Text_SeePeakMtCoronet
     End
 
-_0021:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+FightAreaMiddleHouse_SchoolKidM:
+    NPCMessage FightAreaMiddleHouse_Text_FanaticalAboutBattling
     End
 
-_0034:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+FightAreaMiddleHouse_Youngster:
+    NPCMessage FightAreaMiddleHouse_Text_CheckOutGlobalTerminal
     End
 
     .balign 4, 0

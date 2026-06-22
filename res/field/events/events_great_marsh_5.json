@@ -19,11 +19,11 @@
     ],
     "object_events": [
         {
-            "id": "GREAT_MARSH_5_POKEBALL_0",
+            "id": "LOCALID_ITEM_GREAT_BALL",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x043E",
+            "hidden_flag": "FLAG_OBTAINED_GREAT_MARSH_5_GREAT_BALL",
             "script": 7072,
             "initial_dir": 0,
             "data": [],
@@ -34,7 +34,7 @@
             "y": 0
         },
         {
-            "id": "GREAT_MARSH_5_SIGNBOARD_1",
+            "id": "LOCALID_SIGNBOARD",
             "graphics_id": "OBJ_EVENT_GFX_SIGNBOARD",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -49,7 +49,7 @@
             "y": 0
         },
         {
-            "id": "GREAT_MARSH_5_YOUNGSTER_2",
+            "id": "LOCALID_YOUNGSTER",
             "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
             "movement_type": "MOVEMENT_TYPE_LOOK_NORTH_SOUTH_AND_WEST",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -64,12 +64,12 @@
             "y": 0
         },
         {
-            "id": "GREAT_MARSH_5_SIGNBOARD_3",
+            "id": "LOCALID_SIGNBOARD_GREAT_MARSH_6",
             "clone_id": 1,
             "graphics_id": "OBJ_EVENT_GFX_SIGNBOARD",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x01FD",
+            "hidden_flag": "MAP_HEADER_GREAT_MARSH_6",
             "script": 65535,
             "initial_dir": 0,
             "data": [],

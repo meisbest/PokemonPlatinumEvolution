@@ -13,7 +13,7 @@
     ScriptEntryEnd
 
 VeilstoneStore3F_Attendant:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     CheckIsDepartmentStoreRegular VAR_RESULT
@@ -28,7 +28,7 @@ VeilstoneStore3F_Attendant:
 
 VeilstoneStore3F_AttendantPersonalized:
     BufferPlayerName 0
-    Message VeilstoneStore3F_Text_MayIHelpYouPersonalized
+    Message VeilstoneStore3F_Text_PlayerMayIHelpYou
     InitGlobalTextMenu 1, 1, 0, VAR_RESULT
     AddMenuEntryImm MenuEntries_Text_WhatIsRecommended, 0
     AddMenuEntryImm MenuEntries_Text_NothingThanks, 1
@@ -42,94 +42,59 @@ VeilstoneStore3F_AttendantPersonalized:
 
 VeilstoneStore3F_AttendantPleaseEnjoyYourself:
     Message VeilstoneStore3F_Text_PleaseEnjoyYourself
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore3F_AttendantFalseSwipe:
-    Message VeilstoneStore3F_Text_FalseSwipeMakesPokemonEasierToCatch
-    WaitABXPadPress
+    Message VeilstoneStore3F_Text_FalseSwipeMakesCatchingEasier
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore3F_AttendantFireBlast:
-    Message VeilstoneStore3F_Text_ForFireTypesSuggestFireBlast
-    WaitABXPadPress
+    Message VeilstoneStore3F_Text_FireBlastForFireTypes
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore3F_AttendantProtect:
-    Message VeilstoneStore3F_Text_ProtectIsForDodgingAttacks
-    WaitABXPadPress
+    Message VeilstoneStore3F_Text_ProtectForDodgingAttacks
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore3F_AttendantThunder:
     Message VeilstoneStore3F_Text_ThunderIsPreciseInRain
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore3F_Twin:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message VeilstoneStore3F_Text_FriendTradedMeMachoke
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage VeilstoneStore3F_Text_FriendTradedMeMachoke
     End
 
 VeilstoneStore3F_Guitarist:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message VeilstoneStore3F_Text_WroteSecretsInMyMail
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage VeilstoneStore3F_Text_WroteSecretsInMyMail
     End
 
 VeilstoneStore3F_Breeder:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message VeilstoneStore3F_Text_WouldLoveToBuyAllTheMerchandise
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage VeilstoneStore3F_Text_WantToBuyAllMerchandise
     End
 
 VeilstoneStore3F_TopVendor:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Common_VendorGreeting
-    CloseMessageWithoutErasing
-    PokeMartSpecialties MART_SPECIALTIES_ID_VEILSTONE_3F_UP
-    ReleaseAll
+    PokeMartSpecialtiesWithGreeting MART_SPECIALTIES_ID_VEILSTONE_3F_UP
     End
 
 VeilstoneStore3F_BottomVendor:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Common_VendorGreeting
-    CloseMessageWithoutErasing
-    PokeMartSpecialties MART_SPECIALTIES_ID_VEILSTONE_3F_DOWN
-    ReleaseAll
+    PokeMartSpecialtiesWithGreeting MART_SPECIALTIES_ID_VEILSTONE_3F_DOWN
     End
 
 VeilstoneStore3F_Directory:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message VeilstoneStore3F_Text_Directory
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    EventMessage VeilstoneStore3F_Text_Directory
     End

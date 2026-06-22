@@ -16,6 +16,7 @@
 #include "overlay094/struct_ov94_0223BA24.h"
 
 #include "bg_window.h"
+#include "comm_manager.h"
 #include "font.h"
 #include "game_options.h"
 #include "global_trade.h"
@@ -26,6 +27,7 @@
 #include "menu.h"
 #include "message.h"
 #include "narc.h"
+#include "network_icon.h"
 #include "pokemon.h"
 #include "render_window.h"
 #include "screen_fade.h"
@@ -35,8 +37,6 @@
 #include "string_list.h"
 #include "system.h"
 #include "text.h"
-#include "unk_020366A0.h"
-#include "unk_020393C8.h"
 
 #include "res/text/bank/gts.h"
 
@@ -293,7 +293,7 @@ static void ov94_0223E770(GTSApplicationState *param0)
     Sprite_SetAnimateFlag(param0->cursorSprite, 1);
     Sprite_SetAnim(param0->cursorSprite, 0);
     Sprite_SetExplicitPriority(param0->cursorSprite, 1);
-    sub_02039734();
+    NetworkIcon_Init();
 }
 
 static void ov94_0223E7C4(GTSApplicationState *param0)

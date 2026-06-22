@@ -2,48 +2,42 @@
 #include "res/text/bank/route_205_house.h"
 
 
-    ScriptEntry _000A
-    ScriptEntry _006D
+    ScriptEntry Route205House_PokefanF
+    ScriptEntry Route205House_BugCatcher
     ScriptEntryEnd
 
-_000A:
-    PlayFanfare SEQ_SE_CONFIRM
+Route205House_PokefanF:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message 0
+    Message Route205House_Text_RestAWhile
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_YES, _0035
-    GoToIfEq VAR_RESULT, MENU_NO, _0062
+    GoToIfEq VAR_RESULT, MENU_YES, Route205House_Rest
+    GoToIfEq VAR_RESULT, MENU_NO, Route205House_DontPushYourself
     End
 
-_0035:
+Route205House_Rest:
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
-    PlaySound SEQ_ASA
-    WaitSound
+    PlayFanfare SEQ_ASA
+    WaitFanfare
     HealParty
     FadeScreenIn
     WaitFadeScreen
-    Message 1
-    WaitABXPadPress
+    Message Route205House_Text_PokemonLookRefreshed
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_0062:
-    Message 2
-    WaitABXPadPress
+Route205House_DontPushYourself:
+    Message Route205House_Text_DontPushYourself
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_006D:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route205House_BugCatcher:
+    NPCMessage Route205House_Text_RepelsAreUseful
     End

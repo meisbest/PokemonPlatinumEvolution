@@ -5,11 +5,10 @@
 
 #include "constants/graphics.h"
 #include "constants/narc.h"
-#include "generated/string_padding_mode.h"
+#include "constants/string.h"
 
 #include "struct_decls/struct_0202F298_decl.h"
 #include "struct_decls/struct_0202F41C_decl.h"
-#include "struct_defs/sentence.h"
 #include "struct_defs/struct_02030A80.h"
 #include "struct_defs/struct_0208B878.h"
 #include "struct_defs/struct_0208C06C.h"
@@ -32,6 +31,7 @@
 #include "overlay062/struct_ov62_02248CDC.h"
 
 #include "bg_window.h"
+#include "easy_chat_sentence.h"
 #include "enums.h"
 #include "font.h"
 #include "game_records.h"
@@ -40,6 +40,7 @@
 #include "heap.h"
 #include "message.h"
 #include "narc.h"
+#include "network_icon.h"
 #include "palette.h"
 #include "pokemon_icon.h"
 #include "pokemon_sprite.h"
@@ -54,10 +55,8 @@
 #include "text.h"
 #include "touch_screen.h"
 #include "unk_02012744.h"
-#include "unk_02014A84.h"
 #include "unk_0202F1D4.h"
 #include "unk_02030A80.h"
-#include "unk_020393C8.h"
 #include "unk_0208B284.h"
 
 static void ov62_022349E4(String *param0, enum HeapID heapID);
@@ -152,7 +151,7 @@ int ov62_02231710(UnkStruct_0208C06C *param0, int param1)
         return v3[v4];
     }
 
-    GF_ASSERT(0);
+    GF_ASSERT(FALSE);
 
     return v0[0];
 }
@@ -510,13 +509,13 @@ static void ov62_02231C78(UnkStruct_ov62_022323B8 *param0, UnkStruct_0208C06C *p
             String_Free(v8);
 
             {
-                Sentence v15;
+                EasyChatSentence v15;
 
                 v10 = &param0->unk_0C[7];
 
                 v8 = sub_02030C28(v11, &v15, HEAP_ID_102);
                 if (v8 == NULL) {
-                    v8 = sub_02014B34(&v15, HEAP_ID_102);
+                    v8 = EasyChatSentence_ToString(&v15, HEAP_ID_102);
                 }
 
                 Window_FillTilemap(v10, 0x00);
@@ -666,7 +665,7 @@ int ov62_02232234(int param0, int param1)
     int v0 = param0;
 
     if ((param0 > 16) || (param0 < 0)) {
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         v0 = 0;
     }
 
@@ -1374,7 +1373,7 @@ void ov62_022331C8(UnkStruct_ov62_02233310 *param0, s16 param1)
     }
 
     if (v0 < 0) {
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
     }
 
     if (v1 != 0xFF) {
@@ -1704,7 +1703,7 @@ void ov62_0223371C(UnkStruct_0208C06C *param0)
 {
     int v0;
 
-    sub_0202F1F8(param0->saveData, HEAP_ID_119, &v0);
+    BattleRecording_New(param0->saveData, HEAP_ID_119, &v0);
 
     {
         UnkStruct_02030A80 *v1 = (UnkStruct_02030A80 *)(&param0->unk_8B4.unk_00->unk_00);
@@ -1719,7 +1718,7 @@ static void ov62_02233750(SysTask *param0, void *param1)
     UnkStruct_ov62_02233750 *v0 = param1;
 
     ov62_0222F824(v0->unk_00);
-    sub_02039720();
+    NetworkIcon_Update();
     v0->unk_04 = 1;
     SysTask_Done(param0);
 }
@@ -1852,8 +1851,8 @@ void ov62_022338A8(UnkStruct_0208C06C *param0)
             }
             break;
         }
-        if (sub_0202F250() == 1) {
-            sub_0202F22C();
+        if (BattleRecording_Exists() == 1) {
+            BattleRecording_Free();
         }
     }
 }
@@ -2485,7 +2484,7 @@ static void ov62_02234440(UnkStruct_0208C06C *param0)
     } else {
         param0->unk_41D8.unk_00 = 0;
         sub_0208B9E0(param0->unk_41D8.unk_08, 0);
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
     }
 }
 
@@ -2582,7 +2581,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                 v0 = 258;
                 break;
             default:
-                GF_ASSERT(0);
+                GF_ASSERT(FALSE);
                 break;
             }
             break;
@@ -2619,7 +2618,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                 v0 = 268;
                 break;
             default:
-                GF_ASSERT(0);
+                GF_ASSERT(FALSE);
                 break;
             }
             break;
@@ -2646,7 +2645,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                     v0 = 199;
                     break;
                 default:
-                    GF_ASSERT(0);
+                    GF_ASSERT(FALSE);
                     break;
                 }
                 break;
@@ -2665,7 +2664,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                     v0 = 203;
                     break;
                 default:
-                    GF_ASSERT(0);
+                    GF_ASSERT(FALSE);
                     break;
                 }
                 break;
@@ -2693,7 +2692,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                     v0 = 210;
                     break;
                 default:
-                    GF_ASSERT(0);
+                    GF_ASSERT(FALSE);
                     break;
                 }
                 break;
@@ -2712,7 +2711,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                     v0 = 214;
                     break;
                 default:
-                    GF_ASSERT(0);
+                    GF_ASSERT(FALSE);
                     break;
                 }
                 break;
@@ -2728,7 +2727,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                     v0 = 217;
                     break;
                 default:
-                    GF_ASSERT(0);
+                    GF_ASSERT(FALSE);
                     break;
                 }
                 break;
@@ -2753,7 +2752,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                     v0 = 223;
                     break;
                 default:
-                    GF_ASSERT(0);
+                    GF_ASSERT(FALSE);
                     break;
                 }
                 break;
@@ -2784,7 +2783,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                     v0 = 231;
                     break;
                 default:
-                    GF_ASSERT(0);
+                    GF_ASSERT(FALSE);
                     break;
                 }
                 break;
@@ -2803,7 +2802,7 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                     v0 = 235;
                     break;
                 default:
-                    GF_ASSERT(0);
+                    GF_ASSERT(FALSE);
                     break;
                 }
                 break;
@@ -2822,12 +2821,12 @@ int ov62_022345B8(UnkStruct_0208C06C *param0, int param1, int param2, int param3
                     v0 = 239;
                     break;
                 default:
-                    GF_ASSERT(0);
+                    GF_ASSERT(FALSE);
                     break;
                 }
                 break;
             default:
-                GF_ASSERT(0);
+                GF_ASSERT(FALSE);
                 break;
             }
         } break;

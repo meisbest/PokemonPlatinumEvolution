@@ -6,7 +6,7 @@
 #include "constants/graphics.h"
 #include "constants/narc.h"
 #include "constants/savedata/savedata.h"
-#include "generated/string_padding_mode.h"
+#include "constants/string.h"
 #include "generated/text_banks.h"
 
 #include "game_opening/const_ov77_021D742C.h"
@@ -21,6 +21,7 @@
 
 #include "bg_window.h"
 #include "brightness_controller.h"
+#include "comm_manager.h"
 #include "communication_system.h"
 #include "font.h"
 #include "game_options.h"
@@ -33,6 +34,7 @@
 #include "message.h"
 #include "message_util.h"
 #include "mystery_gift.h"
+#include "network_icon.h"
 #include "overlay_manager.h"
 #include "pokemon.h"
 #include "render_window.h"
@@ -56,10 +58,8 @@
 #include "text.h"
 #include "unk_02033200.h"
 #include "unk_020363E8.h"
-#include "unk_020366A0.h"
-#include "unk_020393C8.h"
 
-#include "res/graphics/main_menu/main_menu_graphics.naix.h"
+#include "res/graphics/main_menu/main_menu_graphics.naix"
 #include "res/text/bank/mystery_gift_menu.h"
 #include "res/text/bank/unk_0695.h"
 
@@ -415,7 +415,7 @@ static enum MysteryGiftAppState SetupFriendOrGBADistribution(ApplicationManager 
     if (appData->receptionMethod != RECEIVE_FROM_GBA_CARTRIDGE) {
         ov97_0222D200(appData, 15);
         appData->wirelessCommsTimeout = (60 * 120);
-        sub_02039734();
+        NetworkIcon_Init();
         ToggleWaitDial(appData, TRUE);
         return MG_APP_STATE_SEARCH_FOR_FRIEND_GIFT;
     } else {
@@ -976,9 +976,9 @@ static void ProcessStateTransitionMenuInput(ApplicationManager *appMan, enum Mys
     u32 input = ListMenu_ProcessInput(appData->listMenu);
 
     switch (input) {
-    case LIST_NOTHING_CHOSEN:
+    case MENU_NOTHING_CHOSEN:
         break;
-    case LIST_CANCEL:
+    case MENU_CANCEL:
         Sound_PlayEffect(SEQ_SE_CONFIRM);
 
         if (onCancel) {
@@ -1187,7 +1187,7 @@ static int MysteryGiftApp_Init(ApplicationManager *appMan, int *unused)
     appData->options = SaveData_GetOptions(appData->saveData);
     appData->msgBoxPrinterDelay = TEXT_SPEED_NO_TRANSFER;
 
-    Heap_Create(HEAP_ID_SYSTEM, HEAP_ID_91, 0x300);
+    Heap_Create(HEAP_ID_SYSTEM, HEAP_ID_NETWORK_ICON, HEAP_SIZE_NETWORK_ICON);
 
     return TRUE;
 }
@@ -2171,7 +2171,7 @@ static BOOL MysteryGiftApp_Main(ApplicationManager *appMan, enum MysteryGiftAppS
         if (netID != 0 && CommSys_IsPlayerConnected(netID)) {
             if (CommTiming_IsSyncState(0xAB) == TRUE) {
                 ToggleWaitDial(appData, FALSE);
-                CommMan_SetErrorHandling(TRUE, TRUE);
+                CommManager_SetErrorHandling(TRUE, TRUE);
                 ShowMessageBox(appMan, &appData->messageBox, MysteryGiftMenu_Text_ReceivingGiftDontTurnOff);
                 SetDownloadArrowAnim(appData, 1);
                 ToggleWaitDial(appData, TRUE);
@@ -2213,7 +2213,7 @@ static BOOL MysteryGiftApp_Main(ApplicationManager *appMan, enum MysteryGiftAppS
         break;
     case MG_APP_STATE_SAVE_GIFT_FROM_FRIEND:
         MainMenuUtil_LoadGiftSprite(appData->bgConfig, GetReceivedWonderCard(appMan));
-        CommMan_SetErrorHandling(0, 0);
+        CommManager_SetErrorHandling(0, 0);
         SaveReceivedGift(appMan);
         *state = MG_APP_STATE_CHECK_FRIEND_CONNECTION_STILL_VALID;
         break;
@@ -2458,7 +2458,7 @@ static int MysteryGiftApp_Exit(ApplicationManager *appMan, int *unused)
         EnqueueApplication(FS_OVERLAY_ID(main_menu), &gWonderCardsAppTemplate);
     }
 
-    Heap_Destroy(HEAP_ID_91);
+    Heap_Destroy(HEAP_ID_NETWORK_ICON);
     ApplicationManager_FreeData(appMan);
     Heap_Destroy(HEAP_ID_MYSTERY_GIFT_APP);
 
@@ -2479,19 +2479,19 @@ static void ov97_02230224(MysteryGiftAppData *param0)
     case 29:
         break;
     case 28:
-        sub_02037D48(param0->saveData);
+        CommManager_InitializeSearchParty(param0->saveData);
         param0->unk_630 = 120;
         param0->unk_62C = 30;
         break;
     case 30:
-        v0 = sub_02037DA0();
+        v0 = CommManager_GetAvailableConnections();
 
         if (v0 & 0x1) {
             param0->unk_634 = 1;
         }
 
         if (--param0->unk_630 == 0) {
-            sub_02037D84();
+            CommManager_EndSearchParty();
             param0->unk_62C = 29;
         }
         break;
@@ -2564,7 +2564,7 @@ static void UpdateLocalWirelessDistributionState(MysteryGiftAppData *appData)
             Unk_ov97_0223F1AC = Heap_Alloc(HEAP_ID_MYSTERY_GIFT_APP, ov97_02238D4C());
             ov97_02238A4C(appData->wirelessDistributionBuffer, ov97_02230280, Unk_ov97_0223F1AC);
             sWirelessDistribState = WIRELESS_DISTRIBUTION_STATE_39;
-            sub_02039734();
+            NetworkIcon_Init();
         }
         break;
     case WIRELESS_DISTRIBUTION_STATE_39:

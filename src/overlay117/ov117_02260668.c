@@ -20,6 +20,7 @@
 
 #include "bg_window.h"
 #include "camera.h"
+#include "comm_manager.h"
 #include "communication_system.h"
 #include "easy3d_object.h"
 #include "enums.h"
@@ -30,6 +31,7 @@
 #include "heap.h"
 #include "message.h"
 #include "narc.h"
+#include "network_icon.h"
 #include "overlay_manager.h"
 #include "palette.h"
 #include "particle_system.h"
@@ -50,8 +52,6 @@
 #include "unk_02012744.h"
 #include "unk_0202419C.h"
 #include "unk_020363E8.h"
-#include "unk_020366A0.h"
-#include "unk_020393C8.h"
 #include "vram_transfer.h"
 
 static void ov117_02260DA0(void *param0);
@@ -249,7 +249,7 @@ int ov117_02260668(ApplicationManager *appMan, int *param1)
     ov117_022613EC(v0);
     ov117_022614AC(v0, 0);
     ov117_02261368(v0);
-    sub_02039734();
+    NetworkIcon_Init();
 
     v0->unk_D4 = ov117_022626B0(v0);
     StartScreenFade(FADE_BOTH_SCREENS, FADE_TYPE_UNK_27, FADE_TYPE_UNK_27, COLOR_BLACK, 6, 1, HEAP_ID_110);
@@ -621,7 +621,7 @@ static void ov117_02260F7C(SysTask *param0, void *param1)
     SpriteSystem_DrawSprites(v0->unk_28);
     SpriteSystem_UpdateTransfer();
     G3_RequestSwapBuffers(GX_SORTMODE_AUTO, GX_BUFFERMODE_Z);
-    sub_02038A1C(110, v0->unk_2C);
+    CommManager_Dummy_02038A1C(110, v0->unk_2C);
 }
 
 static void ov117_022610D8(BgConfig *param0)
@@ -931,7 +931,7 @@ void ov117_02261600(UnkStruct_ov117_02261280 *param0, int param1)
         ParticleSystem_CreateEmitterWithCallback(param0->unk_A4, 2, NULL, param0);
         break;
     default:
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         return;
     }
 }
@@ -1334,7 +1334,7 @@ static BOOL ov117_0226217C(UnkStruct_ov117_02261280 *param0, const UnkStruct_ov1
         } else if (param1->unk_00 == param0->unk_2EDC.unk_00) {
             return 1;
         } else {
-            GF_ASSERT(0);
+            GF_ASSERT(FALSE);
             return 0;
         }
         break;
@@ -1478,7 +1478,7 @@ int ov117_0226235C(UnkStruct_ov117_02261280 *param0, int param1)
         }
     }
 
-    GF_ASSERT(0);
+    GF_ASSERT(FALSE);
     return 0;
 }
 

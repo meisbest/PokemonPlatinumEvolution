@@ -2,39 +2,27 @@
 #include "res/text/bank/hearthome_city_east_gate_to_amity_square.h"
 
 
-    ScriptEntry _002D
-    ScriptEntry _0040
-    ScriptEntry _000E
+    ScriptEntry HearthomeCityEastGateToAmitySquare_Receptionist
+    ScriptEntry HearthomeCityEastGateToAmitySquare_BlackBelt
+    ScriptEntry HearthomeCityEastGateToAmitySquare_OnTransition
     ScriptEntryEnd
 
-_000E:
+HearthomeCityEastGateToAmitySquare_OnTransition:
     CheckTVInterviewEligible TV_PROGRAM_SEGMENT_AMITY_SQUARE_WATCH, VAR_MAP_LOCAL_0
-    GoToIfEq VAR_MAP_LOCAL_0, 0, _0027
-    ClearFlag FLAG_UNK_0x0219
+    GoToIfEq VAR_MAP_LOCAL_0, FALSE, HearthomeCityEastGateToAmitySquare_HideReporter
+    ClearFlag FLAG_HIDE_HEARTHOME_CITY_GATE_TO_AMITY_SQUARE_REPORTER
     End
 
-_0027:
-    SetFlag FLAG_UNK_0x0219
+HearthomeCityEastGateToAmitySquare_HideReporter:
+    SetFlag FLAG_HIDE_HEARTHOME_CITY_GATE_TO_AMITY_SQUARE_REPORTER
     End
 
-_002D:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+HearthomeCityEastGateToAmitySquare_Receptionist:
+    NPCMessage HearthomeCityEastGateToAmitySquare_Text_TakeCutePokemonForAStroll
     End
 
-_0040:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+HearthomeCityEastGateToAmitySquare_BlackBelt:
+    NPCMessage HearthomeCityEastGateToAmitySquare_Text_TheyRefusedEntryToMyPokemon
     End
 
     .balign 4, 0

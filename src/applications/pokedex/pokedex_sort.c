@@ -4,8 +4,6 @@
 
 #include "constants/heap.h"
 
-#include "struct_decls/pokedexdata_decl.h"
-
 #include "applications/pokedex/pokedex_sort_data.h"
 #include "applications/pokedex/sorted_pokedex.h"
 #include "applications/pokedex/species_caught_status.h"
@@ -753,7 +751,7 @@ static void DexSortOrder(int sortOrder, u16 *resultingPokedex, int *numResulting
         pokedexFromFile = PokedexFromNARC(heapID, PDSI_SMALLEST, &pokedexLength);
         break;
     default:
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         break;
     }
 
@@ -803,7 +801,7 @@ static void FilterByName(int filterName, u16 *resultingPokedex, int *numResultin
         pokedexFromFile = PokedexFromNARC(heapID, PDSI_YZ, &pokedexLength);
         break;
     default:
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         break;
     }
 
@@ -877,7 +875,7 @@ static void FilterByType(int typeFilter, u16 *resultingPokedex, int *numResultin
         pokedexFromFile = PokedexFromNARC(heapID, PDSI_DARK, &pokedexLength);
         break;
     default:
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         break;
     }
 
@@ -942,7 +940,7 @@ static void FilterByForm(int filterForm, u16 *resultingPokedex, int *numResultin
         pokedexFromFile = PokedexFromNARC(heapID, PDSI_MULTIBODY, &pokedexLength);
         break;
     default:
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         break;
     }
 

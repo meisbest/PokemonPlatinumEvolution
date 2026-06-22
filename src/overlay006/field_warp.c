@@ -5,14 +5,13 @@
 
 #include "generated/journal_location_events.h"
 
-#include "struct_decls/struct_0203A790_decl.h"
-
 #include "field/field_system.h"
 #include "overlay005/map_object_anim_cmd.h"
 #include "overlay005/ov5_021F0EB0.h"
 #include "overlay006/hm_cut_in.h"
 
 #include "field_map_change.h"
+#include "field_move_tasks.h"
 #include "field_overworld_state.h"
 #include "field_task.h"
 #include "heap.h"
@@ -33,7 +32,7 @@ enum FieldWarpStateResult {
 typedef enum FieldWarpStateResult (*FieldWarpStateFunc)(FieldTask *, FieldSystem *, FieldWarp *);
 
 static FieldWarp *FieldWarp_New(enum HeapID heapID, u32 size);
-static void CreateJournalEntryForWarp(FieldSystem *fieldSystem, FieldWarp *fieldWarp);
+static void CreateJournalEntryForTeleport(FieldSystem *fieldSystem, FieldWarp *fieldWarp);
 static enum FieldWarpStateResult StartWarpOutSpinning(FieldTask *task, FieldSystem *fieldSystem, FieldWarp *fieldWarp);
 static enum FieldWarpStateResult StartFadeOut(FieldTask *task, FieldSystem *fieldSystem, FieldWarp *fieldWarp);
 static enum FieldWarpStateResult FinishFadeOut(FieldTask *task, FieldSystem *fieldSystem, FieldWarp *fieldWarp);
@@ -139,7 +138,7 @@ FieldWarp *FieldWarp_InitEscapeRope(FieldSystem *fieldSystem, enum HeapID heapID
 
     fieldWarp->warpType = FIELD_WARP_TYPE_ESCAPE_ROPE;
     fieldWarp->fieldSystem = fieldSystem;
-    fieldWarp->player = Player_MapObject(fieldSystem->playerAvatar);
+    fieldWarp->player = PlayerAvatar_GetMapObject(fieldSystem->playerAvatar);
 
     return fieldWarp;
 }
@@ -234,7 +233,7 @@ static enum FieldWarpStateResult ChangeMap(FieldTask *task, FieldSystem *fieldSy
     if (fieldWarp->warpType == FIELD_WARP_TYPE_TELEPORT) {
         Location location;
 
-        u16 warpId = FieldOverworldState_GetWarpId(fieldState);
+        u16 warpId = FieldOverworldState_GetBlackOutWarpId(fieldState);
         Location_InitFly(warpId, &location);
         FieldTask_ChangeMapByFieldWarp(task, &location, fieldWarp->warpType);
     } else {
@@ -251,7 +250,7 @@ FieldWarp *FieldWarp_InitFadeIn(FieldSystem *fieldSystem, enum HeapID heapID, en
 
     fieldWarp->warpType = warpType;
     fieldWarp->fieldSystem = fieldSystem;
-    fieldWarp->player = Player_MapObject(fieldSystem->playerAvatar);
+    fieldWarp->player = PlayerAvatar_GetMapObject(fieldSystem->playerAvatar);
 
     return fieldWarp;
 }
@@ -266,7 +265,7 @@ BOOL FieldWarp_FadeIn(FieldTask *task)
         stateResult = sFieldWarpFadeInStates[fieldWarp->state](task, fieldSystem, fieldWarp);
 
         if (stateResult == STATE_RESULT_END_TASK) {
-            CreateJournalEntryForWarp(fieldSystem, fieldWarp);
+            CreateJournalEntryForTeleport(fieldSystem, fieldWarp);
             Heap_Free(fieldWarp);
             return TRUE;
         }
@@ -275,13 +274,13 @@ BOOL FieldWarp_FadeIn(FieldTask *task)
     return FALSE;
 }
 
-static void CreateJournalEntryForWarp(FieldSystem *fieldSystem, FieldWarp *fieldWarp)
+static void CreateJournalEntryForTeleport(FieldSystem *fieldSystem, FieldWarp *fieldWarp)
 {
     if (fieldWarp->warpType != FIELD_WARP_TYPE_TELEPORT) {
         return;
     }
 
-    void *journalEntryLocationEvent = JournalEntry_CreateEventUsedMove(LOCATION_EVENT_WARPED_TO_LOCATION - LOCATION_EVENT_USED_CUT, fieldSystem->location->mapId, HEAP_ID_FIELD1);
+    void *journalEntryLocationEvent = JournalEntry_CreateEventUsedMove(FIELD_MOVE_TELEPORT, fieldSystem->location->mapId, HEAP_ID_FIELD1);
     JournalEntry_SaveData(fieldSystem->journalEntry, journalEntryLocationEvent, JOURNAL_LOCATION);
 }
 
@@ -360,7 +359,7 @@ FieldWarp *FieldWarp_InitDig(FieldSystem *fieldSystem, Pokemon *mon, enum HeapID
 
     fieldWarp->warpType = FIELD_WARP_TYPE_DIG;
     fieldWarp->fieldSystem = fieldSystem;
-    fieldWarp->player = Player_MapObject(fieldSystem->playerAvatar);
+    fieldWarp->player = PlayerAvatar_GetMapObject(fieldSystem->playerAvatar);
     fieldWarp->mon = mon;
 
     return fieldWarp;
@@ -385,9 +384,9 @@ BOOL FieldWarp_DigFadeOut(FieldTask *task)
 
 static enum FieldWarpStateResult StartFieldMoveCutIn(FieldTask *task, FieldSystem *fieldSystem, FieldWarp *fieldWarp)
 {
-    int gender = PlayerAvatar_Gender(fieldSystem->playerAvatar);
+    int gender = PlayerAvatar_GetGender(fieldSystem->playerAvatar);
 
-    fieldWarp->cutInTask = SysTask_HMCutIn_New(fieldSystem, 0, fieldWarp->mon, gender);
+    fieldWarp->cutInTask = HMCutIn_StartTask(fieldSystem, 0, fieldWarp->mon, gender);
     fieldWarp->state++;
 
     return STATE_RESULT_NEXT_STATE;
@@ -395,11 +394,11 @@ static enum FieldWarpStateResult StartFieldMoveCutIn(FieldTask *task, FieldSyste
 
 static enum FieldWarpStateResult FinishFieldMoveCutIn(FieldTask *task, FieldSystem *fieldSystem, FieldWarp *fieldWarp)
 {
-    if (CheckHMCutInFinished(fieldWarp->cutInTask) == FALSE) {
+    if (HMCutIn_IsFinished(fieldWarp->cutInTask) == FALSE) {
         return STATE_RESULT_NEXT_STATE;
     }
 
-    SysTask_HMCutIn_SetTaskDone(fieldWarp->cutInTask);
+    HMCutIn_EndTask(fieldWarp->cutInTask);
     fieldWarp->state++;
     return STATE_RESULT_REPEAT_STATE;
 }
@@ -410,7 +409,7 @@ FieldWarp *FieldWarp_InitTeleport(FieldSystem *fieldSystem, Pokemon *mon, enum H
 
     fieldWarp->warpType = FIELD_WARP_TYPE_TELEPORT;
     fieldWarp->fieldSystem = fieldSystem;
-    fieldWarp->player = Player_MapObject(fieldSystem->playerAvatar);
+    fieldWarp->player = PlayerAvatar_GetMapObject(fieldSystem->playerAvatar);
     fieldWarp->mon = mon;
 
     return fieldWarp;

@@ -9,48 +9,24 @@
     ScriptEntryEnd
 
 JubilifeCityCondominiums1F_ExpertF:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message JubilifeCityCondominiums1F_Text_IsntMyPoketchQuiteFetching
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage JubilifeCityCondominiums1F_Text_IsntMyPoketchQuiteFetching
     End
 
 JubilifeCityCondominiums1F_Pikachu:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    WaitFanfare SEQ_SE_CONFIRM
-    PlayCry SPECIES_PIKACHU
-    Message JubilifeCityCondominiums1F_Text_PiikaPi
-    WaitCry
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    PokemonCryAndMessage SPECIES_PIKACHU, JubilifeCityCondominiums1F_Text_PikachuCry
     End
 
 JubilifeCityCondominiums1F_Pachirisu:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    WaitFanfare SEQ_SE_CONFIRM
-    PlayCry SPECIES_PACHIRISU
-    Message JubilifeCityCondominiums1F_Text_Pachipachii
-    WaitCry
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    PokemonCryAndMessage SPECIES_PACHIRISU, JubilifeCityCondominiums1F_Text_PachirisuCry
     End
 
 JubilifeCityCondominiums1F_Beauty:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfSet FLAG_OBTAINED_QUICK_CLAW, JubilifeCityCondominiums1F_ObtainedQuickClaw
     BufferItemName 0, ITEM_QUICK_CLAW
-    Message JubilifeCityCondominiums1F_Text_YourPokemonIsQuiteAdorableTryMakingItHoldThis
+    Message JubilifeCityCondominiums1F_Text_MakePokemonHoldThis
     SetVar VAR_0x8004, ITEM_QUICK_CLAW
     SetVar VAR_0x8005, 1
     GoToIfCannotFitItem VAR_0x8004, VAR_0x8005, VAR_RESULT, JubilifeCityCondominiums1F_BagIsFull
@@ -67,8 +43,8 @@ JubilifeCityCondominiums1F_BagIsFull:
     End
 
 JubilifeCityCondominiums1F_ObtainedQuickClaw:
-    Message JubilifeCityCondominiums1F_Text_APokemonHoldingThatQuickClawCanSometimesAttackFirst
-    WaitABXPadPress
+    Message JubilifeCityCondominiums1F_Text_SometimesAttackFirst
+    WaitButton
     CloseMessage
     ReleaseAll
     End

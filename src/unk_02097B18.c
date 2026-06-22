@@ -3,7 +3,7 @@
 #include <nitro.h>
 #include <string.h>
 
-#include "struct_decls/struct_0202440C_decl.h"
+#include "struct_decls/tv_broadcast.h"
 #include "struct_defs/seal_case.h"
 #include "struct_defs/struct_02097F18.h"
 
@@ -40,7 +40,7 @@
 #include "system.h"
 #include "touch_pad.h"
 #include "touch_screen_actions.h"
-#include "tv_episode_segment.h"
+#include "tv_segment.h"
 #include "unk_0202C9F4.h"
 #include "vram_transfer.h"
 
@@ -58,7 +58,7 @@ typedef struct {
     UnkStruct_ov76_0223DE00 *unk_00;
     UnkStruct_02097F38_sub1 *unk_04;
     UnkStruct_02097F18 *unk_08;
-    PartyMenu *unk_0C;
+    PartyMenu *partyMenu;
     SaveData *saveData;
     int unk_14;
 } UnkStruct_02097F38;
@@ -272,7 +272,7 @@ Pokemon *sub_02097F00(UnkStruct_02097F18 *param0, int param1)
     int v0 = param1;
 
     if (param0->unk_00 < v0) {
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         v0 = 0;
     }
 
@@ -314,10 +314,8 @@ static BOOL sub_02097F38(FieldTask *param0)
 
         {
             int v3;
-            int v4;
-
             v1->unk_1C = SaveData_GetParty(v0->saveData);
-            v4 = Party_GetCurrentCount(v1->unk_1C);
+            int v4 = Party_GetCurrentCount(v1->unk_1C);
             v1->unk_00 = v4;
 
             for (v3 = 0; v3 < v4; v3++) {
@@ -341,7 +339,7 @@ static BOOL sub_02097F38(FieldTask *param0)
 
         switch (v5) {
         default:
-            GF_ASSERT(0);
+            GF_ASSERT(FALSE);
         case 0:
             v0->unk_14 = 5;
             break;
@@ -352,7 +350,7 @@ static BOOL sub_02097F38(FieldTask *param0)
         }
     } break;
     case 3: {
-        PartyMenu *partyMenu = v0->unk_0C;
+        PartyMenu *partyMenu = v0->partyMenu;
 
         partyMenu->party = v1->unk_1C;
         partyMenu->bag = SaveData_GetBag(v0->saveData);
@@ -366,29 +364,22 @@ static BOOL sub_02097F38(FieldTask *param0)
         v0->unk_14 = 4;
     } break;
     case 4: {
-        PartyMenu *partyMenu = v0->unk_0C;
-        Pokemon *v8;
-        BallCapsule *v9;
-        BallSeal *v10;
-        TVBroadcast *broadcast;
-        int v12;
-        int v13;
-
-        v13 = sub_02097F18(v0->unk_08) + 1;
+        PartyMenu *partyMenu = v0->partyMenu;
+        int v13 = sub_02097F18(v0->unk_08) + 1;
 
         if (partyMenu->selectedMonSlot != 7) {
-            v8 = sub_02097F00(v0->unk_08, partyMenu->selectedMonSlot);
+            Pokemon *v8 = sub_02097F00(v0->unk_08, partyMenu->selectedMonSlot);
 
             Pokemon_SetValue(v8, MON_DATA_BALL_CAPSULE_ID, (u8 *)&v13);
             Pokemon_SetValue(v8, MON_DATA_BALL_CAPSULE, SealCase_GetCapsuleById(v1->unk_20, v13 - 1));
 
-            v9 = SealCase_GetCapsuleById(v1->unk_20, v13 - 1);
-            v10 = BallCapsule_GetBallSeals(v9, 0);
-            v12 = BallSeal_GetSealType(v10);
+            BallCapsule *v9 = SealCase_GetCapsuleById(v1->unk_20, v13 - 1);
+            BallSeal *v10 = BallCapsule_GetBallSeals(v9, 0);
+            int v12 = BallSeal_GetSealType(v10);
             v12 = sub_02098164(v12);
-            broadcast = SaveData_GetTVBroadcast(fieldSystem->saveData);
+            TVBroadcast *broadcast = SaveData_GetTVBroadcast(fieldSystem->saveData);
 
-            FieldSystem_SaveTVEpisodeSegment_SealClubShow(broadcast, v8, v12);
+            FieldSystem_SaveTVSegment_SealClubShow(broadcast, v8, v12);
         }
     }
         v0->unk_14 = 1;
@@ -398,7 +389,7 @@ static BOOL sub_02097F38(FieldTask *param0)
         v0->unk_14 = 6;
         break;
     case 6:
-        Heap_Free(v0->unk_0C);
+        Heap_Free(v0->partyMenu);
         Heap_Free(v0->unk_08);
         Heap_Free(v0);
         return 1;
@@ -417,8 +408,8 @@ void sub_020980DC(FieldTask *param0, SaveData *saveData)
     memset(v0->unk_08, 0, sizeof(UnkStruct_02097F18));
     v0->unk_08->options = SaveData_GetOptions(saveData);
     v0->unk_08->saveData = saveData;
-    v0->unk_0C = Heap_Alloc(HEAP_ID_FIELD2, sizeof(PartyMenu));
-    memset(v0->unk_0C, 0, sizeof(PartyMenu));
+    v0->partyMenu = Heap_Alloc(HEAP_ID_FIELD2, sizeof(PartyMenu));
+    memset(v0->partyMenu, 0, sizeof(PartyMenu));
 
     FieldTask_InitCall(param0, sub_02097F38, v0);
 }

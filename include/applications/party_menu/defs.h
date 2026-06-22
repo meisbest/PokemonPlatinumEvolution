@@ -4,9 +4,8 @@
 #include "constants/graphics.h"
 #include "constants/pokemon.h"
 
-#include "struct_defs/funcptr_0207F248_sub1.h"
-#include "struct_defs/mail.h"
-#include "struct_defs/struct_0202440C.h"
+#include "struct_defs/function_ptr_pair.h"
+#include "struct_defs/tv.h"
 
 #include "field/field_system_decl.h"
 #include "functypes/funcptr_0207F248.h"
@@ -19,6 +18,7 @@
 #include "g3d_pipeline.h"
 #include "game_options.h"
 #include "grid_menu_cursor_position.h"
+#include "mail.h"
 #include "menu.h"
 #include "message.h"
 #include "particle_system.h"
@@ -75,9 +75,9 @@ enum PartyMenuExitCodes {
     PARTY_MENU_EXIT_CODE_SUMMARY,
     PARTY_MENU_EXIT_CODE_2,
     PARTY_MENU_EXIT_CODE_GIVE_ITEM,
-    PARTY_MENU_EXIT_CODE_LEARNED_MOVE,
-    PARTY_MENU_EXIT_CODE_FORGET_MOVE,
-    PARTY_MENU_EXIT_CODE_MAIL,
+    PARTY_MENU_EXIT_CODE_OVERWRITE_MOVE_TM_HM,
+    PARTY_MENU_EXIT_CODE_OVERWRITE_MOVE_LEVEL_UP,
+    PARTY_MENU_EXIT_CODE_WRITE_MAIL,
     PARTY_MENU_EXIT_CODE_READ_MAIL,
     PARTY_MENU_EXIT_CODE_EVOLVE_BY_ITEM,
     PARTY_MENU_EXIT_CODE_EVOLVE_BY_LEVEL,
@@ -225,7 +225,7 @@ typedef struct PartyMenu {
     u8 minSelectionSlots : 4;
     u8 maxSelectionSlots : 4;
     u8 reqLevel;
-    int unk_34;
+    int levelUpMoveIndex;
     u16 evoTargetSpecies;
     u8 padding_3A[2];
     int evoType;
@@ -280,6 +280,22 @@ typedef struct PartyOrderSwitchData {
     u8 unk_306;
 } PartyOrderSwitchData;
 
+enum MonHPTransferIndex {
+    HP_TRANSFER_HP_BUFFER,
+    HP_TRANSFER_STATE,
+    HP_TRANSFER_COUNTER,
+    HP_TRANSFER_JOURNAL_MOVE_IDX,
+    HP_TRANSFER_INDEX_MAX
+};
+
+enum HpTransferState {
+    HP_TRANSFER_STATE_HANDLE_INPUT,
+    HP_TRANSFER_STATE_SELECT_TARGET,
+    HP_TRANSFER_STATE_DONATE_HP,
+    HP_TRANSFER_STATE_RECEIVE_HP,
+    HP_TRANSFER_STATE_CONFIRM_DONE
+};
+
 typedef struct PartyMenuApplication {
     BgConfig *bgConfig;
     Window windows[NUM_PARTY_MENU_WINS];
@@ -308,15 +324,21 @@ typedef struct PartyMenuApplication {
     FunctionPtrPair unk_B04;
     u8 unk_B0C;
     u8 unk_B0D;
-    u8 unk_B0E;
-    u8 switchTargetSlot : 6;
-    u8 inSwitchMode : 1;
+    union {
+        u8 stateAfterMessage;
+        u8 unk_B0E; // turns into a local state in sub_02085804()
+    };
+    u8 selectTargetSlot : 6;
+    u8 inTargetSlotMode : 1;
     u8 hideCancel : 1;
     u8 textPrinterID;
     u8 currPartySlot;
     u8 prevPartySlot;
     u8 unk_B13;
-    u16 monStats[6];
+    union {
+        u16 monStats[STAT_MAX];
+        u16 monHpTransfer[HP_TRANSFER_INDEX_MAX];
+    };
     HeightWeightData *heightWeight;
     PartyMenuFormChange *formChanger;
     G3DPipelineBuffers *formChange3DPipeline;

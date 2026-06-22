@@ -7,38 +7,38 @@
     ScriptEntryEnd
 
 TwinleafTownSouthwestHouse_ExpertF:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    GoToIfSet FLAG_HAS_POKEDEX, TwinleafTownSouthwestHouse_ProfRowanGaveYouAPokedexDidHe
-    Message TwinleafTownSouthwestHouse_Text_ThePokemonProfessorReturned
-    WaitABXPadPress
+    GoToIfSet FLAG_HAS_POKEDEX, TwinleafTownSouthwestHouse_ProfRowanGavePokedex
+    Message TwinleafTownSouthwestHouse_Text_PokemonProfessorReturned
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-TwinleafTownSouthwestHouse_ProfRowanGaveYouAPokedexDidHe:
-    Message TwinleafTownSouthwestHouse_Text_ProfRowanGaveYouAPokedexDidHe
-    WaitABXPadPress
+TwinleafTownSouthwestHouse_ProfRowanGavePokedex:
+    Message TwinleafTownSouthwestHouse_Text_ProfRowanGavePokedex
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 TwinleafTownSouthwestHouse_Twin:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     BufferPlayerName 0
-    GoToIfSet FLAG_HAS_POKEDEX, TwinleafTownSouthwestHouse_DoYouThinkICanBeFriendsWithPokemon
+    GoToIfSet FLAG_HAS_POKEDEX, TwinleafTownSouthwestHouse_CanIBeFriendsWithPokemon
     Message TwinleafTownSouthwestHouse_Text_IWantACutePokemon
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-TwinleafTownSouthwestHouse_DoYouThinkICanBeFriendsWithPokemon:
-    Message TwinleafTownSouthwestHouse_Text_DoYouThinkICanBeFriendsWithPokemon
-    WaitABXPadPress
+TwinleafTownSouthwestHouse_CanIBeFriendsWithPokemon:
+    Message TwinleafTownSouthwestHouse_Text_CanIBeFriendsWithPokemon
+    WaitButton
     CloseMessage
     ReleaseAll
     End

@@ -1,121 +1,117 @@
 #include "macros/scrcmd.inc"
 #include "res/text/bank/distortion_world_1f.h"
 
+// NOTE: These constants must mirror those in ov9_02249960.c
+#define LOCALID_CYNTHIA 128
 
-    ScriptEntry _0016
-    ScriptEntry _001A
-    ScriptEntry _0070
-    ScriptEntry _011D
-    ScriptEntry _012A
+    ScriptEntry DistortionWorld1F_OnTransition
+    ScriptEntry DistortionWorld1F_Portal
+    ScriptEntry DistortionWorld1F_OnFrame_FirstEntry
+    ScriptEntry DistortionWorld1F_CoordEvent_CynthiaElevator
+    ScriptEntry DistortionWorld1F_CynthiaElevator
     ScriptEntryEnd
 
-_0016:
+DistortionWorld1F_OnTransition:
     InitPersistedMapFeaturesForDistortionWorld
     End
 
-_001A:
-    PlayFanfare SEQ_SE_CONFIRM
+DistortionWorld1F_Portal:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    Message 7
+    Message DistortionWorld1F_Text_ReturnToSpearPillar
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_YES, _003A
+    GoToIfEq VAR_RESULT, MENU_YES, DistortionWorld1F_ReturnToSpearPillar
     CloseMessage
     ReleaseAll
     End
 
-_003A:
+DistortionWorld1F_ReturnToSpearPillar:
     BufferPlayerName 0
-    Message 8
+    Message DistortionWorld1F_Text_PlayerHeadedForSpearPillar
     CloseMessage
-    PlayFanfare SEQ_SE_PL_SYUWA
+    PlaySE SEQ_SE_PL_SYUWA
     SetPartyGiratinaForm GIRATINA_FORM_ALTERED
     FadeScreenOut
     WaitFadeScreen
-    Warp MAP_HEADER_SPEAR_PILLAR_DISTORTED, 0, 31, 33, 1
+    Warp MAP_HEADER_SPEAR_PILLAR_DISTORTED, 31, 33, DIR_SOUTH
     FadeScreenIn
     WaitFadeScreen
     End
 
-_0070:
+DistortionWorld1F_OnFrame_FirstEntry:
     LockAll
-    ApplyMovement LOCALID_PLAYER, _0140
+    ApplyMovement LOCALID_PLAYER, DistortionWorld1F_Movement_PlayerWalkWest
     WaitMovement
-    ApplyMovement LOCALID_PLAYER, _014C
+    ApplyMovement LOCALID_PLAYER, DistortionWorld1F_Movement_PlayerWalkOnSpotEast
     WaitMovement
-    ScrCmd_311 128
-    ApplyMovement 128, _017C
+    AddDistortionWorldMapObject LOCALID_CYNTHIA
+    ApplyMovement LOCALID_CYNTHIA, DistortionWorld1F_Movement_CynthiaLookAround
     WaitMovement
-    Message 0
+    Message DistortionWorld1F_Text_ThisPlace
     CloseMessageWithoutErasing
-    ApplyMovement 128, _0198
+    ApplyMovement LOCALID_CYNTHIA, DistortionWorld1F_Movement_CynthiaWalkOnSpotSouth
     WaitMovement
-    Message 1
+    Message DistortionWorld1F_Text_SpaceCalledDistortionWorld
     CloseMessageWithoutErasing
-    ApplyMovement 128, _01A4
+    ApplyMovement LOCALID_CYNTHIA, DistortionWorld1F_Movement_CynthiaWalkOnSpotWest
     WaitMovement
-    Message 2
+    Message DistortionWorld1F_Text_LetsFindGiratina
     CloseMessage
-    ApplyMovement LOCALID_PLAYER, _0154
-    ApplyMovement 128, _01AC
+    ApplyMovement LOCALID_PLAYER, DistortionWorld1F_Movement_PlayerWatchCynthiaWalkSouth
+    ApplyMovement LOCALID_CYNTHIA, DistortionWorld1F_Movement_CynthiaWalkSouth
     WaitMovement
     StartDistortionWorldGiratinaShadowEvent 0
-    ApplyMovement LOCALID_PLAYER, _0160
-    ApplyMovement 128, _01B4
+    ApplyMovement LOCALID_PLAYER, DistortionWorld1F_Movement_PlayerNoticeGiratina
+    ApplyMovement LOCALID_CYNTHIA, DistortionWorld1F_Movement_CynthiaNoticeGiratina
     WaitMovement
     WaitTime 30, VAR_RESULT
     FinishDistortionWorldGiratinaShadowEvent
-    Message 3
-    WaitABXPadPress
+    Message DistortionWorld1F_Text_ThatWasGiratina
+    WaitButton
     CloseMessage
-    ApplyMovement LOCALID_PLAYER, _0174
-    ApplyMovement 128, _01C4
+    ApplyMovement LOCALID_PLAYER, DistortionWorld1F_Movement_PlayerWalkOnSpotSouth
+    ApplyMovement LOCALID_CYNTHIA, DistortionWorld1F_Movement_CynthiaWalkOnSpotNorth
     WaitMovement
-    Message 4
+    Message DistortionWorld1F_Text_WeHaveToHurry
     CloseMessage
-    ApplyMovement 128, _01CC
+    ApplyMovement LOCALID_CYNTHIA, DistortionWorld1F_Movement_CynthiaLeave
     WaitMovement
-    ScrCmd_312 128
+    DeleteDistortionWorldMapObject LOCALID_CYNTHIA
     SetVar VAR_DISTORTION_WORLD_PROGRESS, 1
     ReleaseAll
     End
 
-_011D:
+DistortionWorld1F_CoordEvent_CynthiaElevator:
     LockAll
-    Message 5
+    Message DistortionWorld1F_Text_SlabMovesIfYouStep
     WaitABPadPress
     CloseMessage
     ReleaseAll
     End
 
-_012A:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 6
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+DistortionWorld1F_CynthiaElevator:
+    NPCMessage DistortionWorld1F_Text_WhyIsGroundColoredDifferently
     End
 
     .balign 4, 0
-_0140:
+DistortionWorld1F_Movement_PlayerWalkWest:
     WalkNormalWest
     Delay8
     EndMovement
 
     .balign 4, 0
-_014C:
+DistortionWorld1F_Movement_PlayerWalkOnSpotEast:
     WalkOnSpotNormalEast
     EndMovement
 
     .balign 4, 0
-_0154:
+DistortionWorld1F_Movement_PlayerWatchCynthiaWalkSouth:
     Delay8
     WalkOnSpotNormalSouth
     EndMovement
 
     .balign 4, 0
-_0160:
+DistortionWorld1F_Movement_PlayerNoticeGiratina:
     Delay4
     FaceWest
     EmoteExclamationMark
@@ -123,12 +119,12 @@ _0160:
     EndMovement
 
     .balign 4, 0
-_0174:
+DistortionWorld1F_Movement_PlayerWalkOnSpotSouth:
     WalkOnSpotNormalSouth
     EndMovement
 
     .balign 4, 0
-_017C:
+DistortionWorld1F_Movement_CynthiaLookAround:
     WalkOnSpotNormalSouth
     Delay16 2
     WalkOnSpotNormalEast
@@ -138,35 +134,35 @@ _017C:
     EndMovement
 
     .balign 4, 0
-_0198:
+DistortionWorld1F_Movement_CynthiaWalkOnSpotSouth:
     WalkOnSpotNormalSouth
     Delay8
     EndMovement
 
     .balign 4, 0
-_01A4:
+DistortionWorld1F_Movement_CynthiaWalkOnSpotWest:
     WalkOnSpotNormalWest
     EndMovement
 
     .balign 4, 0
-_01AC:
+DistortionWorld1F_Movement_CynthiaWalkSouth:
     WalkNormalSouth 2
     EndMovement
 
     .balign 4, 0
-_01B4:
+DistortionWorld1F_Movement_CynthiaNoticeGiratina:
     FaceWest
     EmoteExclamationMark
     FaceEast
     EndMovement
 
     .balign 4, 0
-_01C4:
+DistortionWorld1F_Movement_CynthiaWalkOnSpotNorth:
     WalkOnSpotNormalNorth
     EndMovement
 
     .balign 4, 0
-_01CC:
+DistortionWorld1F_Movement_CynthiaLeave:
     WalkNormalWest 3
     WalkNormalSouth 3
     WalkNormalWest 2

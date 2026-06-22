@@ -1,18 +1,20 @@
 #include "overlay090/ov90_021D0D80.h"
 
+#include "nitro/misc.h"
 #include <nitro.h>
 #include <string.h>
 
 #include "struct_decls/struct_0202D750_decl.h"
 #include "struct_decls/struct_0202D764_decl.h"
 #include "struct_defs/battle_frontier.h"
-#include "struct_defs/sentence.h"
 #include "struct_defs/struct_02049A68.h"
 
 #include "overlay090/struct_ov90_021D0D80.h"
 #include "overlay090/struct_ov90_021D1750.h"
 
+#include "battle_frontier_save.h"
 #include "bg_window.h"
+#include "easy_chat_sentence.h"
 #include "font.h"
 #include "game_options.h"
 #include "gx_layers.h"
@@ -31,11 +33,11 @@
 #include "string_template.h"
 #include "system.h"
 #include "text.h"
-#include "unk_02014A84.h"
 #include "unk_0202D05C.h"
-#include "unk_0203061C.h"
 #include "unk_0208C098.h"
 #include "vram_transfer.h"
+
+#include "res/graphics/sprite_templates/tower_records.h"
 
 typedef struct {
     MessageLoader *unk_00;
@@ -57,7 +59,7 @@ typedef struct {
     u8 unk_05;
     u8 unk_06;
     u8 unk_07;
-    Sentence unk_08;
+    EasyChatSentence unk_08;
 } UnkStruct_ov90_021D17F8;
 
 typedef struct {
@@ -73,7 +75,7 @@ typedef struct {
     BgConfig *unk_10;
     UnkStruct_ov90_021D0D80 *unk_14;
     Options *options;
-    BattleFrontier *frontier;
+    BattleFrontierSave *frontier;
     UnkStruct_0202D750 *unk_20;
     UnkStruct_0202D764 *unk_24;
     UnkStruct_ov90_021D0ECC_sub1 unk_28;
@@ -81,7 +83,7 @@ typedef struct {
     UnkStruct_ov90_021D17F8 unk_BC[30];
     SpriteSystem *unk_29C;
     SpriteManager *unk_2A0;
-    Sprite *unk_2A4[4];
+    Sprite *sprites[4];
 } UnkStruct_ov90_021D0ECC;
 
 static int ov90_021D0ECC(UnkStruct_ov90_021D0ECC *param0);
@@ -109,8 +111,8 @@ static void ov90_021D1ABC(UnkStruct_ov90_021D0ECC *param0);
 static void ov90_021D1B6C(UnkStruct_ov90_021D0ECC *param0);
 static void ov90_021D1B90(UnkStruct_ov90_021D0ECC *param0);
 static void ov90_021D1BA4(void);
-static void ov90_021D1BAC(UnkStruct_ov90_021D0ECC *param0);
-static void ov90_021D1C28(UnkStruct_ov90_021D0ECC *param0);
+static void LoadSprites(UnkStruct_ov90_021D0ECC *param0);
+static void DeleteSprites(UnkStruct_ov90_021D0ECC *param0);
 static void ov90_021D1C44(UnkStruct_ov90_021D0ECC *param0, BOOL param1);
 static void ov90_021D1C90(UnkStruct_ov90_021D0ECC *param0, u8 param1, u8 param2, u8 param3);
 
@@ -237,7 +239,7 @@ static int ov90_021D0ECC(UnkStruct_ov90_021D0ECC *param0)
         break;
     case 3:
         ov90_021D1ABC(param0);
-        ov90_021D1BAC(param0);
+        LoadSprites(param0);
         ov90_021D1984(param0);
         break;
     case 4:
@@ -255,7 +257,7 @@ static int ov90_021D0F98(UnkStruct_ov90_021D0ECC *param0)
     switch (param0->unk_04) {
     case 0:
         if (param0->unk_08) {
-            ov90_021D1C28(param0);
+            DeleteSprites(param0);
             ov90_021D1B6C(param0);
             ov90_021D17DC(param0);
         }
@@ -420,7 +422,7 @@ static int ov90_021D1080(UnkStruct_ov90_021D0ECC *param0)
             ov90_021D1A48(param0);
             break;
         default:
-            GF_ASSERT(0);
+            GF_ASSERT(FALSE);
             break;
         }
     } else {
@@ -639,8 +641,8 @@ static void ov90_021D14C8(UnkStruct_ov90_021D0ECC *param0, Window *param1, u8 pa
     u16 v0, v1, v2;
     int v3;
 
-    v1 = sub_02030698(param0->frontier, param3, 0xff);
-    v2 = sub_02030698(param0->frontier, param3 + 1, 0xff);
+    v1 = BattleFrontierSave_GetStat(param0->frontier, param3, 0xff);
+    v2 = BattleFrontierSave_GetStat(param0->frontier, param3 + 1, 0xff);
     v0 = sub_0202D414(param0->unk_20, 8 + param2, 0);
 
     Text_AddPrinterWithParamsAndColor(param1, FONT_SYSTEM, param0->unk_28.unk_24[v0], 4, param4, TEXT_SPEED_NO_TRANSFER, TEXT_COLOR(3, 4, 0), NULL);
@@ -821,7 +823,7 @@ static void ov90_021D1A48(UnkStruct_ov90_021D0ECC *param0)
     String *v0;
     UnkStruct_ov90_021D17F8 *v1 = &(param0->unk_BC[param0->unk_0B * 3 + param0->unk_0C]);
 
-    v0 = sub_02014B34(&v1->unk_08, param0->heapID);
+    v0 = EasyChatSentence_ToString(&v1->unk_08, param0->heapID);
 
     Window_FillTilemap(&param0->unk_6C[2], (0 << 4) | 0);
     Text_AddPrinterWithParamsAndColor(&param0->unk_6C[2], FONT_SYSTEM, v0, 0, 4, TEXT_SPEED_INSTANT, TEXT_COLOR(1, 2, 0), NULL);
@@ -905,34 +907,78 @@ static void ov90_021D1BA4(void)
     SpriteSystem_TransferOam();
 }
 
-static void ov90_021D1BAC(UnkStruct_ov90_021D0ECC *param0)
-{
-    int v0;
-    static const SpriteTemplateFromResourceHeader v1[] = {
-        { 0, 54, 68, 0, 0, 1, 0, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 0, 0, 0 },
-        { 0, 204, 114, 0, 1, 2, 0, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 0, 0, 0 },
-        { 0, 128, 52, 0, 2, 3, 0, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 0, 0, 0 },
-        { 0, 128, 132, 0, 3, 4, 0, NNS_G2D_VRAM_TYPE_2DMAIN, 0, 0, 0, 0 },
-    };
+enum {
+    SPRITE_TEMPLATE_CURSOR = 0,
+    SPRITE_TEMPLATE_UNK,
+    SPRITE_TEMPLATE_SCROLL_UP,
+    SPRITE_TEMPLATE_SCROLL_DOWN,
+    SPRITE_TEMPLATE_MAX,
+};
 
-    for (v0 = 0; v0 < 4; v0++) {
-        param0->unk_2A4[v0] = SpriteSystem_NewSpriteFromResourceHeader(param0->unk_29C, param0->unk_2A0, &v1[v0]);
+static const SpriteTemplateFromResourceHeader sSpriteTemplates[] = {
+    [SPRITE_TEMPLATE_CURSOR] = {
+        .resourceHeaderID = TowerRecords_Template_Interface,
+        .x = 54,
+        .y = 68,
+        .z = 0,
+        .animIdx = 0,
+        .priority = 1,
+        .plttIdx = 0,
+        .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
+    },
+    [SPRITE_TEMPLATE_UNK] = {
+        .resourceHeaderID = TowerRecords_Template_Interface,
+        .x = 204,
+        .y = 114,
+        .z = 0,
+        .animIdx = 1,
+        .priority = 2,
+        .plttIdx = 0,
+        .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
+    },
+    [SPRITE_TEMPLATE_SCROLL_UP] = {
+        .resourceHeaderID = TowerRecords_Template_Interface,
+        .x = 128,
+        .y = 52,
+        .z = 0,
+        .animIdx = 2,
+        .priority = 3,
+        .plttIdx = 0,
+        .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
+    },
+    [SPRITE_TEMPLATE_SCROLL_DOWN] = {
+        .resourceHeaderID = TowerRecords_Template_Interface,
+        .x = 128,
+        .y = 132,
+        .z = 0,
+        .animIdx = 3,
+        .priority = 4,
+        .plttIdx = 0,
+        .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
+    },
+};
+
+static void LoadSprites(UnkStruct_ov90_021D0ECC *param0)
+{
+    SDK_COMPILER_ASSERT(NELEMS(sSpriteTemplates) == SPRITE_TEMPLATE_MAX);
+    SDK_COMPILER_ASSERT(NELEMS(sSpriteTemplates) == NELEMS(param0->sprites));
+
+    for (int i = 0; i < SNELEMS(param0->sprites); i++) {
+        param0->sprites[i] = SpriteSystem_NewSpriteFromResourceHeader(param0->unk_29C, param0->unk_2A0, &sSpriteTemplates[i]);
     }
 
-    Sprite_SetDrawFlag(param0->unk_2A4[2], FALSE);
-    Sprite_SetDrawFlag(param0->unk_2A4[1], FALSE);
-    Sprite_SetAnimateFlag(param0->unk_2A4[0], 1);
-    Sprite_SetAnimateFlag(param0->unk_2A4[2], 1);
-    Sprite_SetAnimateFlag(param0->unk_2A4[3], 1);
-    Sprite_SetExplicitPriority(param0->unk_2A4[1], 3);
+    Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_SCROLL_UP], FALSE);
+    Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_UNK], FALSE);
+    Sprite_SetAnimateFlag(param0->sprites[SPRITE_TEMPLATE_CURSOR], TRUE);
+    Sprite_SetAnimateFlag(param0->sprites[SPRITE_TEMPLATE_SCROLL_UP], TRUE);
+    Sprite_SetAnimateFlag(param0->sprites[SPRITE_TEMPLATE_SCROLL_DOWN], TRUE);
+    Sprite_SetExplicitPriority(param0->sprites[SPRITE_TEMPLATE_UNK], 3);
 }
 
-static void ov90_021D1C28(UnkStruct_ov90_021D0ECC *param0)
+static void DeleteSprites(UnkStruct_ov90_021D0ECC *param0)
 {
-    int v0;
-
-    for (v0 = 0; v0 < 4; v0++) {
-        Sprite_Delete2(param0->unk_2A4[v0]);
+    for (int i = 0; i < SNELEMS(param0->sprites); i++) {
+        Sprite_Delete2(param0->sprites[i]);
     }
 }
 
@@ -940,50 +986,48 @@ static void ov90_021D1C44(UnkStruct_ov90_021D0ECC *param0, BOOL param1)
 {
     BOOL v0;
 
-    if (param1 == 0) {
-        Sprite_SetExplicitPalette(param0->unk_2A4[0], 1);
-        v0 = 0;
+    if (param1 == FALSE) {
+        Sprite_SetExplicitPalette(param0->sprites[SPRITE_TEMPLATE_CURSOR], 1);
+        v0 = FALSE;
     } else {
-        Sprite_SetExplicitPalette(param0->unk_2A4[0], 0);
-        v0 = 1;
+        Sprite_SetExplicitPalette(param0->sprites[SPRITE_TEMPLATE_CURSOR], 0);
+        v0 = TRUE;
     }
 
-    Sprite_SetAnimateFlag(param0->unk_2A4[0], v0);
-    Sprite_SetAnimateFlag(param0->unk_2A4[2], v0);
-    Sprite_SetAnimateFlag(param0->unk_2A4[3], v0);
+    Sprite_SetAnimateFlag(param0->sprites[SPRITE_TEMPLATE_CURSOR], v0);
+    Sprite_SetAnimateFlag(param0->sprites[SPRITE_TEMPLATE_SCROLL_UP], v0);
+    Sprite_SetAnimateFlag(param0->sprites[SPRITE_TEMPLATE_SCROLL_DOWN], v0);
 }
 
 static void ov90_021D1C90(UnkStruct_ov90_021D0ECC *param0, u8 param1, u8 param2, u8 param3)
 {
-    u16 v0, v1;
-
     if (param0->unk_0E == 10 - 2) {
-        Sprite_SetDrawFlag(param0->unk_2A4[1], TRUE);
+        Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_UNK], TRUE);
 
         if (param1 == 10) {
-            Sprite_SetAnimFrame(param0->unk_2A4[1], 1);
-            Sprite_SetDrawFlag(param0->unk_2A4[0], FALSE);
+            Sprite_SetAnimFrame(param0->sprites[SPRITE_TEMPLATE_UNK], 1);
+            Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_CURSOR], FALSE);
         } else {
-            Sprite_SetAnimFrame(param0->unk_2A4[1], 0);
-            Sprite_SetDrawFlag(param0->unk_2A4[0], TRUE);
+            Sprite_SetAnimFrame(param0->sprites[SPRITE_TEMPLATE_UNK], 0);
+            Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_CURSOR], TRUE);
         }
     } else {
-        Sprite_SetDrawFlag(param0->unk_2A4[0], TRUE);
-        Sprite_SetDrawFlag(param0->unk_2A4[1], FALSE);
+        Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_CURSOR], TRUE);
+        Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_UNK], FALSE);
     }
 
     switch (param0->unk_0E) {
     case 0:
-        Sprite_SetDrawFlag(param0->unk_2A4[2], FALSE);
+        Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_SCROLL_UP], FALSE);
         break;
     case (10 - 2):
-        Sprite_SetDrawFlag(param0->unk_2A4[3], FALSE);
+        Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_SCROLL_DOWN], FALSE);
         break;
     default:
-        Sprite_SetDrawFlag(param0->unk_2A4[2], TRUE);
-        Sprite_SetDrawFlag(param0->unk_2A4[3], TRUE);
+        Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_SCROLL_UP], TRUE);
+        Sprite_SetDrawFlag(param0->sprites[SPRITE_TEMPLATE_SCROLL_DOWN], TRUE);
         break;
     }
 
-    Sprite_SetPositionXY(param0->unk_2A4[0], param2 * 72 + 54, param3 * 24 + 68);
+    Sprite_SetPositionXY(param0->sprites[SPRITE_TEMPLATE_CURSOR], param2 * 72 + 54, param3 * 24 + 68);
 }

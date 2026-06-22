@@ -2,27 +2,21 @@
 #include "res/text/bank/route_211_west.h"
 
 
-    ScriptEntry _000E
-    ScriptEntry _0021
-    ScriptEntry _0038
+    ScriptEntry Route211West_Dummy1
+    ScriptEntry Route211West_ArrowSignpostMtCoronet
+    ScriptEntry Route211West_ArrowSignpostEternaCity
     ScriptEntryEnd
 
-_000E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route211West_Dummy1:
+    NPCMessage Route211West_Text_Dummy0
     End
 
-_0021:
-    ShowArrowSign 1
+Route211West_ArrowSignpostMtCoronet:
+    ShowArrowSign Route211West_Text_SignMtCoronet
     End
 
-_0038:
-    ShowArrowSign 2
+Route211West_ArrowSignpostEternaCity:
+    ShowArrowSign Route211West_Text_SignEternaCity
     End
 
     .balign 4, 0

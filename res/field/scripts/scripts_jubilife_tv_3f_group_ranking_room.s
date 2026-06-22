@@ -11,54 +11,36 @@
     ScriptEntryEnd
 
 JubilifeTV3FGroupRankingRoom_RecordMachinePokemon:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    ScrCmd_1B5 3
+    StartRankingsMachine 3
     ReleaseAll
     End
 
 JubilifeTV3FGroupRankingRoom_RecordMachineBattles:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    ScrCmd_1B5 4
+    StartRankingsMachine 4
     ReleaseAll
     End
 
 JubilifeTV3FGroupRankingRoom_RecordMachineContests:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    ScrCmd_1B5 5
+    StartRankingsMachine 5
     ReleaseAll
     End
 
 JubilifeTV3FGroupRankingRoom_Youngster:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message JubilifeTV3FGroupRankingRoom_Text_YouCanSeeTheRankingsOfPeopleInYourGroupHere
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage JubilifeTV3FGroupRankingRoom_Text_SeeRankingsInGroupHere
     End
 
 JubilifeTV3FGroupRankingRoom_BattleGirl:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message JubilifeTV3FGroupRankingRoom_Text_TheseRankingsAreNifty
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage JubilifeTV3FGroupRankingRoom_Text_TheseRankingsAreNifty
     End
 
 JubilifeTV3FGroupRankingRoom_Worker:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message JubilifeTV3FGroupRankingRoom_Text_SorryImStillFineTuningThisThingyHere
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage JubilifeTV3FGroupRankingRoom_Text_ImStillFineTuningThisThingy
     End
 
     .balign 4, 0

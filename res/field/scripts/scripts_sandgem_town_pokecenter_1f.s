@@ -3,44 +3,26 @@
 #include "res/field/events/events_sandgem_town_pokecenter_1f.h"
 
 
-    ScriptEntry SandgemTownPokecenter1F_PokecenterNurse
+    ScriptEntry SandgemTownPokecenter1F_Nurse
     ScriptEntry SandgemTownPokecenter1F_BreederM
     ScriptEntry SandgemTownPokecenter1F_ExpertM
     ScriptEntry SandgemTownPokecenter1F_Lass
     ScriptEntryEnd
 
-SandgemTownPokecenter1F_PokecenterNurse:
-    Common_CallPokecenterNurse LOCALID_POKECENTER_NURSE
+SandgemTownPokecenter1F_Nurse:
+    Common_CallPokecenterNurse LOCALID_SANDGEM_NURSE
     End
 
 SandgemTownPokecenter1F_BreederM:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message SandgemTownPokecenter1F_Text_ThatLadyAtTheCounterWillHealYourPokemon
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage SandgemTownPokecenter1F_Text_LadyAtCounterHealsPokemon
     End
 
 SandgemTownPokecenter1F_ExpertM:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message SandgemTownPokecenter1F_Text_DoYouSeeThatPCOverThere
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage SandgemTownPokecenter1F_Text_PCOverThere
     End
 
 SandgemTownPokecenter1F_Lass:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message SandgemTownPokecenter1F_Text_TheTopFloorIsTheCommunicationClub
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage SandgemTownPokecenter1F_Text_TopFloorIsCommunicationClub
     End
 
     .balign 4, 0

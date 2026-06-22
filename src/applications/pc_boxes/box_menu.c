@@ -1,18 +1,14 @@
 #include "applications/pc_boxes/box_menu.h"
 
 #include <nitro.h>
-#include <string.h>
 
 #include "constants/items.h"
-
-#include "struct_decls/pc_boxes_decl.h"
 
 #include "applications/pc_boxes/box_app_manager.h"
 #include "applications/pc_boxes/box_application.h"
 #include "applications/pc_boxes/pc_mon_preview.h"
 #include "applications/pc_boxes/struct_box_menu.h"
 
-#include "enums.h"
 #include "pc_boxes.h"
 #include "sound_playback.h"
 #include "system.h"
@@ -162,7 +158,7 @@ void BoxMenu_FillWallpaperMenu(BoxApplication *boxApp, enum BoxMenuItem menuItem
     if (menuItem >= BOX_MENU_FIRST_WALLPAPER_PAGE && menuItem <= BOX_MENU_LAST_WALLPAPER_PAGE) {
         menu->selectedMenuItemIndex = menuItem - BOX_MENU_FIRST_WALLPAPER_PAGE;
     } else {
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
     }
 }
 

@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "generated/movement_types.h"
+#include "generated/object_events_gfx.h"
 
 #include "struct_decls/struct_02061830_sub1_decl.h"
 #include "struct_defs/struct_020EDF0C.h"
@@ -36,7 +37,7 @@
 #include "unk_020655F4.h"
 #include "unk_020EDBAC.h"
 
-typedef struct MapObjectMan {
+typedef struct MapObjectManager {
     u32 status;
     int maxObjects;
     int objectCnt;
@@ -909,8 +910,8 @@ static void sub_02062628(MapObject *mapObj)
 
 static int MapObject_GetFieldSystemGraphicsID(FieldSystem *fieldSystem, int graphicsID)
 {
-    if (graphicsID >= 0x65 && graphicsID <= 0x74) {
-        graphicsID -= 0x65;
+    if (graphicsID >= OBJ_EVENT_GFX_VAR_0 && graphicsID <= OBJ_EVENT_GFX_VAR_F) {
+        graphicsID -= OBJ_EVENT_GFX_VAR_0;
         graphicsID = FieldSystem_GetGraphicsID(fieldSystem, graphicsID);
     }
 
@@ -1914,18 +1915,18 @@ int MapObject_CheckFlagDoNotSinkIntoTerrain(const MapObject *mapObj)
     return FALSE;
 }
 
-void sub_02062F14(MapObject *mapObj, int param1)
+void MapObject_SetElevatedBridgeStatus(MapObject *mapObj, BOOL isOnElevatedBridge)
 {
-    if (param1 == TRUE) {
-        MapObject_SetStatusFlagOn(mapObj, MAP_OBJ_STATUS_28);
+    if (isOnElevatedBridge == TRUE) {
+        MapObject_SetStatusFlagOn(mapObj, MAP_OBJ_STATUS_ON_ELEVATED_BRIDGE);
     } else {
-        MapObject_SetStatusFlagOff(mapObj, MAP_OBJ_STATUS_28);
+        MapObject_SetStatusFlagOff(mapObj, MAP_OBJ_STATUS_ON_ELEVATED_BRIDGE);
     }
 }
 
-int sub_02062F30(const MapObject *mapObj)
+int MapObject_IsStatusOnElevatedBridge(const MapObject *mapObj)
 {
-    if (MapObject_CheckStatus(mapObj, MAP_OBJ_STATUS_28)) {
+    if (MapObject_CheckStatus(mapObj, MAP_OBJ_STATUS_ON_ELEVATED_BRIDGE)) {
         return TRUE;
     }
 

@@ -1,17 +1,11 @@
 #include "macros/scrcmd.inc"
 
 
-    ScriptEntry _0006
+    ScriptEntry Unk173_Dummy1
     ScriptEntryEnd
 
-_0006:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Unk173_Dummy1:
+    NPCMessage 0
     End
 
     .balign 4, 0

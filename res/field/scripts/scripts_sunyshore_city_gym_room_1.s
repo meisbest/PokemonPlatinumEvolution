@@ -1,4 +1,5 @@
 #include "macros/scrcmd.inc"
+#include "constants/sunyshore_gym_buttons.h"
 #include "res/text/bank/sunyshore_city_gym_room_1.h"
 
 
@@ -14,16 +15,16 @@ SunyshoreGymRoom1_Init:
     End
 
 SunyshoreGymRoom1_Button:
-    SunyshoreGymButton 0
+    PressSunyshoreGymButton SUNYSHORE_GYM_BUTTON_NORMAL
     End
 
 SunyshoreGymRoom1_GymGuide:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfBadgeAcquired BADGE_ID_BEACON, SunyshoreGymRoom1_GymGuideAfterbadge
     Message SunyshoreGymRoom1_Text_GymGuideBeforeBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -31,17 +32,17 @@ SunyshoreGymRoom1_GymGuide:
 SunyshoreGymRoom1_GymGuideAfterbadge:
     BufferPlayerName 0
     Message SunyshoreGymRoom1_Text_GymGuideAfterBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 SunyshoreGymRoom1_GymStatue:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     GoToIfBadgeAcquired BADGE_ID_BEACON, SunyshoreGymRoom1_GymStatue_AfterBadge
     Message SunyshoreGymRoom1_Text_GymStatue_BeforeBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -51,7 +52,7 @@ SunyshoreGymRoom1_GymStatue_AfterBadge:
     BufferPlayerName 0
     BufferRivalName 1
     Message SunyshoreGymRoom1_Text_GymStatue_AfterBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -60,7 +61,7 @@ SunyshoreGymRoom1_GymStatue_AfterRivalBadge:
     BufferPlayerName 0
     BufferRivalName 1
     Message SunyshoreGymRoom1_Text_GymStatue_AfterRivalBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End

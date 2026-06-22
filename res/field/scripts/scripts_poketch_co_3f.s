@@ -13,42 +13,24 @@
     ScriptEntryEnd
 
 PoketchCo3F_NinjaBoy:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message PoketchCo3F_Text_TheresAGirlsModelAndABoysModel
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage PoketchCo3F_Text_TheresGenderedModels
     End
 
 PoketchCo3F_PokefanF:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message PoketchCo3F_Text_MyHusbandsThePresident
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage PoketchCo3F_Text_MyHusbandsThePresident
     End
 
 PoketchCo3F_ExpertF:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message PoketchCo3F_Text_PeopleEverywhereMakePoketchApps
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage PoketchCo3F_Text_PeopleEverywhereMakeApps
     End
 
 PoketchCo3F_PCSouthWest:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message PoketchCo3F_Text_ThereAreDescriptionsOfPoketchApps1
+    Message PoketchCo3F_Text_DescriptionsOfPoketchApps1
 PoketchCo3F_PCSouthWestAddMenuEntries:
-    Message PoketchCo3F_Text_WhichPoketchAppWouldYouLikeToReadAbout1
+    Message PoketchCo3F_Text_ReadAboutWhichPoketchApp1
     InitGlobalTextMenu 1, 1, 0, VAR_0x8004
     CheckPoketchEnabled VAR_RESULT
     GoToIfEq VAR_RESULT, 0, PoketchCo3F_PCSouthWestShowMenu
@@ -135,12 +117,12 @@ PoketchCo3F_PCSouthWestReturn:
     Return
 
 PoketchCo3F_PCSouthMiddle:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message PoketchCo3F_Text_ThereAreDescriptionsOfPoketchApps2
+    Message PoketchCo3F_Text_DescriptionsOfPoketchApps2
 PoketchCo3F_PCSouthMiddleAddMenuEntries:
-    Message PoketchCo3F_Text_WhichPoketchAppWouldYouLikeToReadAbout2
+    Message PoketchCo3F_Text_ReadAboutWhichPoketchApp2
     InitGlobalTextMenu 1, 1, 0, VAR_0x8004
     CheckPoketchEnabled VAR_RESULT
     GoToIfEq VAR_RESULT, 0, PoketchCo3F_PCSouthMiddleShowMenu
@@ -239,12 +221,12 @@ PoketchCo3F_PCSouthMiddleReturn:
     Return
 
 PoketchCo3F_PCSouthEast:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message PoketchCo3F_Text_ThereAreDescriptionsOfPoketchApps3
+    Message PoketchCo3F_Text_DescriptionsOfPoketchApps3
 PoketchCo3F_PCSouthEastAddMenuEntries:
-    Message PoketchCo3F_Text_WhichPoketchAppWouldYouLikeToReadAbout3
+    Message PoketchCo3F_Text_ReadAboutWhichPoketchApp3
     InitGlobalTextMenu 1, 1, 0, VAR_0x8004
     CheckPoketchEnabled VAR_RESULT
     GoToIfEq VAR_RESULT, 0, PoketchCo3F_PCSouthEastShowMenu
@@ -331,12 +313,12 @@ PoketchCo3F_PCSouthEastReturn:
     Return
 
 PoketchCo3F_PCNorthWest:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message PoketchCo3F_Text_ThereAreDescriptionsOfPoketchApps4
+    Message PoketchCo3F_Text_DescriptionsOfPoketchApps4
 PoketchCo3F_PCNorthWestAddMenuEntries:
-    Message PoketchCo3F_Text_WhichPoketchAppWouldYouLikeToReadAbout4
+    Message PoketchCo3F_Text_ReadAboutWhichPoketchApp4
     InitGlobalTextMenu 1, 1, 0, VAR_0x8004
     CheckPoketchEnabled VAR_RESULT
     GoToIfEq VAR_RESULT, 0, PoketchCo3F_PCNorthWestShowMenu

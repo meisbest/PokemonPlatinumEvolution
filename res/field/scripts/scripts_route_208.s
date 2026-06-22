@@ -2,52 +2,52 @@
 #include "res/text/bank/route_208.h"
 
 
-    ScriptEntry _0016
-    ScriptEntry _002D
-    ScriptEntry _0044
-    ScriptEntry _0070
-    ScriptEntry _005B
+    ScriptEntry Route208_ArrowSignpostMtCoronet
+    ScriptEntry Route208_ArrowSignpostHearthomeCity
+    ScriptEntry Route208_SignboardBerryMastersHouse
+    ScriptEntry Route208_BlackBelt
+    ScriptEntry Route208_TrainerTipsSignpost
     ScriptEntryEnd
 
-_0016:
-    ShowArrowSign 2
+Route208_ArrowSignpostMtCoronet:
+    ShowArrowSign Route208_Text_SignMtCoronet
     End
 
-_002D:
-    ShowArrowSign 3
+Route208_ArrowSignpostHearthomeCity:
+    ShowArrowSign Route208_Text_SignHearthomeCity
     End
 
-_0044:
-    ShowLandmarkSign 4
+Route208_SignboardBerryMastersHouse:
+    ShowLandmarkSign Route208_Text_SignBerryMastersHouse
     End
 
-_005B:
-    ShowScrollingSign 5
+Route208_TrainerTipsSignpost:
+    ShowScrollingSign Route208_Text_TrainerTipsWatchBerrySoilColor
     End
 
-_0070:
-    PlayFanfare SEQ_SE_CONFIRM
+Route208_BlackBelt:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    GoToIfSet FLAG_UNK_0x013F, _00B5
-    Message 0
+    GoToIfSet FLAG_RECEIVED_ROUTE_208_ODD_KEYSTONE, Route208_GoToRoute209
+    Message Route208_Text_JustTakeIt
     SetVar VAR_0x8004, ITEM_ODD_KEYSTONE
     SetVar VAR_0x8005, 1
-    GoToIfCannotFitItem VAR_0x8004, VAR_0x8005, VAR_RESULT, _00C0
-    SetFlag FLAG_UNK_0x013F
+    GoToIfCannotFitItem VAR_0x8004, VAR_0x8005, VAR_RESULT, Route208_BagIsFull
+    SetFlag FLAG_RECEIVED_ROUTE_208_ODD_KEYSTONE
     Common_GiveItemQuantityNoLineFeed
     CloseMessage
     ReleaseAll
     End
 
-_00B5:
-    Message 1
-    WaitABXPadPress
+Route208_GoToRoute209:
+    Message Route208_Text_GoToRoute209
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_00C0:
+Route208_BagIsFull:
     Common_MessageBagIsFull
     CloseMessage
     ReleaseAll

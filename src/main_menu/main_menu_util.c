@@ -7,7 +7,7 @@
 #include "constants/forms.h"
 #include "constants/graphics.h"
 #include "constants/narc.h"
-#include "constants/species.h"
+#include "constants/versions.h"
 #include "generated/items.h"
 
 #include "main_menu/mystery_gift_app.h"
@@ -42,10 +42,9 @@
 #include "system.h"
 #include "text.h"
 #include "unk_02033200.h"
-#include "versions.h"
 #include "vram_transfer.h"
 
-#include "res/graphics/main_menu/main_menu_graphics.naix.h"
+#include "res/graphics/main_menu/main_menu_graphics.naix"
 
 #define WONDER_CARD_ENCRYPTION_MAGIC 0xD679
 

@@ -1,37 +1,32 @@
 #include "macros/scrcmd.inc"
 #include "res/text/bank/mining_museum.h"
+#include "res/text/bank/menu_entries.h"
 
 
-    ScriptEntry MiningMuseum_Welcome
+    ScriptEntry MiningMuseum_AceTrainerF
     ScriptEntry MiningMuseum_FossilResearcher
-    ScriptEntry MiningMuseum_CoalExhibit1
-    ScriptEntry MiningMuseum_CoalExhibit2
-    ScriptEntry MiningMuseum_MineUnderSea
+    ScriptEntry MiningMuseum_Hiker
+    ScriptEntry MiningMuseum_Twin
+    ScriptEntry MiningMuseum_SchoolKidM
     ScriptEntry MiningMuseum_HowCoalIsMade1
     ScriptEntry MiningMuseum_HowCoalIsMade2
     ScriptEntry MiningMuseum_HowCoalIsMade3
-    ScriptEntry MiningMuseum_CoalSamplesDisplay
-    ScriptEntry MiningMuseum_CoalSamplesBox
-    ScriptEntry MiningMuseum_MiningLamps
-    ScriptEntry MiningMuseum_MiningTools
-    ScriptEntry MiningMuseum_MineWorkerItems
-    ScriptEntry MiningMuseum_UndergroundManInfo
-    ScriptEntry MiningMuseum_MiningRequiresStrongMind
-    ScriptEntry MiningMuseum_MineHistory
+    ScriptEntry MiningMuseum_DisplayCoalDifferentRegions
+    ScriptEntry MiningMuseum_DisplayCategorizedSamples
+    ScriptEntry MiningMuseum_DisplayLamps
+    ScriptEntry MiningMuseum_DisplayTools
+    ScriptEntry MiningMuseum_DisplayItems
+    ScriptEntry MiningMuseum_PokemonBreederF
+    ScriptEntry MiningMuseum_Collector
+    ScriptEntry MiningMuseum_ExpertM
     ScriptEntryEnd
 
-MiningMuseum_Welcome:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message MiningMuseum_Text_Welcome
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_AceTrainerF:
+    NPCMessage MiningMuseum_Text_WelcomeToMuseum
     End
 
 MiningMuseum_FossilResearcher:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfSet FLAG_UNK_0x0001, MiningMuseum_ExtractingPokemon
@@ -40,7 +35,7 @@ MiningMuseum_FossilResearcher:
     GoToIfNe VAR_REVIVED_POKEMON_SPECIES, 0, MiningMuseum_PokemonRevival
     GetFossilCount VAR_0x8000
     GoToIfEq VAR_0x8000, 0, MiningMuseum_NoFossils
-    Message MiningMuseum_Text_HaveFossilForMe
+    Message MiningMuseum_Text_ShallIReviveFossil
     ShowYesNoMenu VAR_RESULT
     GoToIfEq VAR_RESULT, MENU_NO, MiningMuseum_DeclinedRevival
     GoToIfEq VAR_0x8000, 1, MiningMuseum_SingleFossilRevival
@@ -64,13 +59,13 @@ MiningMuseum_FossilResearcher:
     SetVar VAR_0x8005, 0
     InitGlobalTextMenu 1, 1, 0, VAR_0x8003
 MiningMuseum_FossilMenuLoop:
-    CallIfEq VAR_0x8005, 0, MiningMuseum_CheckFossil_OldAmber
-    CallIfEq VAR_0x8005, 1, MiningMuseum_CheckFossil_HelixFossil
-    CallIfEq VAR_0x8005, 2, MiningMuseum_CheckFossil_DomeFossil
-    CallIfEq VAR_0x8005, 3, MiningMuseum_CheckFossil_RootFossil
-    CallIfEq VAR_0x8005, 4, MiningMuseum_CheckFossil_ClawFossil
-    CallIfEq VAR_0x8005, 5, MiningMuseum_CheckFossil_ArmorFossil
-    CallIfEq VAR_0x8005, 6, MiningMuseum_CheckFossil_SkullFossil
+    CallIfEq VAR_0x8005, 0, MiningMuseum_CheckHasOldAmber
+    CallIfEq VAR_0x8005, 1, MiningMuseum_CheckHasHelixFossil
+    CallIfEq VAR_0x8005, 2, MiningMuseum_CheckHasDomeFossil
+    CallIfEq VAR_0x8005, 3, MiningMuseum_CheckHasRootFossil
+    CallIfEq VAR_0x8005, 4, MiningMuseum_CheckHasClawFossil
+    CallIfEq VAR_0x8005, 5, MiningMuseum_CheckHasArmorFossil
+    CallIfEq VAR_0x8005, 6, MiningMuseum_CheckHasSkullFossil
     GoToIfEq VAR_RESULT, FALSE, MiningMuseum_FossilMenuNext
     CallIfEq VAR_0x8004, 0, MiningMuseum_SetOldAmberVar
     CallIfEq VAR_0x8004, 1, MiningMuseum_SetHelixFossilVar
@@ -80,7 +75,7 @@ MiningMuseum_FossilMenuLoop:
     CallIfEq VAR_0x8004, 5, MiningMuseum_SetArmorFossilVar
     CallIfEq VAR_0x8004, 6, MiningMuseum_SetSkullFossilVar
     SetVar VAR_0x8006, VAR_0x8005
-    AddVar VAR_0x8006, 156
+    AddVar VAR_0x8006, MenuEntries_Text_Fossil_OldAmber
     AddMenuEntry VAR_0x8006, VAR_0x8004
     GoTo MiningMuseum_FossilMenuContinue
 
@@ -92,7 +87,7 @@ MiningMuseum_FossilMenuContinue:
     AddVar VAR_0x8004, 1
     AddVar VAR_0x8005, 1
     GoToIfNe VAR_0x8004, VAR_0x8001, MiningMuseum_FossilMenuLoop
-    AddMenuEntry 44, VAR_0x8004
+    AddMenuEntry MenuEntries_Text_Fossil_Cancel, VAR_0x8004
     ShowMenu
     GoToIfEq VAR_0x8003, 0xFF, MiningMuseum_DeclinedRevival
     GoToIfEq VAR_0x8003, VAR_MAP_LOCAL_0, MiningMuseum_DeclinedRevival
@@ -108,37 +103,37 @@ MiningMuseum_FossilMenuContinue:
     RemoveItem VAR_0x8002, 1, VAR_RESULT
     GoTo MiningMuseum_ExtractingPokemon
 
-MiningMuseum_CheckFossil_OldAmber:
+MiningMuseum_CheckHasOldAmber:
     SetVar VAR_MAP_LOCAL_0, ITEM_OLD_AMBER
     CheckItem VAR_MAP_LOCAL_0, 1, VAR_RESULT
     Return
 
-MiningMuseum_CheckFossil_HelixFossil:
+MiningMuseum_CheckHasHelixFossil:
     SetVar VAR_MAP_LOCAL_0, ITEM_HELIX_FOSSIL
     CheckItem VAR_MAP_LOCAL_0, 1, VAR_RESULT
     Return
 
-MiningMuseum_CheckFossil_DomeFossil:
+MiningMuseum_CheckHasDomeFossil:
     SetVar VAR_MAP_LOCAL_0, ITEM_DOME_FOSSIL
     CheckItem VAR_MAP_LOCAL_0, 1, VAR_RESULT
     Return
 
-MiningMuseum_CheckFossil_RootFossil:
+MiningMuseum_CheckHasRootFossil:
     SetVar VAR_MAP_LOCAL_0, ITEM_ROOT_FOSSIL
     CheckItem VAR_MAP_LOCAL_0, 1, VAR_RESULT
     Return
 
-MiningMuseum_CheckFossil_ClawFossil:
+MiningMuseum_CheckHasClawFossil:
     SetVar VAR_MAP_LOCAL_0, ITEM_CLAW_FOSSIL
     CheckItem VAR_MAP_LOCAL_0, 1, VAR_RESULT
     Return
 
-MiningMuseum_CheckFossil_ArmorFossil:
+MiningMuseum_CheckHasArmorFossil:
     SetVar VAR_MAP_LOCAL_0, ITEM_ARMOR_FOSSIL
     CheckItem VAR_MAP_LOCAL_0, 1, VAR_RESULT
     Return
 
-MiningMuseum_CheckFossil_SkullFossil:
+MiningMuseum_CheckHasSkullFossil:
     SetVar VAR_MAP_LOCAL_0, ITEM_SKULL_FOSSIL
     CheckItem VAR_MAP_LOCAL_0, 1, VAR_RESULT
     Return
@@ -208,28 +203,28 @@ MiningMuseum_SingleFossilRevival:
 MiningMuseum_ExtractingPokemon:
     SetFlag FLAG_UNK_0x0001
     Message MiningMuseum_Text_ExtractingPokemonLeave
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 MiningMuseum_DeclinedRevival:
     Message MiningMuseum_Text_DeclinedFossilRevival
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 MiningMuseum_PokemonRevival:
     BufferSpeciesNameFromVar 0, VAR_REVIVED_POKEMON_SPECIES, 0, 0
-    Message MiningMuseum_Text_PokemonRevivedTooLong
+    Message MiningMuseum_Text_ThisIsRevivedPokemon
     GetPartyCount VAR_RESULT
-    GoToIfEq VAR_RESULT, 6, MiningMuseum_PartyFull
+    GoToIfEq VAR_RESULT, MAX_PARTY_SIZE, MiningMuseum_PartyFull
     BufferSpeciesNameFromVar 1, VAR_REVIVED_POKEMON_SPECIES, 0, 0
     BufferPlayerName 0
-    PlaySound SEQ_FANFA4
-    Message MiningMuseum_Text_PokemonReceived
-    WaitSound
+    PlayFanfare SEQ_FANFA4
+    Message MiningMuseum_Text_ReceivedPokemon
+    WaitFanfare
     GivePokemon VAR_REVIVED_POKEMON_SPECIES, 20, ITEM_NONE, VAR_RESULT
     IncrementGameRecord RECORD_POKEMON_RECEIVED_FROM_FOSSIL_REVIVAL
     SetVar VAR_REVIVED_POKEMON_SPECIES, 0
@@ -263,155 +258,79 @@ MiningMuseum_NoNickname:
 
 MiningMuseum_PartyFull:
     Message MiningMuseum_Text_PartyFull
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 MiningMuseum_NoFossils:
     Message MiningMuseum_Text_BringFossilsToMe
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 MiningMuseum_NotYetReady:
     Message MiningMuseum_Text_NotYetReady
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-MiningMuseum_CoalExhibit1:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message MiningMuseum_Text_CoalExhibit1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_Hiker:
+    NPCMessage MiningMuseum_Text_CoalExhibit1
     End
 
-MiningMuseum_CoalExhibit2:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message MiningMuseum_Text_CoalExhibit2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_Twin:
+    NPCMessage MiningMuseum_Text_CoalExhibit2
     End
 
-MiningMuseum_MineUnderSea:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message MiningMuseum_Text_MineExtendsUnderSea
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_SchoolKidM:
+    NPCMessage MiningMuseum_Text_MineExtendsUnderSea
     End
 
 MiningMuseum_HowCoalIsMade1:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message MiningMuseum_Text_HowCoalIsMade1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    EventMessage MiningMuseum_Text_HowCoalIsMade1
     End
 
 MiningMuseum_HowCoalIsMade2:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message MiningMuseum_Text_HowCoalIsMade2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    EventMessage MiningMuseum_Text_HowCoalIsMade2
     End
 
 MiningMuseum_HowCoalIsMade3:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message MiningMuseum_Text_HowCoalIsMade3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    EventMessage MiningMuseum_Text_HowCoalIsMade3
     End
 
-MiningMuseum_CoalSamplesDisplay:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message MiningMuseum_Text_CoalSamplesDisplay
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_DisplayCoalDifferentRegions:
+    EventMessage MiningMuseum_Text_SamplesDifferentRegions
     End
 
-MiningMuseum_CoalSamplesBox:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message MiningMuseum_Text_CoalSamplesBox
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_DisplayCategorizedSamples:
+    EventMessage MiningMuseum_Text_CategorizedCoalSamples
     End
 
-MiningMuseum_MiningLamps:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message MiningMuseum_Text_MiningLamps
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_DisplayLamps:
+    EventMessage MiningMuseum_Text_MiningLamps
     End
 
-MiningMuseum_MiningTools:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message MiningMuseum_Text_MiningTools
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_DisplayTools:
+    EventMessage MiningMuseum_Text_MiningTools
     End
 
-MiningMuseum_MineWorkerItems:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message MiningMuseum_Text_MineWorkerItems
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_DisplayItems:
+    EventMessage MiningMuseum_Text_MineWorkerItems
     End
 
-MiningMuseum_UndergroundManInfo:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message MiningMuseum_Text_UndergroundManInfo
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_PokemonBreederF:
+    NPCMessage MiningMuseum_Text_UndergroundManInfo
     End
 
-MiningMuseum_MiningRequiresStrongMind:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message MiningMuseum_Text_MiningRequiresStrongMind
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_Collector:
+    NPCMessage MiningMuseum_Text_MiningRequiresStrongMind
     End
 
-MiningMuseum_MineHistory:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message MiningMuseum_Text_MineHistory
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+MiningMuseum_ExpertM:
+    NPCMessage MiningMuseum_Text_MineHistory
     End
 
     .balign 4, 0

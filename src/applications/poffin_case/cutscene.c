@@ -13,6 +13,7 @@
 #include "math_util.h"
 #include "message.h"
 #include "narc.h"
+#include "network_icon.h"
 #include "overlay_manager.h"
 #include "poffin_sprite.h"
 #include "pokemon.h"
@@ -29,11 +30,10 @@
 #include "sys_task_manager.h"
 #include "system.h"
 #include "text.h"
-#include "unk_020393C8.h"
 #include "unk_0208C098.h"
 #include "vram_transfer.h"
 
-#include "res/graphics/poffin_case/feeding_cutscene/cutscene.naix.h"
+#include "res/graphics/poffin_case/feeding_cutscene/cutscene.naix"
 
 #define MON_SPRITE_FAR_SIZE      0x1000
 #define MON_SPRITE_FAR_X         128
@@ -561,7 +561,7 @@ static void InitSpriteSystem(PoffinCutscene *app)
     ManagedSprite_SetDrawFlag(app->poffinSprite->sprite, FALSE);
 
     if (CommSys_IsInitialized()) {
-        sub_02039734();
+        NetworkIcon_Init();
     }
 
     GXLayers_EngineAToggleLayers(GX_PLANEMASK_OBJ, TRUE);

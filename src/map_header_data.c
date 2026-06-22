@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "constants/heap.h"
+#include "constants/versions.h"
 
 #include "field/field_system.h"
 #include "overlay006/wild_encounters.h"
@@ -245,7 +246,7 @@ const u8 *MapHeaderData_GetInitScriptBytes(const FieldSystem *fieldSystem)
     return (const u8 *)&fieldSystem->mapHeaderData->initScripts;
 }
 
-BOOL MapHeaderData_IsAnyObjectEventAtPos(const FieldSystem *fieldSystem, u16 x, u16 z)
+BOOL MapHeaderData_IsPosFreeOfObjectEvents(const FieldSystem *fieldSystem, u16 x, u16 z)
 {
     const MapHeaderData *data = fieldSystem->mapHeaderData;
 

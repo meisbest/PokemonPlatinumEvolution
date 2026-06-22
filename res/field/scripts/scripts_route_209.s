@@ -2,223 +2,202 @@
 #include "res/text/bank/route_209.h"
 
 
-    ScriptEntry _0091
-    ScriptEntry _00A4
-    ScriptEntry _0270
-    ScriptEntry _0287
-    ScriptEntry _01C7
-    ScriptEntry _02B3
-    ScriptEntry _02C6
-    ScriptEntry _0026
-    ScriptEntry _029E
+    ScriptEntry Route209_PokefanM
+    ScriptEntry Route209_HallowedTower
+    ScriptEntry Route209_ArrowSignpostHearthomeCity
+    ScriptEntry Route209_ArrowSignpostSolaceonTown
+    ScriptEntry Route209_Fisherman
+    ScriptEntry Route209_JoggerRichard
+    ScriptEntry Route209_JoggerRaul
+    ScriptEntry Route209_OnTransition
+    ScriptEntry Route209_TrainerTipsSignpost
     ScriptEntryEnd
 
-_0026:
+Route209_OnTransition:
     GetTimeOfDay VAR_MAP_LOCAL_0
-    GoToIfEq VAR_MAP_LOCAL_0, 0, _006D
-    GoToIfEq VAR_MAP_LOCAL_0, 1, _007F
-    GoToIfEq VAR_MAP_LOCAL_0, 2, _007F
-    GoToIfEq VAR_MAP_LOCAL_0, 3, _007F
-    GoToIfEq VAR_MAP_LOCAL_0, 4, _007F
+    GoToIfEq VAR_MAP_LOCAL_0, TIMEOFDAY_MORNING, Route209_SetJoggersBattle
+    GoToIfInRange VAR_MAP_LOCAL_0, TIMEOFDAY_DAY, TIMEOFDAY_LATE_NIGHT, Route209_SetJoggersNoBattle
     End
 
-_006D:
-    ClearFlag FLAG_UNK_0x026D
-    ClearFlag FLAG_UNK_0x026F
-    SetFlag FLAG_UNK_0x026C
-    SetFlag FLAG_UNK_0x026E
+Route209_SetJoggersBattle:
+    ClearFlag FLAG_HIDE_ROUTE_209_JOGGER_RICHARD
+    ClearFlag FLAG_HIDE_ROUTE_209_JOGGER_RAUL
+    SetFlag FLAG_HIDE_ROUTE_209_JOGGER_RICHARD_NO_BATTLE
+    SetFlag FLAG_HIDE_ROUTE_209_JOGGER_RAUL_NO_BATTLE
     End
 
-_007F:
-    ClearFlag FLAG_UNK_0x026C
-    ClearFlag FLAG_UNK_0x026E
-    SetFlag FLAG_UNK_0x026D
-    SetFlag FLAG_UNK_0x026F
+Route209_SetJoggersNoBattle:
+    ClearFlag FLAG_HIDE_ROUTE_209_JOGGER_RICHARD_NO_BATTLE
+    ClearFlag FLAG_HIDE_ROUTE_209_JOGGER_RAUL_NO_BATTLE
+    SetFlag FLAG_HIDE_ROUTE_209_JOGGER_RICHARD
+    SetFlag FLAG_HIDE_ROUTE_209_JOGGER_RAUL
     End
 
-_0091:
-    PlayFanfare SEQ_SE_CONFIRM
+Route209_PokefanM:
+    NPCMessage Route209_Text_ThisIsTheLostTower
+    End
+
+Route209_HallowedTower:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
-    End
-
-_00A4:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    GoToIfEq VAR_UNK_0x408A, 1, _0102
+    GoToIfEq VAR_HALLOWED_TOWER_STATE, 1, Route209_CheckSpiritombCounter
     CheckItem ITEM_ODD_KEYSTONE, 1, VAR_RESULT
-    GoToIfEq VAR_RESULT, 0, _01BC
-    Message 2
+    GoToIfEq VAR_RESULT, FALSE, Route209_ThereIsABrokenTower
+    Message Route209_Text_UseTheOddKeystone
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_YES, _00E6
+    GoToIfEq VAR_RESULT, MENU_YES, Route209_UseOddKeystone
     CloseMessage
     ReleaseAll
     End
 
-_00E6:
+Route209_UseOddKeystone:
     BufferPlayerName 0
-    Message 3
-    WaitABXPadPress
+    Message Route209_Text_PlayerUsedTheOddKeystone
+    WaitButton
     RemoveItem ITEM_ODD_KEYSTONE, 1, VAR_RESULT
-    SetVar VAR_UNK_0x408A, 1
+    SetVar VAR_HALLOWED_TOWER_STATE, 1
     CloseMessage
     ReleaseAll
     End
 
-_0102:
+Route209_CheckSpiritombCounter:
     GetSpiritombCounter VAR_RESULT
-    GoToIfGe VAR_RESULT, 32, _014D
-    GoToIfGe VAR_RESULT, 29, _01B1
-    GoToIfGe VAR_RESULT, 22, _01A6
-    GoToIfGe VAR_RESULT, 15, _019B
-    GoToIfGe VAR_RESULT, 8, _0190
-    GoTo _0185
+    GoToIfGe VAR_RESULT, 32, Route209_EncounterSpiritomb
+    GoToIfGe VAR_RESULT, 29, Route209_SomeSortOfPresence
+    GoToIfGe VAR_RESULT, 22, Route209_IsThatTowerShaking
+    GoToIfGe VAR_RESULT, 15, Route209_CryingComingFromInside
+    GoToIfGe VAR_RESULT, 8, Route209_StonesAppearToHaveShifted
+    GoTo Route209_BuiltManyYearsAgo
 
-_014D:
-    WaitFanfare SEQ_SE_CONFIRM
+Route209_EncounterSpiritomb:
+    WaitSE SEQ_SE_CONFIRM
     PlayCry SPECIES_SPIRITOMB
-    Message 9
+    Message Route209_Text_SpiritombCry
     WaitCry
     CloseMessage
     StartWildBattle SPECIES_SPIRITOMB, 25
     CheckWonBattle VAR_RESULT
-    GoToIfEq VAR_RESULT, FALSE, _017F
-    SetVar VAR_UNK_0x408A, 0
+    GoToIfEq VAR_RESULT, FALSE, Route209_BlackOut
+    SetVar VAR_HALLOWED_TOWER_STATE, 0
     ClearSpiritombCounter
     End
 
-_017F:
+Route209_BlackOut:
     BlackOutFromBattle
     ReleaseAll
     End
 
-_0185:
-    Message 4
-    WaitABXPadPress
+Route209_BuiltManyYearsAgo:
+    Message Route209_Text_BuiltManyYearsAgo
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_0190:
-    Message 5
-    WaitABXPadPress
+Route209_StonesAppearToHaveShifted:
+    Message Route209_Text_StonesAppearToHaveShifted
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_019B:
-    Message 6
-    WaitABXPadPress
+Route209_CryingComingFromInside:
+    Message Route209_Text_CryingComingFromInside
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_01A6:
-    Message 7
-    WaitABXPadPress
+Route209_IsThatTowerShaking:
+    Message Route209_Text_IsTheTowerShaking
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_01B1:
-    Message 8
-    WaitABXPadPress
+Route209_SomeSortOfPresence:
+    Message Route209_Text_SomeSortOfPresence
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_01BC:
-    Message 1
-    WaitABXPadPress
+Route209_ThereIsABrokenTower:
+    Message Route209_Text_ThereIsABrokenTower
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_01C7:
-    PlayFanfare SEQ_SE_CONFIRM
+Route209_Fisherman:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     SetVar VAR_0x8004, ITEM_GOOD_ROD
     BufferItemNameWithArticle 0, VAR_0x8004
     CapitalizeFirstLetter 0
-    GoToIfSet FLAG_GOOD_ROD_OBTAINED, _020B
-    Message 10
+    GoToIfSet FLAG_GOOD_ROD_OBTAINED, Route209_AskExplainHowToFish
+    Message Route209_Text_GoodRodIsReallyGood
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_YES, AcceptGoodRod
-    GoToIfEq VAR_RESULT, MENU_NO, RefuseGoodRod
+    GoToIfEq VAR_RESULT, MENU_YES, Route209_AcceptGoodRod
+    GoToIfEq VAR_RESULT, MENU_NO, Route209_RefuseGoodRod
     End
 
-_020B:
+Route209_AskExplainHowToFish:
     BufferItemName 0, VAR_0x8004
-    Message 12
+    Message Route209_Text_DoINeedToExplain
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_YES, _0233
-    GoToIfEq VAR_RESULT, MENU_NO, _023E
+    GoToIfEq VAR_RESULT, MENU_YES, Route209_ExplainHowToFish
+    GoToIfEq VAR_RESULT, MENU_NO, Route209_WhenYouReelYouBattle
     End
 
-_0233:
-    Message 14
-    WaitABXPadPress
+Route209_ExplainHowToFish:
+    Message Route209_Text_ExplainHowToFish
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_023E:
-    Message 15
-    WaitABXPadPress
+Route209_WhenYouReelYouBattle:
+    Message Route209_Text_WhenYouReelYouBattle
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-RefuseGoodRod:
-    Message 13
-    WaitABXPadPress
+Route209_RefuseGoodRod:
+    Message Route209_Text_YouDontLikeToFish
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-AcceptGoodRod:
+Route209_AcceptGoodRod:
     BufferItemName 0, VAR_0x8004
-    Message 11
+    Message Route209_Text_TakeThisGoodRod
     SetVar VAR_0x8005, 1
     Common_GiveItemQuantity
     SetFlag FLAG_GOOD_ROD_OBTAINED
-    GoTo _020B
+    GoTo Route209_AskExplainHowToFish
 
-_0270:
-    ShowArrowSign 18
+Route209_ArrowSignpostHearthomeCity:
+    ShowArrowSign Route209_Text_SignHearthomeCity
     End
 
-_0287:
-    ShowArrowSign 19
+Route209_ArrowSignpostSolaceonTown:
+    ShowArrowSign Route209_Text_SignSolaceonTown
     End
 
-_029E:
-    ShowScrollingSign 20
+Route209_TrainerTipsSignpost:
+    ShowScrollingSign Route209_Text_TrainerTipsRegisterKeyItems
     End
 
-_02B3:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 16
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route209_JoggerRichard:
+    NPCMessage Route209_Text_DoYouJogEveryMorning
     End
 
-_02C6:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 17
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route209_JoggerRaul:
+    NPCMessage Route209_Text_PokemonChasedAfterMe
     End
 
     .balign 4, 0

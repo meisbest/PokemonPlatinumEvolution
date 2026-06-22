@@ -233,129 +233,129 @@ static void BufferUsedItemMessage(PartyMenuApplication *application, u16 param1,
 
     switch (sub_02084B70(param1)) {
     case 4:
-        string = MessageLoader_GetNewString(application->messageLoader, 65);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonWasCuredOfPoison);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 3:
-        string = MessageLoader_GetNewString(application->messageLoader, 91);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonWokeUp);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 5:
-        string = MessageLoader_GetNewString(application->messageLoader, 67);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonsBurnWasHealed);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 6:
-        string = MessageLoader_GetNewString(application->messageLoader, 68);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonWasThawedOut);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 7:
-        string = MessageLoader_GetNewString(application->messageLoader, 66);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonWasCuredOfParalysis);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 8:
-        string = MessageLoader_GetNewString(application->messageLoader, 73);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonSnappedOutOfConfusion);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 10:
-        string = MessageLoader_GetNewString(application->messageLoader, 74);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonGotOverInfatuation);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 9:
-        string = MessageLoader_GetNewString(application->messageLoader, 71);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBecameHealthy);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 12:
-        string = MessageLoader_GetNewString(application->messageLoader, 75);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBaseStatRose);
         StringTemplate_SetPokemonStatName(application->template, 1, 0);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 13:
-        string = MessageLoader_GetNewString(application->messageLoader, 75);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBaseStatRose);
         StringTemplate_SetPokemonStatName(application->template, 1, 1);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 14:
-        string = MessageLoader_GetNewString(application->messageLoader, 75);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBaseStatRose);
         StringTemplate_SetPokemonStatName(application->template, 1, 2);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 15:
-        string = MessageLoader_GetNewString(application->messageLoader, 75);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBaseStatRose);
         StringTemplate_SetPokemonStatName(application->template, 1, 3);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 16:
-        string = MessageLoader_GetNewString(application->messageLoader, 75);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBaseStatRose);
         StringTemplate_SetPokemonStatName(application->template, 1, 4);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 17:
-        string = MessageLoader_GetNewString(application->messageLoader, 75);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBaseStatRose);
         StringTemplate_SetPokemonStatName(application->template, 1, 5);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 18:
-        string = MessageLoader_GetNewString(application->messageLoader, 110 + param2);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBecameMoreFriendly + param2);
         StringTemplate_SetPokemonStatName(application->template, 1, 0);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 19:
-        string = MessageLoader_GetNewString(application->messageLoader, 110 + param2);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBecameMoreFriendly + param2);
         StringTemplate_SetPokemonStatName(application->template, 1, 1);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 20:
-        string = MessageLoader_GetNewString(application->messageLoader, 110 + param2);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBecameMoreFriendly + param2);
         StringTemplate_SetPokemonStatName(application->template, 1, 2);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 21:
-        string = MessageLoader_GetNewString(application->messageLoader, 110 + param2);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBecameMoreFriendly + param2);
         StringTemplate_SetPokemonStatName(application->template, 1, 3);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 22:
-        string = MessageLoader_GetNewString(application->messageLoader, 110 + param2);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBecameMoreFriendly + param2);
         StringTemplate_SetPokemonStatName(application->template, 1, 4);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 23:
-        string = MessageLoader_GetNewString(application->messageLoader, 110 + param2);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonBecameMoreFriendly + param2);
         StringTemplate_SetPokemonStatName(application->template, 1, 5);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 25:
     case 26:
-        string = MessageLoader_GetNewString(application->messageLoader, 72);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MovesPPIncreased);
         StringTemplate_SetMoveName(application->template, 0, param2);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         break;
     case 27:
-        MessageLoader_GetString(application->messageLoader, pl_msg_00000453_00069, application->tmpString);
+        MessageLoader_GetString(application->messageLoader, PartyMenu_Text_PPWasRestored, application->tmpString);
         break;
     default:
-        MessageLoader_GetString(application->messageLoader, pl_msg_00000453_00105, application->tmpString);
+        MessageLoader_GetString(application->messageLoader, PartyMenu_Text_ItWontHaveAnyEffect, application->tmpString);
     }
 }
 
@@ -583,13 +583,13 @@ int sub_02085804(PartyMenuApplication *application)
         application->currPartySlot = GetFirstFaintedMon(application, 0);
 
         if (application->currPartySlot == 0xff) {
-            MessageLoader_GetString(application->messageLoader, pl_msg_00000453_00105, application->tmpString);
+            MessageLoader_GetString(application->messageLoader, PartyMenu_Text_ItWontHaveAnyEffect, application->tmpString);
             PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, TRUE);
             application->unk_B00 = sub_02085348;
             PartyMenu_UpdateCursor(application, 0, 1);
             application->currPartySlot = 7;
 
-            return 5;
+            return PARTY_MENU_STATE_5;
         }
 
         if (application->currPartySlot != 0) {
@@ -651,13 +651,13 @@ int sub_02085804(PartyMenuApplication *application)
                 Bag_TryRemoveItem(application->partyMenu->bag, application->partyMenu->usedItemID, 1, HEAP_ID_PARTY_MENU);
                 application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_DONE;
                 application->currPartySlot = 7;
-                return 32;
+                return PARTY_MENU_STATE_32;
             }
         }
         break;
     }
 
-    return 7;
+    return PARTY_MENU_STATE_USE_SACRED_ASH;
 }
 
 static int sub_02085A70(void *applicationPtr)
@@ -743,13 +743,13 @@ static int sub_02085C50(void *applicationPtr)
             Sound_PlayEffect(SEQ_SE_CONFIRM);
             PartyMenu_RemoveContextWindow(application);
             application->unk_B13 = 3;
-            application->partyMenu->unk_34 = 0;
+            application->partyMenu->levelUpMoveIndex = 0;
         }
         break;
     case 3:
         mon = Party_GetPokemonBySlotIndex(application->partyMenu->party, application->currPartySlot);
 
-        switch (Pokemon_LevelUpMove(mon, &application->partyMenu->unk_34, &application->partyMenu->learnedMove)) {
+        switch (Pokemon_LevelUpMove(mon, &application->partyMenu->levelUpMoveIndex, &application->partyMenu->learnedMove)) {
         case 0x0:
             application->unk_B13 = 6;
             break;
@@ -765,9 +765,9 @@ static int sub_02085C50(void *applicationPtr)
 
             application->unk_B04.unk_00 = sub_02085FB4;
             application->unk_B04.unk_04 = sub_02086008;
-            application->unk_B0E = 26;
+            application->stateAfterMessage = PARTY_MENU_STATE_26;
 
-            return 24;
+            return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
         case 0xfffe:
             break;
         default:
@@ -844,36 +844,36 @@ int sub_02085EF4(PartyMenuApplication *application)
     }
 
     StringTemplate_SetMoveName(application->template, 1, Pokemon_GetValue(mon, 54 + application->partyMenu->selectedMoveSlot, NULL));
-    string = MessageLoader_GetNewString(application->messageLoader, 60);
+    string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonForgotMove);
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
     PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, TRUE);
 
-    application->unk_B0E = 5;
+    application->stateAfterMessage = PARTY_MENU_STATE_5;
     application->unk_B13 = 5;
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 static int sub_02085FB4(void *applicationPtr)
 {
     PartyMenuApplication *application = applicationPtr;
-    String *string = MessageLoader_GetNewString(application->messageLoader, 59);
+    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_WhichMoveShouldBeForgotten);
 
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
     PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, FALSE);
 
-    application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_FORGET_MOVE;
-    application->unk_B0E = 25;
+    application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_OVERWRITE_MOVE_LEVEL_UP;
+    application->stateAfterMessage = PARTY_MENU_STATE_25;
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 static int sub_02086008(void *applicationPtr)
 {
     PartyMenuApplication *application = applicationPtr;
-    String *string = MessageLoader_GetNewString(application->messageLoader, 55);
+    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_StopTryingToTeachMove);
 
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
@@ -881,30 +881,30 @@ static int sub_02086008(void *applicationPtr)
 
     application->unk_B04.unk_00 = sub_02086060;
     application->unk_B04.unk_04 = sub_020860AC;
-    application->unk_B0E = 26;
+    application->stateAfterMessage = PARTY_MENU_STATE_26;
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 static int sub_02086060(void *applicationPtr)
 {
     PartyMenuApplication *application = applicationPtr;
-    String *string = MessageLoader_GetNewString(application->messageLoader, 58);
+    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonDidNotLearnMove);
 
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
     PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, FALSE);
 
-    application->unk_B0E = 5;
+    application->stateAfterMessage = PARTY_MENU_STATE_5;
     application->unk_B13 = 4;
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 static int sub_020860AC(void *applicationPtr)
 {
     PartyMenuApplication *application = applicationPtr;
-    String *string = MessageLoader_GetNewString(application->messageLoader, 52);
+    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonWantsToLearnMove);
 
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
@@ -912,9 +912,9 @@ static int sub_020860AC(void *applicationPtr)
 
     application->unk_B04.unk_00 = sub_02085FB4;
     application->unk_B04.unk_04 = sub_02086008;
-    application->unk_B0E = 26;
+    application->stateAfterMessage = PARTY_MENU_STATE_26;
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 u8 PartyMenu_CanMonLearnMove(PartyMenuApplication *application, Pokemon *mon)
@@ -962,43 +962,43 @@ int sub_0208615C(PartyMenuApplication *application)
     case 2:
     case 3:
         TeachMove(application, mon, v2);
-        string = MessageLoader_GetNewString(application->messageLoader, 61);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonLearnedMove);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, TRUE);
         application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_DONE;
-        application->unk_B0E = 25;
+        application->stateAfterMessage = PARTY_MENU_STATE_25;
         break;
     case 0xfd:
-        string = MessageLoader_GetNewString(application->messageLoader, 63);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonAlreadyKnowsMove);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, TRUE);
         application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_DONE;
-        application->unk_B0E = 25;
+        application->stateAfterMessage = PARTY_MENU_STATE_25;
         break;
     case 0xfe:
-        string = MessageLoader_GetNewString(application->messageLoader, 52);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonWantsToLearnMove);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, TRUE);
 
         application->unk_B04.unk_00 = sub_02086438;
         application->unk_B04.unk_04 = sub_0208648C;
-        application->unk_B0E = 26;
+        application->stateAfterMessage = PARTY_MENU_STATE_26;
         break;
     case 0xff:
-        string = MessageLoader_GetNewString(application->messageLoader, 62);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonAndMoveAreNotCompatible);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, TRUE);
 
         application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_DONE;
-        application->unk_B0E = 25;
+        application->stateAfterMessage = PARTY_MENU_STATE_25;
         break;
     }
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 int sub_020862F8(PartyMenuApplication *application)
@@ -1015,13 +1015,13 @@ int sub_020862F8(PartyMenuApplication *application)
     }
 
     StringTemplate_SetMoveName(application->template, 1, Pokemon_GetValue(mon, 54 + application->partyMenu->selectedMoveSlot, NULL));
-    string = MessageLoader_GetNewString(application->messageLoader, 60);
+    string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonForgotMove);
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
     PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, TRUE);
 
-    application->unk_B0E = 22;
-    return 24;
+    application->stateAfterMessage = PARTY_MENU_STATE_22;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 int sub_020863A0(PartyMenuApplication *application)
@@ -1033,40 +1033,40 @@ int sub_020863A0(PartyMenuApplication *application)
         mon = Party_GetPokemonBySlotIndex(application->partyMenu->party, application->currPartySlot);
 
         TeachMove(application, mon, application->partyMenu->selectedMoveSlot);
-        string = MessageLoader_GetNewString(application->messageLoader, 61);
+        string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonLearnedMove);
         StringTemplate_SetMoveName(application->template, 1, application->partyMenu->learnedMove);
         StringTemplate_Format(application->template, application->tmpString, string);
         String_Free(string);
         PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, FALSE);
 
         application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_DONE;
-        application->unk_B0E = 25;
+        application->stateAfterMessage = PARTY_MENU_STATE_25;
 
-        return 24;
+        return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
     }
 
-    return 22;
+    return PARTY_MENU_STATE_22;
 }
 
 static int sub_02086438(void *applicationPtr)
 {
     PartyMenuApplication *application = applicationPtr;
-    String *string = MessageLoader_GetNewString(application->messageLoader, 59);
+    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_WhichMoveShouldBeForgotten);
 
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
     PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, FALSE);
 
-    application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_LEARNED_MOVE;
-    application->unk_B0E = 25;
+    application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_OVERWRITE_MOVE_TM_HM;
+    application->stateAfterMessage = PARTY_MENU_STATE_25;
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 static int sub_0208648C(void *applicationPtr)
 {
     PartyMenuApplication *application = applicationPtr;
-    String *string = MessageLoader_GetNewString(application->messageLoader, 55);
+    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_StopTryingToTeachMove);
 
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
@@ -1074,30 +1074,30 @@ static int sub_0208648C(void *applicationPtr)
 
     application->unk_B04.unk_00 = sub_020864E4;
     application->unk_B04.unk_04 = sub_02086538;
-    application->unk_B0E = 26;
+    application->stateAfterMessage = PARTY_MENU_STATE_26;
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 static int sub_020864E4(void *applicationPtr)
 {
     PartyMenuApplication *application = applicationPtr;
-    String *string = MessageLoader_GetNewString(application->messageLoader, 58);
+    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonDidNotLearnMove);
 
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
     PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, FALSE);
 
     application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_DONE;
-    application->unk_B0E = 25;
+    application->stateAfterMessage = PARTY_MENU_STATE_25;
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 static int sub_02086538(void *applicationPtr)
 {
     PartyMenuApplication *application = applicationPtr;
-    String *string = MessageLoader_GetNewString(application->messageLoader, 52);
+    String *string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MonWantsToLearnMove);
 
     StringTemplate_Format(application->template, application->tmpString, string);
     String_Free(string);
@@ -1105,9 +1105,9 @@ static int sub_02086538(void *applicationPtr)
 
     application->unk_B04.unk_00 = sub_02086438;
     application->unk_B04.unk_04 = sub_0208648C;
-    application->unk_B0E = 26;
+    application->stateAfterMessage = PARTY_MENU_STATE_26;
 
-    return 24;
+    return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
 }
 
 static void TeachMove(PartyMenuApplication *application, Pokemon *mon, u32 moveSlot)
@@ -1138,7 +1138,7 @@ static u8 BufferLearnedMoveInSlot(PartyMenuApplication *application, u8 moveSlot
 
     mon = Party_GetPokemonBySlotIndex(application->partyMenu->party, application->currPartySlot);
     moveID = (u16)Pokemon_GetValue(mon, MON_DATA_MOVE1 + moveSlot, NULL);
-    string = MessageLoader_GetNewString(application->messageLoader, 162 + moveSlot);
+    string = MessageLoader_GetNewString(application->messageLoader, PartyMenu_Text_MoveSlot0 + moveSlot);
 
     StringTemplate_SetMoveName(application->template, 0, moveID);
     StringTemplate_Format(application->template, application->tmpFormat, string);
@@ -1159,9 +1159,9 @@ void sub_020866A0(PartyMenuApplication *application, u8 param1)
     u8 moveCount;
 
     if (param1 == 0) {
-        PartyMenu_PrintMediumMessage(application, pl_msg_00000453_00041, TRUE);
+        PartyMenu_PrintMediumMessage(application, PartyMenu_Text_BoostPPOfWhichMove, TRUE);
     } else {
-        PartyMenu_PrintMediumMessage(application, pl_msg_00000453_00040, TRUE);
+        PartyMenu_PrintMediumMessage(application, PartyMenu_Text_RestoreWhichMove, TRUE);
     }
 
     application->contextMenuChoices = StringList_New(4, HEAP_ID_PARTY_MENU);
@@ -1196,13 +1196,13 @@ int sub_02086774(PartyMenuApplication *application)
     switch (menuAction) {
     case MENU_NOTHING_CHOSEN:
         break;
-    case MENU_CANCELED:
+    case MENU_CANCEL:
         Window_EraseMessageBox(&application->windows[33], 1);
         Window_EraseStandardFrame(&application->windows[36], 1);
         Menu_Free(application->contextMenu, NULL);
         StringList_Free(application->contextMenuChoices);
-        PartyMenu_PrintShortMessage(application, pl_msg_00000453_00032, TRUE);
-        return 4;
+        PartyMenu_PrintShortMessage(application, PartyMenu_Text_UseOnWhichMon, TRUE);
+        return PARTY_MENU_STATE_USE_ITEM;
     default:
         Window_EraseMessageBox(&application->windows[33], 1);
         Window_EraseStandardFrame(&application->windows[36], 1);
@@ -1215,18 +1215,18 @@ int sub_02086774(PartyMenuApplication *application)
             Bag_TryRemoveItem(application->partyMenu->bag, application->partyMenu->usedItemID, 1, HEAP_ID_PARTY_MENU);
             Sound_PlayEffect(SEQ_SE_DP_KAIFUKU);
         } else {
-            MessageLoader_GetString(application->messageLoader, pl_msg_00000453_00105, application->tmpString);
+            MessageLoader_GetString(application->messageLoader, PartyMenu_Text_ItWontHaveAnyEffect, application->tmpString);
         }
 
         PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, TRUE);
 
         application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_DONE;
-        application->unk_B0E = 25;
+        application->stateAfterMessage = PARTY_MENU_STATE_25;
 
-        return 24;
+        return PARTY_MENU_STATE_SHOW_MESSAGE_THEN_NEXT_STATE;
     }
 
-    return 6;
+    return PARTY_MENU_STATE_6;
 }
 
 void sub_020868B0(PartyMenuApplication *application)
@@ -1234,17 +1234,17 @@ void sub_020868B0(PartyMenuApplication *application)
     Window_EraseMessageBox(&application->windows[32], 1);
 
     if (application->partyMembers[application->currPartySlot].heldItem == ITEM_NONE) {
-        MessageLoader_GetString(application->messageLoader, pl_msg_00000453_00127, application->tmpString);
+        MessageLoader_GetString(application->messageLoader, PartyMenu_Text_MailWasTransferredFromMailbox, application->tmpString);
         PartyMenu_DrawMemberMail(application, application->currPartySlot);
     } else {
-        MessageLoader_GetString(application->messageLoader, pl_msg_00000453_00128, application->tmpString);
+        MessageLoader_GetString(application->messageLoader, PartyMenu_Text_MonHoldingItemCannotHoldMail, application->tmpString);
         application->currPartySlot = 7;
     }
 
     PartyMenu_PrintLongMessage(application, PRINT_MESSAGE_PRELOADED, TRUE);
 
     application->partyMenu->menuSelectionResult = PARTY_MENU_EXIT_CODE_DONE;
-    application->unk_B0E = 25;
+    application->stateAfterMessage = PARTY_MENU_STATE_25;
 }
 
 static u16 GetCurrentMapLabel(PartyMenuApplication *application)

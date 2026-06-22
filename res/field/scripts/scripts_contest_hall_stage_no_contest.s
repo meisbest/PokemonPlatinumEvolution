@@ -2,50 +2,26 @@
 #include "res/text/bank/contest_hall_stage_no_contest.h"
 
 
-    ScriptEntry _0012
-    ScriptEntry _0025
-    ScriptEntry _0038
-    ScriptEntry _004B
+    ScriptEntry ContestHallStageNoContest_Hiker
+    ScriptEntry ContestHallStageNoContest_Idol
+    ScriptEntry ContestHallStageNoContest_Beauty
+    ScriptEntry ContestHallStageNoContest_BlackBelt
     ScriptEntryEnd
 
-_0012:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ContestHallStageNoContest_Hiker:
+    NPCMessage ContestHallStageNoContest_Text_DressUpYourPokemon
     End
 
-_0025:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ContestHallStageNoContest_Idol:
+    NPCMessage ContestHallStageNoContest_Text_MimicTheLeadDancer
     End
 
-_0038:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ContestHallStageNoContest_Beauty:
+    NPCMessage ContestHallStageNoContest_Text_PokemonNeedTheRightMoves
     End
 
-_004B:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ContestHallStageNoContest_BlackBelt:
+    NPCMessage ContestHallStageNoContest_Text_PullOffACoolMove
     End
 
     .balign 4, 0

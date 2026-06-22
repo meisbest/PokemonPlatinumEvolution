@@ -29,7 +29,7 @@
 #include "sprite_util.h"
 #include "unk_02012744.h"
 
-#include "res/graphics/pokedex/zukan.naix.h"
+#include "res/graphics/pokedex/zukan.naix"
 #include "res/text/bank/pokedex.h"
 
 #define TERMINALVALUE      0xffff
@@ -1160,7 +1160,7 @@ static void PokedexSort_PopulateDexStatus(EncounterCollection *encounterCollecti
         fieldCategory = PEFC_FIELDNIGHT;
         break;
     default:
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         break;
     }
 

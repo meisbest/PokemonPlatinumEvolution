@@ -2,50 +2,26 @@
 #include "res/text/bank/route_212_gate_to_hearthome_city.h"
 
 
-    ScriptEntry _0012
-    ScriptEntry _0025
-    ScriptEntry _0038
-    ScriptEntry _004B
+    ScriptEntry Route212GateToHearthomeCity_Reporter
+    ScriptEntry Route212GateToHearthomeCity_Cameraman
+    ScriptEntry Route212GateToHearthomeCity_Collector
+    ScriptEntry Route212GateToHearthomeCity_Cowgirl
     ScriptEntryEnd
 
-_0012:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route212GateToHearthomeCity_Reporter:
+    NPCMessage Route212GateToHearthomeCity_Text_ContestsAreInteresting
     End
 
-_0025:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route212GateToHearthomeCity_Cameraman:
+    NPCMessage Route212GateToHearthomeCity_Text_GatesClosed
     End
 
-_0038:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route212GateToHearthomeCity_Collector:
+    NPCMessage Route212GateToHearthomeCity_Text_TraveledLongWay
     End
 
-_004B:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 4
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route212GateToHearthomeCity_Cowgirl:
+    NPCMessage Route212GateToHearthomeCity_Text_GivenPokemonPoffins
     End
 
     .balign 4, 0

@@ -8,14 +8,14 @@
     ScriptEntry SunyshoreMarket_Sailor
     ScriptEntry SunyshoreMarket_SealShop
     ScriptEntry SunyshoreMarket_PokefanM
-    ScriptEntry SunyshoreMarket_Dummy
+    ScriptEntry SunyshoreMarket_Dummy5
     ScriptEntry SunyshoreMarket_BattleGirl
 
-SunyshoreMarket_Dummy:
+SunyshoreMarket_Dummy5:
     End
 
 SunyshoreMarket_EffortRibbonWoman:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GetFirstNonEggInParty VAR_0x8000
@@ -27,20 +27,20 @@ SunyshoreMarket_EffortRibbonWoman:
     GoToIfLt VAR_RESULT, MAX_EVS_ALL_STATS, SunyshoreMarket_NotEnoughEVs
     Message SunyshoreMarket_Text_ItWorkedStupendouslyHard
     SetPartyMonRibbon VAR_0x8000, RIBBON_HOENN_EFFORT
-    PlaySound SEQ_FANFA1
+    PlayFanfare SEQ_FANFA1
     BufferPlayerName 1
     Message SunyshoreMarket_Text_PlayerReceivedEffortRibbon
-    WaitSound
+    WaitFanfare
     BufferPartyMonSpecies 0, VAR_0x8000
     Message SunyshoreMarket_Text_PlayerPutEffortRibbonOn
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 SunyshoreMarket_NotEnoughEVs:
     Message SunyshoreMarket_Text_ItNeedsToWorkHarder
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -48,23 +48,17 @@ SunyshoreMarket_NotEnoughEVs:
 SunyshoreMarket_PokemonAlreadyHasEffortRibbon:
     BufferPartyMonSpecies 0, VAR_0x8000
     Message SunyshoreMarket_Text_EffortRibbonLooksGood
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 SunyshoreMarket_Sailor:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message SunyshoreMarket_Text_BestKnownForSeals
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage SunyshoreMarket_Text_BestKnownForSeals
     End
 
 SunyshoreMarket_SealShop:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     CheckItem ITEM_SEAL_CASE, 1, VAR_RESULT
@@ -78,7 +72,7 @@ SunyshoreMarket_SealShop:
 
 SunyshoreMarket_NoSealCase:
     Message SunyshoreMarket_Text_NoSealCase
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -124,7 +118,7 @@ SunyshoreMarket_SealShopSunday:
     Return
 
 SunyshoreMarket_PokefanM:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     Message SunyshoreMarket_Text_SeeTheSealMerchant
@@ -137,26 +131,20 @@ SunyshoreMarket_PokefanM:
 
 SunyshoreMarket_PokefanM_FirstWeekHalfMessage:
     Message SunyshoreMarket_Text_DidntHaveSeals
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 SunyshoreMarket_PokefanM_SecondWeekHalfMessage:
     Message SunyshoreMarket_Text_CameThroughWithDifferentSeals
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 SunyshoreMarket_BattleGirl:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message SunyshoreMarket_Text_HugeFanOfWiFiPlaza
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage SunyshoreMarket_Text_HugeFanOfWiFiPlaza
     End
 
     .balign 4, 0

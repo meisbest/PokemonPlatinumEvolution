@@ -148,7 +148,7 @@ static FieldSystem *InitFieldSystem(ApplicationManager *appMan)
 {
     Heap_Create(HEAP_ID_APPLICATION, HEAP_ID_FIELD2, HEAP_SIZE_FIELD2);
     Heap_Create(HEAP_ID_APPLICATION, HEAP_ID_FIELD3, HEAP_SIZE_FIELD3);
-    Heap_Create(HEAP_ID_SYSTEM, HEAP_ID_91, 0x300);
+    Heap_Create(HEAP_ID_SYSTEM, HEAP_ID_NETWORK_ICON, HEAP_SIZE_NETWORK_ICON);
 
     FieldSystem *fieldSystem = ApplicationManager_NewData(appMan, sizeof(FieldSystem), HEAP_ID_FIELD2);
     MI_CpuClear8(fieldSystem, sizeof(FieldSystem));
@@ -189,7 +189,7 @@ static void TeardownFieldSystem(ApplicationManager *appMan)
 
     Heap_Free(fieldSystem->processManager);
     ApplicationManager_FreeData(appMan);
-    Heap_Destroy(HEAP_ID_91);
+    Heap_Destroy(HEAP_ID_NETWORK_ICON);
     Heap_Destroy(HEAP_ID_FIELD2);
     Heap_Destroy(HEAP_ID_FIELD3);
 }
@@ -282,13 +282,13 @@ static void HandleFieldInput(FieldSystem *fieldSystem)
     case MAP_LOAD_TYPE_BATTLE_TOWER:
         if (processInput) {
             if (FieldInput_Process_BattleTower(&fieldInput, fieldSystem) == TRUE) {
-                MapNamePopUp_Hide(fieldSystem->unk_04->unk_08);
+                MapNamePopUp_Hide(fieldSystem->unk_04->mapPopup);
                 Signpost_DoCommand(fieldSystem, SIGNPOST_CMD_REMOVE);
                 ov5_021E0EEC(fieldSystem->playerAvatar);
                 FieldSystem_SendPoketchEvent(fieldSystem, POKETCH_EVENT_SLEEP, 1);
             } else {
                 if (gSystem.pressedKeys & PAD_BUTTON_A) {
-                    MapNamePopUp_Hide(fieldSystem->unk_04->unk_08);
+                    MapNamePopUp_Hide(fieldSystem->unk_04->mapPopup);
                 }
 
                 BOOL tappedPoketch = FALSE;
@@ -305,14 +305,14 @@ static void HandleFieldInput(FieldSystem *fieldSystem)
     default:
         if (processInput) {
             if (FieldInput_Process(&fieldInput, fieldSystem) == TRUE) {
-                MapNamePopUp_Hide(fieldSystem->unk_04->unk_08);
+                MapNamePopUp_Hide(fieldSystem->unk_04->mapPopup);
                 Signpost_DoCommand(fieldSystem, SIGNPOST_CMD_REMOVE);
                 sub_0205F56C(fieldSystem->playerAvatar);
                 ov5_021E0EEC(fieldSystem->playerAvatar);
                 FieldSystem_SendPoketchEvent(fieldSystem, POKETCH_EVENT_SLEEP, 1);
             } else {
                 if (gSystem.pressedKeys & PAD_BUTTON_A) {
-                    MapNamePopUp_Hide(fieldSystem->unk_04->unk_08);
+                    MapNamePopUp_Hide(fieldSystem->unk_04->mapPopup);
                 }
 
                 BOOL tappedPoketch = 0;

@@ -2,17 +2,11 @@
 #include "res/text/bank/galactic_hq_b1f.h"
 
 
-    ScriptEntry _0006
+    ScriptEntry GalacticHQB1F_GruntM
     ScriptEntryEnd
 
-_0006:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+GalacticHQB1F_GruntM:
+    NPCMessage GalacticHQB1F_Text_GruntiestOfGrunts
     End
 
     .balign 4, 0

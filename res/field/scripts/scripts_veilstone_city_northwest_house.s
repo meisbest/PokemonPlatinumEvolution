@@ -2,42 +2,21 @@
 #include "res/text/bank/veilstone_city_northwest_house.h"
 
 
-    ScriptEntry _000E
-    ScriptEntry _0021
-    ScriptEntry _0034
+    ScriptEntry VeilstoneCityNorthwestHouse_AceTrainerF
+    ScriptEntry VeilstoneCityNorthwestHouse_OldWoman
+    ScriptEntry VeilstoneCityNorthwestHouse_Buneary
     ScriptEntryEnd
 
-_000E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+VeilstoneCityNorthwestHouse_AceTrainerF:
+    NPCMessage VeilstoneCityNorthwestHouse_Text_MtCoronetPartedSinnoh
     End
 
-_0021:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+VeilstoneCityNorthwestHouse_OldWoman:
+    NPCMessage VeilstoneCityNorthwestHouse_Text_PokemonAppearInManyGuises
     End
 
-_0034:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    WaitFanfare SEQ_SE_CONFIRM
-    PlayCry SPECIES_BUNEARY
-    Message 2
-    WaitCry
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+VeilstoneCityNorthwestHouse_Buneary:
+    PokemonCryAndMessage SPECIES_BUNEARY, VeilstoneCityNorthwestHouse_Text_BunearyCry
     End
 
     .balign 4, 0

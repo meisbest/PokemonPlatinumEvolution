@@ -1,13 +1,14 @@
 #include "macros/scrcmd.inc"
 #include "res/text/bank/veilstone_store_elevator.h"
 #include "res/text/bank/menu_entries.h"
+#include "res/field/events/events_veilstone_store_elevator.h"
 
 
-    ScriptEntry VeilstoneStoreElevator_TalkElevatorOperator
+    ScriptEntry VeilstoneStoreElevator_Receptionist
     ScriptEntryEnd
 
-VeilstoneStoreElevator_TalkElevatorOperator:
-    PlayFanfare SEQ_SE_CONFIRM
+VeilstoneStoreElevator_Receptionist:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GetFloorsAbove VAR_ELEVATOR_FLOORS_ABOVE
@@ -145,9 +146,9 @@ VeilstoneStoreElevator_GoingDownMessage:
 VeilstoneStoreElevator_ElevatorAnimation:
     SetVar VAR_ELEVATOR_FLOORS_ABOVE, -1
     CloseMessage
-    ApplyMovement 0, VeilstoneStoreElevator_LookDown
+    ApplyMovement LOCALID_RECEPTIONIST, VeilstoneStoreElevator_Movement_ReceptionistWalkOnSpotSouth
     WaitMovement
-    WaitFanfare SEQ_SE_CONFIRM
+    WaitSE SEQ_SE_CONFIRM
     PlayElevatorAnimation VAR_0x8004, 4
     Return
 
@@ -192,7 +193,7 @@ VeilstoneStoreElevator_ArrivedFloorB1:
     End
 
 VeilstoneStoreElevator_ElevatorDone:
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -201,7 +202,7 @@ VeilstoneStoreElevator_SelectCurrentFloor:
     SetVar VAR_ELEVATOR_FLOORS_ABOVE, -1
     WaitTime 1, VAR_RESULT
     Message VeilstoneStoreElevator_Text_SameFloor
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -210,12 +211,12 @@ VeilstoneStoreElevator_SelectNoFloor:
     SetVar VAR_ELEVATOR_FLOORS_ABOVE, -1
     WaitTime 1, VAR_RESULT
     Message VeilstoneStoreElevator_Text_LookForward
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
     .balign 4, 0
-VeilstoneStoreElevator_LookDown:
+VeilstoneStoreElevator_Movement_ReceptionistWalkOnSpotSouth:
     WalkOnSpotNormalSouth
     EndMovement

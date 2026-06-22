@@ -2,80 +2,56 @@
 #include "res/text/bank/pastoria_city_observatory_gate_2f.h"
 
 
-    ScriptEntry _0016
-    ScriptEntry _0078
-    ScriptEntry _008B
-    ScriptEntry _009E
-    ScriptEntry _00B1
+    ScriptEntry PastoriaCityObservatoryGate2F_Binocular
+    ScriptEntry PastoriaCityObservatoryGate2F_AceTrainerF
+    ScriptEntry PastoriaCityObservatoryGate2F_BugCatcher
+    ScriptEntry PastoriaCityObservatoryGate2F_PokefanM
+    ScriptEntry PastoriaCityObservatoryGate2F_Picnicker
     ScriptEntryEnd
 
-_0016:
-    PlayFanfare SEQ_SE_CONFIRM
+PastoriaCityObservatoryGate2F_Binocular:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     ShowMoney 20, 2
-    Message 0
+    Message PastoriaCityObservatoryGate2F_Text_AskPut100InBinoculars
     ShowYesNoMenu VAR_RESULT
     CloseMessage
-    GoToIfEq VAR_RESULT, MENU_YES, _003E
+    GoToIfEq VAR_RESULT, MENU_YES, PastoriaCityObservatoryGate2F_TryUseBinoculars
     HideMoney
     ReleaseAll
     End
 
-_003E:
-    GoToIfNotEnoughMoney 100, _006B
+PastoriaCityObservatoryGate2F_TryUseBinoculars:
+    GoToIfNotEnoughMoney 100, PastoriaCityObservatoryGate2F_NotEnoughMoney
     RemoveMoney 100
     UpdateMoneyDisplay
-    PlayFanfare SEQ_SE_DP_REGI
-    WaitFanfare SEQ_SE_DP_REGI
+    PlaySE SEQ_SE_DP_REGI
+    WaitSE SEQ_SE_DP_REGI
     HideMoney
     StartGreatMarshLookout
     ReleaseAll
     End
 
-_006B:
-    Message 1
-    WaitABXPadPress
+PastoriaCityObservatoryGate2F_NotEnoughMoney:
+    Message PastoriaCityObservatoryGate2F_Text_NotEnoughMoney
+    WaitButton
     CloseMessage
     HideMoney
     ReleaseAll
     End
 
-_0078:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+PastoriaCityObservatoryGate2F_AceTrainerF:
+    NPCMessage PastoriaCityObservatoryGate2F_Text_PokemonDifferFromYesterday
     End
 
-_008B:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+PastoriaCityObservatoryGate2F_BugCatcher:
+    NPCMessage PastoriaCityObservatoryGate2F_Text_YouCanSeePokemon
     End
 
-_009E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 4
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+PastoriaCityObservatoryGate2F_PokefanM:
+    NPCMessage PastoriaCityObservatoryGate2F_Text_TakeQuickTrams
     End
 
-_00B1:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 5
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+PastoriaCityObservatoryGate2F_Picnicker:
+    NPCMessage PastoriaCityObservatoryGate2F_Text_YouCanSinkInBog
     End

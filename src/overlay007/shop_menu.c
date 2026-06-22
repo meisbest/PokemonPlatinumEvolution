@@ -52,7 +52,7 @@
 #include "system_vars.h"
 #include "text.h"
 #include "trainer_info.h"
-#include "tv_episode_segment.h"
+#include "tv_segment.h"
 #include "underground.h"
 #include "unk_0202C9F4.h"
 #include "unk_0202D05C.h"
@@ -61,7 +61,8 @@
 #include "unk_02097B18.h"
 #include "vars_flags.h"
 
-#include "res/graphics/shop_menu/shop_gra.naix.h"
+#include "res/graphics/shop_menu/shop_gra.naix"
+#include "res/graphics/sprite_templates/shop_menu.h"
 #include "res/text/bank/location_names.h"
 #include "res/text/bank/underground_goods.h"
 #include "res/text/bank/unk_0543.h"
@@ -197,7 +198,7 @@ static const u8 sShop_BagPockets[] = {
     POCKET_MAIL,
     POCKET_BATTLE_ITEMS,
     POCKET_KEY_ITEMS,
-    -1
+    POCKET_LIST_END,
 };
 
 static const WindowTemplate sShop_FrontierCurrMoneyWindowTemplate = {
@@ -270,7 +271,7 @@ void Shop_Start(FieldTask *task, FieldSystem *fieldSystem, u16 *shopItems, u8 ma
 
 static u8 Shop_GetCameraPosDest(FieldSystem *fieldSystem)
 {
-    int dir = PlayerAvatar_GetDir(fieldSystem->playerAvatar);
+    int dir = PlayerAvatar_GetFacingDir(fieldSystem->playerAvatar);
 
     if ((dir == DIR_NORTH) || (dir == DIR_SOUTH) || (dir == DIR_EAST)) {
         return 10;
@@ -381,21 +382,21 @@ static void Shop_InitContextMenu(ShopMenu *shopMenu)
 
         StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00015, SHOP_STATE_INIT_CAMERA);
         StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00016, 14);
-        StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00017, LIST_CANCEL);
+        StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00017, MENU_CANCEL);
         Window_Add(shopMenu->bgConfig, &shopMenu->windows[0], BG_LAYER_MAIN_3, 1, 1, 13, 6, FIELD_MESSAGE_PALETTE_INDEX, (((1024 - (18 + 12) - 9 - (32 * 8)) - (18 + 12 + 24)) - (27 * 4)) - (13 * 6));
     } else if (shopMenu->martType == MART_TYPE_FRONTIER) {
         maxOptions = 2;
         shopMenu->optionsList = StringList_New(maxOptions, HEAP_ID_FIELD2);
 
         StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00029, SHOP_STATE_INIT_CAMERA);
-        StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00030, LIST_CANCEL);
+        StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00030, MENU_CANCEL);
         Window_Add(shopMenu->bgConfig, &shopMenu->windows[0], BG_LAYER_MAIN_3, 23, 13, 7, 4, FIELD_MESSAGE_PALETTE_INDEX, (((1024 - (18 + 12) - 9 - (32 * 8)) - (18 + 12 + 24)) - (27 * 4)) - (13 * 6));
     } else {
         maxOptions = 2;
         shopMenu->optionsList = StringList_New(maxOptions, HEAP_ID_FIELD2);
 
         StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00015, SHOP_STATE_INIT_CAMERA);
-        StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00017, LIST_CANCEL);
+        StringList_AddFromMessageBank(shopMenu->optionsList, shopMenu->msgLoader, pl_msg_00000543_00017, MENU_CANCEL);
         Window_Add(shopMenu->bgConfig, &shopMenu->windows[0], BG_LAYER_MAIN_3, 1, 1, 13, 4, 13, (((1024 - (18 + 12) - 9 - (32 * 8)) - (18 + 12 + 24)) - (27 * 4)) - (13 * 6));
     }
 
@@ -421,7 +422,7 @@ static u8 Shop_SelectContextMenu(ShopMenu *shopMenu)
     switch (input) {
     case MENU_NOTHING_CHOSEN:
         break;
-    case MENU_CANCELED:
+    case MENU_CANCEL:
         Shop_CloseContextMenu(shopMenu);
         return SHOP_STATE_SHOW_EXIT_MESSAGE;
     default:
@@ -667,9 +668,9 @@ static void Shop_InitItemsList(ShopMenu *shopMenu)
     }
 
     if (isTMShop) {
-        StringList_AddFromMessageBank(shopMenu->itemsList, shopMenu->msgLoader, pl_msg_00000543_00026, LIST_CANCEL);
+        StringList_AddFromMessageBank(shopMenu->itemsList, shopMenu->msgLoader, pl_msg_00000543_00026, MENU_CANCEL);
     } else {
-        StringList_AddFromMessageBank(shopMenu->itemsList, shopMenu->msgLoader, pl_msg_00000543_00008, LIST_CANCEL);
+        StringList_AddFromMessageBank(shopMenu->itemsList, shopMenu->msgLoader, pl_msg_00000543_00008, MENU_CANCEL);
     }
 
     MessageLoader_Free(itemNames);
@@ -704,7 +705,7 @@ static void Shop_MenuCursorCallback(ListMenu *menu, u32 index, u8 onInit)
 
     Window_FillTilemap(&shopMenu->windows[SHOP_WINDOW_ITEM_DESCRIPTION], 0);
 
-    if (index != MENU_CANCELED) {
+    if (index != MENU_CANCEL) {
         String *string;
 
         if (shopMenu->martType == MART_TYPE_NORMAL) {
@@ -762,7 +763,7 @@ static void Shop_MenuPrintCallback(ListMenu *menu, u32 index, u8 yOffset)
 {
     ShopMenu *shopMenu = (ShopMenu *)ListMenu_GetAttribute(menu, LIST_MENU_PARENT);
 
-    if (index != MENU_CANCELED) {
+    if (index != MENU_CANCEL) {
         String *string, *fmtString;
         u32 price, strWidth;
         u16 itemId = index;
@@ -792,7 +793,7 @@ static void Shop_MenuPrintCallback(ListMenu *menu, u32 index, u8 yOffset)
         String_Free(string);
     }
 
-    if (index == MENU_CANCELED) {
+    if (index == MENU_CANCEL) {
         String *string = MessageLoader_GetNewString(shopMenu->msgLoader, pl_msg_00000543_00008);
 
         Window_FillRectWithColor(&shopMenu->windows[SHOP_WINDOW_ITEM_LIST], 15, 0, yOffset, 19 * 8, 16);
@@ -871,7 +872,7 @@ static u8 Shop_SelectBuyMenu(ShopMenu *shopMenu)
     switch (input) {
     case MENU_NOTHING_CHOSEN:
         break;
-    case MENU_CANCELED:
+    case MENU_CANCEL:
         ListMenu_Free(shopMenu->listMenu, NULL, NULL);
         StringList_Free(shopMenu->itemsList);
         Shop_DestroyStaticWindows(shopMenu);
@@ -1195,7 +1196,7 @@ static u8 Shop_SelectConfirmPurchase(ShopMenu *shopMenu)
         Sound_PlayEffect(SEQ_SE_DP_REGI);
         return SHOP_STATE_CONFIRM_PURCHASE;
     }
-    case MENU_CANCELED:
+    case MENU_CANCEL:
         Window_EraseMessageBox(&shopMenu->windows[SHOP_WINDOW_MESSAGE], FALSE);
         Shop_SetScrollSpritesPositionXY(shopMenu, FALSE);
         Sprite_SetDrawFlag(shopMenu->sprites[SHOP_SPRITE_SCROLL_ARROW_UP], shopMenu->spriteDrawFlags[SHOP_SPRITE_SCROLL_ARROW_UP]);
@@ -1216,7 +1217,7 @@ static u8 Shop_ConfirmItemPurchase(ShopMenu *shopMenu)
 
     if (shopMenu->martType == MART_TYPE_NORMAL) {
         Bag_TryAddItem(shopMenu->destInventory, shopMenu->itemId, shopMenu->itemAmount, HEAP_ID_FIELD2);
-        FieldSystem_SaveTVEpisodeSegment_SinnohShoppingChampCorner(shopMenu->saveData, shopMenu->itemId, shopMenu->itemAmount);
+        FieldSystem_SaveTVSegment_SinnohShoppingChampCorner(shopMenu->saveData, shopMenu->itemId, shopMenu->itemAmount);
     } else if (shopMenu->martType == MART_TYPE_FRONTIER) {
         Bag_TryAddItem(shopMenu->destInventory, shopMenu->itemId, shopMenu->itemAmount, HEAP_ID_FIELD2);
     } else if (shopMenu->martType == MART_TYPE_DECOR) {
@@ -1228,7 +1229,7 @@ static u8 Shop_ConfirmItemPurchase(ShopMenu *shopMenu)
     Shop_TakeMoney(shopMenu, shopMenu->itemPrice * shopMenu->itemAmount);
 
     if (shopMenu->martType == MART_TYPE_FRONTIER) {
-        GameRecords_AddToRecordValue(shopMenu->records, RECORD_UNK_069, shopMenu->itemPrice * shopMenu->itemAmount);
+        GameRecords_AddToRecordValue(shopMenu->records, RECORD_BATTLE_POINTS_SPENT, shopMenu->itemPrice * shopMenu->itemAmount);
     } else {
         GameRecords_AddToRecordValue(shopMenu->records, RECORD_MONEY_SPENT, shopMenu->itemPrice * shopMenu->itemAmount);
     }
@@ -1482,67 +1483,51 @@ static const SpriteResourceDataPaths sShop_SpriteResourcePaths = {
 };
 
 static const SpriteTemplateFromResourceHeader sShop_SpriteTemplates[] = {
-    {
-        .resourceHeaderID = 0,
-        .x = 0xB1,
-        .y = 0x8,
+    [SHOP_SPRITE_SCROLL_ARROW_UP] = {
+        .resourceHeaderID = ShopMenu_Template_ScrollArrow,
+        .x = 177,
+        .y = 8,
         .z = 0,
         .animIdx = 0,
         .priority = 0,
         .plttIdx = 0,
         .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
-        .dummy18 = 0,
-        .dummy1C = 0,
-        .dummy20 = 0,
-        .dummy24 = 0,
     },
-    {
-        .resourceHeaderID = 0,
-        .x = 0xB1,
-        .y = 0x84,
+    [SHOP_SPRITE_SCROLL_ARROW_DOWN] = {
+        .resourceHeaderID = ShopMenu_Template_ScrollArrow,
+        .x = 177,
+        .y = 132,
         .z = 0,
         .animIdx = 1,
         .priority = 0,
         .plttIdx = 0,
         .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
-        .dummy18 = 0,
-        .dummy1C = 0,
-        .dummy20 = 0,
-        .dummy24 = 0,
     },
-    {
-        .resourceHeaderID = 1,
-        .x = 0xAC,
-        .y = 0x18,
+    [SHOP_SPRITE_CURSOR] = {
+        .resourceHeaderID = ShopMenu_Template_Cursor,
+        .x = 172,
+        .y = 24,
         .z = 0,
         .animIdx = 0,
         .priority = 0,
         .plttIdx = 0,
         .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
-        .dummy18 = 0,
-        .dummy1C = 0,
-        .dummy20 = 0,
-        .dummy24 = 0,
     },
-    {
-        .resourceHeaderID = 2,
-        .x = 0x16,
-        .y = 0xAC,
+    [SHOP_SPRITE_ITEM_ICON] = {
+        .resourceHeaderID = ShopMenu_Template_ItemIcon,
+        .x = 22,
+        .y = 172,
         .z = 0,
         .animIdx = 0,
         .priority = 0,
         .plttIdx = 0,
         .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
-        .dummy18 = 0,
-        .dummy1C = 0,
-        .dummy20 = 0,
-        .dummy24 = 0,
     },
 };
 
 static void Shop_DrawSprites(ShopMenu *shopMenu)
 {
-    SpriteResourceManager_Init(&shopMenu->spriteManager, &sShop_SpriteResourcePaths, 4, HEAP_ID_FIELD2);
+    SpriteResourceManager_Init(&shopMenu->spriteManager, &sShop_SpriteResourcePaths, SHOP_SPRITE_MAX, HEAP_ID_FIELD2);
 
     for (u32 i = 0; i < SHOP_SPRITE_MAX; i++) {
         shopMenu->sprites[i] = SpriteResourceManager_CreateSprite(&shopMenu->spriteManager, &sShop_SpriteTemplates[i]);

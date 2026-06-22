@@ -18,6 +18,7 @@
 #include "bag.h"
 #include "bg_window.h"
 #include "camera.h"
+#include "comm_manager.h"
 #include "communication_information.h"
 #include "communication_system.h"
 #include "font.h"
@@ -28,6 +29,7 @@
 #include "math_util.h"
 #include "message.h"
 #include "narc.h"
+#include "network_icon.h"
 #include "overlay_manager.h"
 #include "palette.h"
 #include "party.h"
@@ -49,9 +51,7 @@
 #include "trainer_info.h"
 #include "unk_0202419C.h"
 #include "unk_020363E8.h"
-#include "unk_020366A0.h"
 #include "unk_02038ED4.h"
-#include "unk_020393C8.h"
 #include "unk_02092494.h"
 #include "unk_0209BDF8.h"
 #include "vram_transfer.h"
@@ -425,7 +425,7 @@ int ov109_021D0D80(ApplicationManager *appMan, int *param1)
     UnkStruct_ov109_021D0F70 *v0;
     UnkStruct_0209C194 *v1 = ApplicationManager_Args(appMan);
 
-    CommMan_SetErrorHandling(1, 1);
+    CommManager_SetErrorHandling(1, 1);
     SetVBlankCallback(NULL, NULL);
     DisableHBlank();
     ResetLock(RESET_LOCK_0x2);
@@ -486,7 +486,7 @@ int ov109_021D0EB4(ApplicationManager *appMan, int *param1)
     UnkStruct_ov109_021D0F70 *v0 = ApplicationManager_Data(appMan);
 
     if (DisableTouchPad() != 1) {
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
     }
 
     ov109_021D31E0(v0);
@@ -1335,7 +1335,7 @@ static int ov109_021D1A14(UnkStruct_ov109_021D0F70 *param0)
 {
     void *journalEntryOnlineEvent = JournalEntry_CreateEventMisc(95, ONLINE_EVENT_SPIN_TRADE);
 
-    JournalEntry_SaveData(param0->unk_CC->unk_14.unk_18, journalEntryOnlineEvent, JOURNAL_ONLINE_EVENT);
+    JournalEntry_SaveData(param0->unk_CC->unk_14.journalEntry, journalEntryOnlineEvent, JOURNAL_ONLINE_EVENT);
     GameRecords_IncrementRecordValue(param0->unk_CC->unk_14.records, RECORD_UNK_119);
     GameRecords_IncrementTrainerScore(param0->unk_CC->unk_14.records, TRAINER_SCORE_EVENT_UNK_45);
     ov109_021D2634(param0, 11);
@@ -1410,9 +1410,9 @@ static int ov109_021D1B2C(UnkStruct_ov109_021D0F70 *param0)
 {
     if (param0->unk_18 == 0) {
         if (CommTiming_IsSyncState(202)) {
-            CommMan_SetErrorHandling(0, 0);
-            sub_02037B58(1);
-            sub_02036AC4();
+            CommManager_SetErrorHandling(0, 0);
+            CommManager_SetMaxNumConnections(1);
+            CommManager_UnionRestartSearch();
             param0->unk_00 = 50;
         }
     } else {
@@ -1422,9 +1422,9 @@ static int ov109_021D1B2C(UnkStruct_ov109_021D0F70 *param0)
             param0->unk_0C = 0;
 
             if (param0->unk_D0->unk_3C == 0) {
-                CommMan_SetErrorHandling(0, 0);
-                sub_02037B58(1);
-                sub_02036AC4();
+                CommManager_SetErrorHandling(0, 0);
+                CommManager_SetMaxNumConnections(1);
+                CommManager_UnionRestartSearch();
             }
 
             param0->unk_00 = 50;
@@ -1960,12 +1960,12 @@ static void ov109_021D2408(UnkStruct_ov109_021D0F70 *param0)
     }
 
     {
-        sub_02039734();
+        NetworkIcon_Init();
     }
 
     {
         NNSG2dPaletteData *v5;
-        void *v6 = sub_020394A8(HEAP_ID_95);
+        void *v6 = NetworkIcon_GetPalette(HEAP_ID_95);
 
         NNS_G2dGetUnpackedPaletteData(v6, &v5);
         PaletteData_LoadBuffer(v2, v5->pRawData, 2, 14 * 16, 32);
@@ -2747,7 +2747,7 @@ static void ov109_021D31F0(UnkStruct_ov109_021D0F70 *param0, UnkStruct_ov109_021
         }
     }
 
-    GF_ASSERT(0);
+    GF_ASSERT(FALSE);
 }
 
 static void ov109_021D3218(UnkStruct_ov109_021D0F70 *param0)
@@ -2853,7 +2853,7 @@ static void ov109_021D3328(UnkStruct_ov109_021D0F70 *param0, UnkStruct_ov109_021
         }
     }
 
-    GF_ASSERT(0);
+    GF_ASSERT(FALSE);
 }
 
 static void ov109_021D3370(UnkStruct_ov109_021D3370 *param0)
@@ -2936,7 +2936,7 @@ static void ov109_021D3460(UnkStruct_ov109_021D0F70 *param0, UnkStruct_ov109_021
         }
     }
 
-    GF_ASSERT(0);
+    GF_ASSERT(FALSE);
 }
 
 static void ov109_021D34A8(UnkStruct_ov109_021D0F70 *param0, UnkStruct_ov109_021D34A8 *param1)

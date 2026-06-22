@@ -80,7 +80,7 @@ void ConvertNtrToPng(char *inputPath, char *outputPath, struct NtrToPngOptions *
 
     if (options->paletteFilePath != NULL)
     {
-        ReadNtrPalette(options->paletteFilePath, &image.palette, options->bitDepth, options->palIndex, false, options->convertTo8Bpp);
+        ReadNtrPalette(options->paletteFilePath, &image.palette, options->bitDepth, options->palIndex, options->convertTo8Bpp, options->verbose);
         image.hasPalette = true;
     }
     else
@@ -187,7 +187,7 @@ void ConvertPngToNtr(char *inputPath, char *outputPath, struct PngToNtrOptions *
     WriteNtrImage(outputPath, options->numTiles, options->bitDepth, options->colsPerChunk, options->rowsPerChunk,
                   &image, !image.hasPalette, options->clobberSize, options->byteOrder, options->version101,
                   options->sopc, options->vramTransfer, options->scan, options->encodeMode, options->mappingType,
-                  key, options->wrongSize, options->convertTo4Bpp, options->rotate);
+                  key, options->wrongSize, options->convertTo4Bpp, options->rotate, options->tilesWide);
 
     FreeImage(&image);
 }
@@ -517,6 +517,7 @@ void HandlePngToNtrCommand(char *inputPath, char *outputPath, int argc, char **a
     options.cellFilePath = NULL;
     options.cellSnap = true;
     options.numTiles = 0;
+    options.tilesWide = 0;
     options.bitDepth = 0;
     options.colsPerChunk = 1;
     options.rowsPerChunk = 1;
@@ -588,6 +589,19 @@ void HandlePngToNtrCommand(char *inputPath, char *outputPath, int argc, char **a
                     break;
                 }
             }
+        }
+        else if (strcmp(option, "-width") == 0)
+        {
+            if (i + 1 >= argc)
+                FATAL_ERROR("No number of tiles following \"-width\".\n");
+
+            i++;
+
+            if (!ParseNumber(argv[i], NULL, 10, &options.tilesWide))
+                FATAL_ERROR("Failed to parse tile width.\n");
+
+            if (options.tilesWide < 1)
+                FATAL_ERROR("Tile width must be positive.\n");
         }
         else if (strcmp(option, "-mwidth") == 0 || strcmp(option, "-cpc") == 0)
         {
@@ -824,7 +838,7 @@ void HandleNtrToJascPaletteCommand(char *inputPath, char *outputPath, int argc, 
 {
     struct Palette palette;
     int bitdepth = 0;
-    bool inverted = false;
+    bool verbose = false;
 
     for (int i = 3; i < argc; i++)
     {
@@ -843,9 +857,9 @@ void HandleNtrToJascPaletteCommand(char *inputPath, char *outputPath, int argc, 
             if (bitdepth != 4 && bitdepth != 8)
                 FATAL_ERROR("Bitdepth must be 4 or 8.\n");
         }
-        else if (strcmp(option, "-invertsize") == 0)
+        else if (strcmp(option, "-verbose") == 0)
         {
-            inverted = true;
+            verbose = true;
         }
         else
         {
@@ -853,7 +867,7 @@ void HandleNtrToJascPaletteCommand(char *inputPath, char *outputPath, int argc, 
         }
     }
 
-    ReadNtrPalette(inputPath, &palette, bitdepth, 0, inverted, false);
+    ReadNtrPalette(inputPath, &palette, bitdepth, 0, false, verbose);
     WriteJascPalette(outputPath, &palette);
 }
 

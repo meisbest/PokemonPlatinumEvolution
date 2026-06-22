@@ -18,6 +18,7 @@
 #include "game_overlay.h"
 #include "heap.h"
 #include "main.h"
+#include "network_icon.h"
 #include "overlay_manager.h"
 #include "save_player.h"
 #include "sound.h"
@@ -27,7 +28,6 @@
 #include "unk_02030CE8.h"
 #include "unk_02033200.h"
 #include "unk_02038FFC.h"
-#include "unk_020393C8.h"
 #include "unk_020890F4.h"
 #include "vars_flags.h"
 #include "wifi_overlays.h"
@@ -99,7 +99,7 @@ int ov98_02246C20(ApplicationManager *appMan, int *param1)
     UnkStruct_ov98_02246E88 *v0;
 
     Heap_Create(HEAP_ID_APPLICATION, HEAP_ID_108, 0x28000);
-    Heap_Create(HEAP_ID_SYSTEM, HEAP_ID_91, 0x300);
+    Heap_Create(HEAP_ID_SYSTEM, HEAP_ID_NETWORK_ICON, HEAP_SIZE_NETWORK_ICON);
 
     v0 = ApplicationManager_NewData(appMan, sizeof(UnkStruct_ov98_02246E88), HEAP_ID_108);
     MI_CpuClear8(v0, sizeof(UnkStruct_ov98_02246E88));
@@ -179,7 +179,7 @@ int ov98_02246DC0(ApplicationManager *appMan, int *param1)
     String_Free(v0->unk_114);
     ApplicationManager_FreeData(appMan);
     Heap_Destroy(HEAP_ID_108);
-    Heap_Destroy(HEAP_ID_91);
+    Heap_Destroy(HEAP_ID_NETWORK_ICON);
     EnqueueApplication(FS_OVERLAY_ID(game_opening), &gTitleScreenAppTemplate);
 
     return 1;

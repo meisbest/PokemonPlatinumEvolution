@@ -9,19 +9,19 @@
     ScriptEntryEnd
 
 SnowpointGym_Init:
-    GoToIfSet FLAG_UNK_0x00EB, _001F
+    GoToIfSet FLAG_UNK_0x00EB, SnowpointCityGym_HideSnowpointCityCandice
     End
 
-_001F:
-    SetFlag FLAG_UNK_0x01F3
+SnowpointCityGym_HideSnowpointCityCandice:
+    SetFlag FLAG_HIDE_SNOWPOINT_CITY_CANDICE
     End
 
 SnowpointGym_Candice:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfBadgeAcquired BADGE_ID_ICICLE, SnowpointGym_CandiceAfterBadge
-    CreateJournalEvent LOCATION_EVENT_GYM_WAS_TOO_TOUGH, 167, 0, 0, 0
+    CreateJournalEvent LOCATION_EVENT_GYM_WAS_TOO_TOUGH, MAP_HEADER_SNOWPOINT_CITY_GYM
     Message SnowpointGym_Text_CandiceIntro
     CloseMessage
     StartTrainerBattle TRAINER_LEADER_CANDICE
@@ -30,8 +30,8 @@ SnowpointGym_Candice:
     Message SnowpointGym_Text_BeatCandice
     BufferPlayerName 0
     Message SnowpointGym_Text_CandiceReceiveIciclebadge
-    PlaySound SEQ_BADGE
-    WaitSound
+    PlayFanfare SEQ_BADGE
+    WaitFanfare
     GiveBadge BADGE_ID_ICICLE
     IncrementTrainerScore2 TRAINER_SCORE_EVENT_BADGE_EARNED
     SetTrainerFlag TRAINER_ACE_TRAINER_SERGIO
@@ -40,7 +40,7 @@ SnowpointGym_Candice:
     SetTrainerFlag TRAINER_ACE_TRAINER_SAVANNAH
     SetTrainerFlag TRAINER_ACE_TRAINER_ALICIA
     SetTrainerFlag TRAINER_ACE_TRAINER_BRENNA
-    CreateJournalEvent LOCATION_EVENT_BEAT_GYM_LEADER, 167, TRAINER_LEADER_CANDICE, 0, 0
+    CreateJournalEvent LOCATION_EVENT_BEAT_GYM_LEADER, MAP_HEADER_SNOWPOINT_CITY_GYM, TRAINER_LEADER_CANDICE
     SetFlag FLAG_HIDE_VEILSTONE_GALACTIC_GRUNTS
     Message SnowpointGym_Text_CandiceExplainIcicleBadge
     GoTo SnowpointGym_CandiceTryGiveTM72
@@ -54,7 +54,7 @@ SnowpointGym_CandiceTryGiveTM72:
     BufferItemName 0, VAR_0x8004
     BufferTMHMMoveName 1, VAR_0x8004
     Message SnowpointGym_Text_CandiceExplainTM72
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -68,7 +68,7 @@ SnowpointGym_CandiceCannotGiveTM72:
 SnowpointGym_CandiceAfterBadge:
     GoToIfUnset FLAG_OBTAINED_CANDICE_TM72, SnowpointGym_CandiceTryGiveTM72
     Message SnowpointGym_Text_CandiceAfterBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -79,12 +79,12 @@ SnowpointGym_LostBattle:
     End
 
 SnowpointGym_GymGuide:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfBadgeAcquired BADGE_ID_ICICLE, SnowpointGym_GymGuideAfterBadge
     Message SnowpointGym_Text_GymGuideBeforeBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -92,19 +92,19 @@ SnowpointGym_GymGuide:
 SnowpointGym_GymGuideAfterBadge:
     BufferPlayerName 0
     Message SnowpointGym_Text_GymGuideAfterBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 SnowpointGym_GymStatue:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     GoToIfBadgeAcquired BADGE_ID_ICICLE, SnowpointGym_GymStatueAfterBadge
     BufferRivalName 0
     BufferRivalName 1
     Message SnowpointGym_Text_GymStatueBeforeBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -114,7 +114,7 @@ SnowpointGym_GymStatueAfterBadge:
     BufferPlayerName 1
     BufferRivalName 2
     Message SnowpointGym_Text_GymStatueAfterBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End

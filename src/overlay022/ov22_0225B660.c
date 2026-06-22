@@ -297,7 +297,7 @@ static void ov22_0225BB00(UnkStruct_ov22_0225B85C *param0)
     String_Free(v7);
 
     word = DressUpPhoto_GetTitleWord(param0->photo);
-    StringTemplate_SetCustomMessageWord(v5, 0, word);
+    StringTemplate_SetEasyChatWord(v5, 0, word);
 
     v7 = String_Init(200, HEAP_ID_13);
     v6 = MessageLoader_GetNewString(v8, 45);
@@ -316,7 +316,7 @@ static void ov22_0225BB00(UnkStruct_ov22_0225B85C *param0)
 
 static void ov22_0225BC18(UnkStruct_ov22_0225B85C *param0)
 {
-    int v0;
+    int contestRank;
     StringTemplate *v1;
     String *v2;
     String *v3;
@@ -329,12 +329,12 @@ static void ov22_0225BC18(UnkStruct_ov22_0225B85C *param0)
 
     Sprite_SetAnim(param0->unk_1FC, param0->unk_08);
 
-    v0 = sub_0202A5D0(param0->unk_04);
+    contestRank = sub_0202A5D0(param0->unk_04);
     v1 = StringTemplate_Default(HEAP_ID_13);
     v2 = String_Init(200, HEAP_ID_13);
 
     StringTemplate_SetContestTypeName(v1, 0, Contest_GetContestTypeMessageID(param0->unk_08));
-    StringTemplate_SetContestRankName(v1, 1, Contest_GetRankMessageID(v0));
+    StringTemplate_SetContestRankName(v1, 1, Contest_GetRankMessageID(contestRank));
 
     v4 = sub_0202A544(param0->unk_04);
     sub_0202A524(param0->unk_04, v2);

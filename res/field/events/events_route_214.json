@@ -27,7 +27,7 @@
     ],
     "object_events": [
         {
-            "id": "ROUTE_214_PI_CARLOS",
+            "id": "LOCALID_PI_CARLOS",
             "graphics_id": "OBJ_EVENT_GFX_RICH_BOY",
             "movement_type": "MOVEMENT_TYPE_LOOK_NORTH_AND_SOUTH",
             "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -44,7 +44,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_COLLECTOR_DOUGLAS",
+            "id": "LOCALID_COLLECTOR_DOUGLAS",
             "graphics_id": "OBJ_EVENT_GFX_COLLECTOR",
             "movement_type": "MOVEMENT_TYPE_LOOK_NORTH_AND_WEST",
             "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -61,7 +61,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_COLLECTOR_BRADY",
+            "id": "LOCALID_COLLECTOR_BRADY",
             "graphics_id": "OBJ_EVENT_GFX_COLLECTOR",
             "movement_type": "MOVEMENT_TYPE_WALK_BACK_AND_FORTH",
             "trainer_type": "TRAINER_TYPE_FACE_SIDES",
@@ -79,7 +79,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_RUIN_MANIAC_BRYAN",
+            "id": "LOCALID_RUIN_MANIAC_BRYAN",
             "graphics_id": "OBJ_EVENT_GFX_RUIN_MANIAC",
             "movement_type": "MOVEMENT_TYPE_LOOK_EAST",
             "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -96,7 +96,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_RUIN_MANIAC_RONALD",
+            "id": "LOCALID_RUIN_MANIAC_RONALD",
             "graphics_id": "OBJ_EVENT_GFX_RUIN_MANIAC",
             "movement_type": "MOVEMENT_TYPE_LOOK_NORTH_AND_SOUTH",
             "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -113,7 +113,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_COLLECTOR_JAMAL",
+            "id": "LOCALID_COLLECTOR_JAMAL",
             "graphics_id": "OBJ_EVENT_GFX_COLLECTOR",
             "movement_type": "MOVEMENT_TYPE_ROTATE_COUNTERCLOCKWISE",
             "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -130,7 +130,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_BEAUTY_DEVON",
+            "id": "LOCALID_BEAUTY_DEVON",
             "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
             "movement_type": "MOVEMENT_TYPE_LOOK_EAST",
             "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -147,7 +147,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_PSYCHIC_MITCHELL",
+            "id": "LOCALID_PSYCHIC_MITCHELL",
             "graphics_id": "OBJ_EVENT_GFX_PSYCHIC",
             "movement_type": "MOVEMENT_TYPE_WALK_BACK_AND_FORTH",
             "trainer_type": "TRAINER_TYPE_FACE_COUNTERCLOCKWISE",
@@ -165,7 +165,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_PSYCHIC_ABIGAIL",
+            "id": "LOCALID_PSYCHIC_ABIGAIL",
             "graphics_id": "OBJ_EVENT_GFX_PSYCHIC",
             "movement_type": "MOVEMENT_TYPE_LOOK_WEST",
             "trainer_type": "TRAINER_TYPE_FACE_SIDES",
@@ -182,11 +182,11 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_ROCK_SMASH_9",
+            "id": "LOCALID_ROCK_SMASH_1",
             "graphics_id": "OBJ_EVENT_GFX_ROCK_SMASH",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x0020",
+            "hidden_flag": "FLAG_HIDE_OBSTACLE_1",
             "script": 10001,
             "initial_dir": 0,
             "data": [],
@@ -197,11 +197,11 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_ROCK_SMASH_10",
+            "id": "LOCALID_ROCK_SMASH_2",
             "graphics_id": "OBJ_EVENT_GFX_ROCK_SMASH",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x0021",
+            "hidden_flag": "FLAG_HIDE_OBSTACLE_2",
             "script": 10001,
             "initial_dir": 0,
             "data": [],
@@ -212,7 +212,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_ARROW_SIGNPOST_11",
+            "id": "LOCALID_ARROW_SIGNPOST_VEILSTONE_CITY",
             "graphics_id": "OBJ_EVENT_GFX_ARROW_SIGNPOST",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -229,7 +229,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_ARROW_SIGNPOST_12",
+            "id": "LOCALID_ARROW_SIGNPOST_LAKE_VALOR",
             "graphics_id": "OBJ_EVENT_GFX_ARROW_SIGNPOST",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -246,8 +246,8 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_UNK_100_13",
-            "graphics_id": "OBJ_EVENT_GFX_UNK_100",
+            "id": "LOCALID_BERRY_SOIL_1",
+            "graphics_id": "OBJ_EVENT_GFX_BERRY_SOIL",
             "movement_type": "MOVEMENT_TYPE_BERRY_SOIL",
             "trainer_type": "TRAINER_TYPE_NONE",
             "hidden_flag": "0",
@@ -263,8 +263,8 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_UNK_100_14",
-            "graphics_id": "OBJ_EVENT_GFX_UNK_100",
+            "id": "LOCALID_BERRY_SOIL_2",
+            "graphics_id": "OBJ_EVENT_GFX_BERRY_SOIL",
             "movement_type": "MOVEMENT_TYPE_BERRY_SOIL",
             "trainer_type": "TRAINER_TYPE_NONE",
             "hidden_flag": "0",
@@ -280,8 +280,8 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_UNK_100_15",
-            "graphics_id": "OBJ_EVENT_GFX_UNK_100",
+            "id": "LOCALID_BERRY_SOIL_3",
+            "graphics_id": "OBJ_EVENT_GFX_BERRY_SOIL",
             "movement_type": "MOVEMENT_TYPE_BERRY_SOIL",
             "trainer_type": "TRAINER_TYPE_NONE",
             "hidden_flag": "0",
@@ -297,8 +297,8 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_UNK_100_16",
-            "graphics_id": "OBJ_EVENT_GFX_UNK_100",
+            "id": "LOCALID_BERRY_SOIL_4",
+            "graphics_id": "OBJ_EVENT_GFX_BERRY_SOIL",
             "movement_type": "MOVEMENT_TYPE_BERRY_SOIL",
             "trainer_type": "TRAINER_TYPE_NONE",
             "hidden_flag": "0",
@@ -314,11 +314,11 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_POKEBALL_17",
+            "id": "LOCALID_ITEM_RARE_CANDY",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x0469",
+            "hidden_flag": "FLAG_OBTAINED_ROUTE_214_RARE_CANDY",
             "script": 7115,
             "initial_dir": 0,
             "data": [],
@@ -329,11 +329,11 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_POKEBALL_18",
+            "id": "LOCALID_ITEM_MAX_REPEL",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x0468",
+            "hidden_flag": "FLAG_OBTAINED_ROUTE_214_MAX_REPEL",
             "script": 7114,
             "initial_dir": 0,
             "data": [],
@@ -344,11 +344,11 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_POKEBALL_19",
+            "id": "LOCALID_ITEM_RED_SHARD",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x0467",
+            "hidden_flag": "FLAG_OBTAINED_ROUTE_214_RED_SHARD",
             "script": 7113,
             "initial_dir": 0,
             "data": [],
@@ -359,11 +359,11 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_POKEBALL_20",
+            "id": "LOCALID_ITEM_BIG_ROOT",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x0466",
+            "hidden_flag": "FLAG_OBTAINED_ROUTE_214_BIG_ROOT",
             "script": 7112,
             "initial_dir": 0,
             "data": [],
@@ -374,7 +374,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_VENT_21",
+            "id": "LOCALID_VENT_1",
             "graphics_id": "OBJ_EVENT_GFX_VENT",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -389,7 +389,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_VENT_22",
+            "id": "LOCALID_VENT_2",
             "graphics_id": "OBJ_EVENT_GFX_VENT",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -404,7 +404,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_VENT_23",
+            "id": "LOCALID_VENT_3",
             "graphics_id": "OBJ_EVENT_GFX_VENT",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -419,7 +419,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_VENT_24",
+            "id": "LOCALID_VENT_4",
             "graphics_id": "OBJ_EVENT_GFX_VENT",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -434,7 +434,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_VENT_25",
+            "id": "LOCALID_VENT_5",
             "graphics_id": "OBJ_EVENT_GFX_VENT",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -449,7 +449,7 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_VENT_26",
+            "id": "LOCALID_VENT_6",
             "graphics_id": "OBJ_EVENT_GFX_VENT",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
@@ -464,11 +464,11 @@
             "y": 0
         },
         {
-            "id": "ROUTE_214_POKEBALL_27",
+            "id": "LOCALID_ITEM_MAGMARIZER",
             "graphics_id": "OBJ_EVENT_GFX_POKEBALL",
             "movement_type": "MOVEMENT_TYPE_NONE",
             "trainer_type": "TRAINER_TYPE_NONE",
-            "hidden_flag": "FLAG_UNK_0x0534",
+            "hidden_flag": "FLAG_OBTAINED_ROUTE_214_MAGMARIZER",
             "script": 7317,
             "initial_dir": 0,
             "data": [],

@@ -3,7 +3,6 @@
 #include <nitro.h>
 #include <string.h>
 
-#include "struct_decls/pokedexdata_decl.h"
 #include "struct_defs/dress_up_photo.h"
 #include "struct_defs/struct_02030A80.h"
 #include "struct_defs/struct_0208C06C.h"
@@ -1385,7 +1384,7 @@ static void ov62_02239724(UnkStruct_0208C06C *param0)
     word = DressUpPhoto_GetTitleWord(v5->photo);
 
     StringTemplate_SetString(v4, 0, v1, 0, 1, GAME_LANGUAGE);
-    StringTemplate_SetCustomMessageWord(v4, 1, word);
+    StringTemplate_SetEasyChatWord(v4, 1, word);
     StringTemplate_Format(v4, v3, v2);
 
     v7 = String_NumLines(v3);
@@ -1434,7 +1433,7 @@ static void ov62_02239854(UnkStruct_0208C06C *param0, int param1)
     word = DressUpPhoto_GetTitleWord(v5->unk_230.photo);
 
     StringTemplate_SetString(v4, 0, v1, 0, 1, GAME_LANGUAGE);
-    StringTemplate_SetCustomMessageWord(v4, 1, word);
+    StringTemplate_SetEasyChatWord(v4, 1, word);
     StringTemplate_Format(v4, v3, v2);
 
     v7 = String_NumLines(v3);

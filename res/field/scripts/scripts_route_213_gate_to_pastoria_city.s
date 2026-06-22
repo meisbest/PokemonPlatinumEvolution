@@ -2,38 +2,32 @@
 #include "res/text/bank/route_213_gate_to_pastoria_city.h"
 
 
-    ScriptEntry _000A
-    ScriptEntry _001D
+    ScriptEntry Route213GateToPastoriaCity_PokefanM
+    ScriptEntry Route213GateToPastoriaCity_SchoolKidF
     ScriptEntryEnd
 
-_000A:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route213GateToPastoriaCity_PokefanM:
+    NPCMessage Route213GateToPastoriaCity_Text_FootprintsInSand
     End
 
-_001D:
-    PlayFanfare SEQ_SE_CONFIRM
+Route213GateToPastoriaCity_SchoolKidF:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message 1
+    Message Route213GateToPastoriaCity_Text_DoYouKnowBattleFrontier
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_NO, _0044
-    Message 2
-    GoTo _004F
+    GoToIfEq VAR_RESULT, MENU_NO, Route213GateToPastoriaCity_YouDontKnow
+    Message Route213GateToPastoriaCity_Text_YouKnow
+    GoTo Route213GateToPastoriaCity_SchoolKidFEnd
     End
 
-_0044:
-    Message 3
-    GoTo _004F
+Route213GateToPastoriaCity_YouDontKnow:
+    Message Route213GateToPastoriaCity_Text_YouDontKnow
+    GoTo Route213GateToPastoriaCity_SchoolKidFEnd
     End
 
-_004F:
-    WaitABXPadPress
+Route213GateToPastoriaCity_SchoolKidFEnd:
+    WaitButton
     CloseMessage
     ReleaseAll
     End

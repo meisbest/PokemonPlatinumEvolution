@@ -6,10 +6,9 @@
 
 #include "constants/savedata/vars_flags.h"
 
-#include "struct_decls/struct_02061AB4_decl.h"
-#include "struct_defs/struct_020708E0.h"
-#include "struct_defs/struct_02097728.h"
+#include "struct_decls/map_object.h"
 
+#include "applications/mail.h"
 #include "applications/party_menu/defs.h"
 #include "applications/party_menu/main.h"
 #include "applications/poffin_case/main.h"
@@ -27,6 +26,7 @@
 #include "bag_context.h"
 #include "berry_patch_manager.h"
 #include "bg_window.h"
+#include "field_bgm.h"
 #include "field_map_change.h"
 #include "field_message.h"
 #include "field_system.h"
@@ -58,7 +58,6 @@
 #include "terrain_collision_manager.h"
 #include "unk_0203C954.h"
 #include "unk_0203D1B8.h"
-#include "unk_020553DC.h"
 #include "unk_0205F180.h"
 #include "unk_0206B9D8.h"
 #include "vars_flags.h"
@@ -72,7 +71,7 @@ typedef struct ItemUseFuncDat {
 } ItemUseFuncDat;
 
 void *FieldSystem_OpenTownMapItem(FieldSystem *fieldSystem);
-static void sub_020684D0(FieldSystem *fieldSystem, ItemUseContext *usageContext);
+static void ItemUseContext_InitForDistortionWorld(FieldSystem *fieldSystem, ItemUseContext *usageContext);
 static void UseHealingItemFromMenu(ItemMenuUseContext *usageContext, const ItemUseContext *additionalContext);
 static void UseTownMapFromMenu(ItemMenuUseContext *usageContext, const ItemUseContext *additionalContext);
 static void UseExplorerKitFromMenu(ItemMenuUseContext *usageContext, const ItemUseContext *additionalContext);
@@ -166,76 +165,72 @@ static const ItemUseFuncDat sItemUseFuncs[] = {
 };
 // clang-format on
 
-u32 GetItemUseFunction(u16 discriminator, u16 functionIdx)
+u32 ItemUseFunction_Get(u16 funcType, u16 functionIdx)
 {
-    if (discriminator == USE_ITEM_TASK_MENU) {
+    if (funcType == ITEM_FUNC_USE_FROM_MENU) {
         return (u32)sItemUseFuncs[functionIdx].useItemFromMenuFunc;
-    } else if (discriminator == USE_ITEM_TASK_FIELD) {
+    } else if (funcType == ITEM_FUNC_USE_IN_FIELD) {
         return (u32)sItemUseFuncs[functionIdx].useItemInFieldFunc;
     }
 
     return (u32)sItemUseFuncs[functionIdx].canUseItemFunc;
 }
 
-void sub_0206842C(FieldSystem *fieldSystem, ItemUseContext *usageContext)
+void ItemUseContext_Init(FieldSystem *fieldSystem, ItemUseContext *ctxOut)
 {
-    int playerXCoordinate, playerZCoordinate, playerDirection;
-    MapObject *v3;
-
     if (PlayerAvatar_DistortionGravityChanged(fieldSystem->playerAvatar) == TRUE) {
-        sub_020684D0(fieldSystem, usageContext);
+        ItemUseContext_InitForDistortionWorld(fieldSystem, ctxOut);
         return;
     }
 
-    usageContext->fieldSystem = fieldSystem;
-    usageContext->mapHeaderID = fieldSystem->location->mapId;
-    usageContext->hasPartner = SystemFlag_CheckHasPartner(SaveData_GetVarsFlags(fieldSystem->saveData));
-    usageContext->playerState = PlayerAvatar_GetPlayerState(fieldSystem->playerAvatar);
+    ctxOut->fieldSystem = fieldSystem;
+    ctxOut->mapHeaderID = fieldSystem->location->mapId;
+    ctxOut->hasPartner = SystemFlag_CheckHasPartner(SaveData_GetVarsFlags(fieldSystem->saveData));
+    ctxOut->playerState = PlayerAvatar_GetPlayerState(fieldSystem->playerAvatar);
 
-    playerXCoordinate = Player_GetXPos(fieldSystem->playerAvatar);
-    playerZCoordinate = Player_GetZPos(fieldSystem->playerAvatar);
+    int x = PlayerAvatar_GetXPos(fieldSystem->playerAvatar);
+    int z = PlayerAvatar_GetZPos(fieldSystem->playerAvatar);
 
-    usageContext->currTileBehavior = TerrainCollisionManager_GetTileBehavior(fieldSystem, playerXCoordinate, playerZCoordinate);
+    ctxOut->currTileBehavior = TerrainCollisionManager_GetTileBehavior(fieldSystem, x, z);
 
-    playerDirection = PlayerAvatar_GetDir(fieldSystem->playerAvatar);
+    int playerDirection = PlayerAvatar_GetFacingDir(fieldSystem->playerAvatar);
 
     switch (playerDirection) {
-    case 0:
-        playerZCoordinate--;
+    case DIR_NORTH:
+        z--;
         break;
-    case 1:
-        playerZCoordinate++;
+    case DIR_SOUTH:
+        z++;
         break;
-    case 3:
-        playerXCoordinate++;
+    case DIR_EAST:
+        x++;
         break;
-    case 2:
-        playerXCoordinate--;
+    case DIR_WEST:
+        x--;
         break;
     }
 
-    usageContext->facingTileBehavior = TerrainCollisionManager_GetTileBehavior(fieldSystem, playerXCoordinate, playerZCoordinate);
-    sub_0203C9D4(fieldSystem, &v3);
+    ctxOut->facingTileBehavior = TerrainCollisionManager_GetTileBehavior(fieldSystem, x, z);
+    MapObject *mapObj;
+    sub_0203C9D4(fieldSystem, &mapObj);
 
-    usageContext->berryPatchFlags = BerryPatches_GetPatchFlags(fieldSystem, v3);
-    usageContext->playerAvatar = fieldSystem->playerAvatar;
+    ctxOut->berryPatchFlags = BerryPatches_GetPatchFlags(fieldSystem, mapObj);
+    ctxOut->playerAvatar = fieldSystem->playerAvatar;
 }
 
-static void sub_020684D0(FieldSystem *fieldSystem, ItemUseContext *usageContext)
+static void ItemUseContext_InitForDistortionWorld(FieldSystem *fieldSystem, ItemUseContext *ctxOut)
 {
-    usageContext->fieldSystem = fieldSystem;
-    usageContext->mapHeaderID = fieldSystem->location->mapId;
-    usageContext->hasPartner = SystemFlag_CheckHasPartner(SaveData_GetVarsFlags(fieldSystem->saveData));
-    usageContext->playerState = PlayerAvatar_GetPlayerState(fieldSystem->playerAvatar);
-    usageContext->currTileBehavior = PlayerAvatar_GetDistortionCurrTileBehaviour(fieldSystem->playerAvatar);
+    ctxOut->fieldSystem = fieldSystem;
+    ctxOut->mapHeaderID = fieldSystem->location->mapId;
+    ctxOut->hasPartner = SystemFlag_CheckHasPartner(SaveData_GetVarsFlags(fieldSystem->saveData));
+    ctxOut->playerState = PlayerAvatar_GetPlayerState(fieldSystem->playerAvatar);
+    ctxOut->currTileBehavior = PlayerAvatar_GetDistortionCurrTileBehaviour(fieldSystem->playerAvatar);
 
-    {
-        int v0 = PlayerAvatar_GetDistortionDir(fieldSystem->playerAvatar);
-        usageContext->facingTileBehavior = PlayerAvatar_GetDistortionTileBehaviour(fieldSystem->playerAvatar, v0);
-    }
+    int distortionDir = PlayerAvatar_GetDistortionDir(fieldSystem->playerAvatar);
+    ctxOut->facingTileBehavior = PlayerAvatar_GetDistortionFacingTileBehaviour(fieldSystem->playerAvatar, distortionDir);
 
-    usageContext->berryPatchFlags = BerryPatches_GetPatchFlags(fieldSystem, NULL);
-    usageContext->playerAvatar = fieldSystem->playerAvatar;
+    ctxOut->berryPatchFlags = BerryPatches_GetPatchFlags(fieldSystem, NULL);
+    ctxOut->playerAvatar = fieldSystem->playerAvatar;
 }
 
 static UnkStruct_0206851C *sub_0206851C(u32 param0, u16 param1, u16 param2, u16 param3, u16 param4)
@@ -260,7 +255,7 @@ static void sub_02068540(ItemMenuUseContext *usageContext, const ItemUseContext 
 
     menu->callback = sub_020685AC;
     menu->taskData = sub_0206851C(param2, usageContext->item, 0, 0, 0);
-    menu->state = START_MENU_STATE_10;
+    menu->state = START_MENU_STATE_NEW_TASK;
 }
 
 static void sub_02068584(ItemFieldUseContext *usageContext, u32 param1)
@@ -327,7 +322,7 @@ static void UseTownMapFromMenu(ItemMenuUseContext *usageContext, const ItemUseCo
     StartMenu *menu = FieldTask_GetEnv(usageContext->fieldTask);
 
     menu->taskData = FieldSystem_OpenTownMapItem(fieldSystem);
-    StartMenu_SetCallback(menu, sub_0203C3F4);
+    StartMenu_SetCallback(menu, StartMenu_ExitTownMap);
 }
 
 static BOOL UseTownMapInField(ItemFieldUseContext *usageContext)
@@ -349,18 +344,18 @@ static void UseExplorerKitFromMenu(ItemMenuUseContext *usageContext, const ItemU
     FieldSystem_StartFieldMap(fieldSystem);
 
     menu->callback = FieldTask_MapChangeToUnderground;
-    menu->taskData = sub_02053FAC(fieldSystem);
-    menu->state = START_MENU_STATE_10;
+    menu->taskData = MapChangeUndergroundContext_New(fieldSystem);
+    menu->state = START_MENU_STATE_NEW_TASK;
 
     fieldSystem->menuCursorPos = 0;
 }
 
 static BOOL UseExplorerKitInField(ItemFieldUseContext *usageContext)
 {
-    void *v0 = sub_02053FAC(usageContext->fieldSystem);
+    MapChangeUndergroundContext *ctx = MapChangeUndergroundContext_New(usageContext->fieldSystem);
 
     MapObjectMan_PauseAllMovement(usageContext->fieldSystem->mapObjMan);
-    FieldSystem_CreateTask(usageContext->fieldSystem, FieldTask_MapChangeToUnderground, v0);
+    FieldSystem_CreateTask(usageContext->fieldSystem, FieldTask_MapChangeToUnderground, ctx);
 
     usageContext->fieldSystem->menuCursorPos = 0;
     return FALSE;
@@ -372,11 +367,11 @@ static enum ItemUseCheckResult CanUseExplorerKit(const ItemUseContext *usageCont
         return ITEM_USE_CANNOT_USE_GENERIC;
     }
 
-    if (!(MapHeader_IsOnMainMatrix(usageContext->mapHeaderID))) {
+    if (!MapHeader_IsOnMainMatrix(usageContext->mapHeaderID)) {
         return ITEM_USE_CANNOT_USE_GENERIC;
     }
 
-    if (sub_0205EFDC(usageContext->playerAvatar) == TRUE) {
+    if (PlayerAvatar_IsOnCyclingRoad(usageContext->playerAvatar) == TRUE) {
         return ITEM_USE_CANNOT_USE_GENERIC;
     }
 
@@ -385,7 +380,7 @@ static enum ItemUseCheckResult CanUseExplorerKit(const ItemUseContext *usageCont
         return ITEM_USE_CANNOT_USE_GENERIC;
     }
 
-    if (PlayerAvatar_GetPlayerState(usageContext->playerAvatar) == 0x2) {
+    if (PlayerAvatar_GetPlayerState(usageContext->playerAvatar) == PLAYER_AVATAR_SURFING) {
         return ITEM_USE_CANNOT_USE_GENERIC;
     }
 
@@ -397,15 +392,12 @@ static enum ItemUseCheckResult CanUseExplorerKit(const ItemUseContext *usageCont
         return ITEM_USE_CANNOT_USE_GENERIC;
     }
 
-    {
-        u16 v0, v1;
+    u16 x = PlayerAvatar_GetXPos(usageContext->fieldSystem->playerAvatar);
+    u16 z = PlayerAvatar_GetZPos(usageContext->fieldSystem->playerAvatar);
 
-        v0 = Player_GetXPos(usageContext->fieldSystem->playerAvatar);
-        v1 = Player_GetZPos(usageContext->fieldSystem->playerAvatar);
-
-        if (MapHeaderData_IsAnyObjectEventAtPos(usageContext->fieldSystem, v0, v1) == FALSE) {
-            return ITEM_USE_CANNOT_USE_GENERIC;
-        }
+    // doesn't match as !MapHeaderData_IsPosFreeOfObjectEvents
+    if (MapHeaderData_IsPosFreeOfObjectEvents(usageContext->fieldSystem, x, z) == FALSE) {
+        return ITEM_USE_CANNOT_USE_GENERIC;
     }
 
     return ITEM_USE_CAN_USE;
@@ -420,7 +412,7 @@ static void UseBicycleFromMenu(ItemMenuUseContext *usageContext, const ItemUseCo
 
     menu->callback = MountOrUnmountBicycle;
     menu->taskData = NULL;
-    menu->state = START_MENU_STATE_10;
+    menu->state = START_MENU_STATE_NEW_TASK;
 }
 
 static BOOL UseBicycleInField(ItemFieldUseContext *usageContext)
@@ -440,16 +432,16 @@ static BOOL MountOrUnmountBicycle(FieldTask *task)
         break;
     case 1:
         if (PlayerAvatar_GetPlayerState(fieldSystem->playerAvatar) == 0x1) {
-            MapObject_SetPauseMovementOff(Player_MapObject(fieldSystem->playerAvatar));
+            MapObject_SetPauseMovementOff(PlayerAvatar_GetMapObject(fieldSystem->playerAvatar));
             PlayerAvatar_SetTransitionState(fieldSystem->playerAvatar, PLAYER_TRANSITION_WALKING);
             PlayerAvatar_RequestChangeState(fieldSystem->playerAvatar);
 
-            Sound_SetSpecialBGM(fieldSystem, SEQ_NONE);
-            Sound_TryFadeOutToBGM(fieldSystem, Sound_GetOverrideBGM(fieldSystem, fieldSystem->location->mapId), 1);
+            FieldBGM_SetOverride(fieldSystem, SEQ_NONE);
+            FieldBGM_TryFadeOut(fieldSystem, FieldBGM_GetEffective(fieldSystem, fieldSystem->location->mapId), 1);
         } else {
-            Sound_SetSpecialBGM(fieldSystem, SEQ_BICYCLE);
-            Sound_TryFadeOutToBGM(fieldSystem, SEQ_BICYCLE, 1);
-            MapObject_SetPauseMovementOff(Player_MapObject(fieldSystem->playerAvatar));
+            FieldBGM_SetOverride(fieldSystem, SEQ_BICYCLE);
+            FieldBGM_TryFadeOut(fieldSystem, SEQ_BICYCLE, 1);
+            MapObject_SetPauseMovementOff(PlayerAvatar_GetMapObject(fieldSystem->playerAvatar));
 
             PlayerAvatar_SetTransitionState(fieldSystem->playerAvatar, PLAYER_TRANSITION_CYCLING);
             PlayerAvatar_RequestChangeState(fieldSystem->playerAvatar);
@@ -482,12 +474,12 @@ static enum ItemUseCheckResult CanUseBicycle(const ItemUseContext *usageContext)
         return ITEM_USE_CANNOT_DISMOUNT;
     }
 
-    if (sub_0205EFDC(usageContext->playerAvatar) == TRUE) {
+    if (PlayerAvatar_IsOnCyclingRoad(usageContext->playerAvatar) == TRUE) {
         return ITEM_USE_CANNOT_DISMOUNT;
     }
 
     {
-        MapObject *v1 = Player_MapObject(usageContext->playerAvatar);
+        MapObject *v1 = PlayerAvatar_GetMapObject(usageContext->playerAvatar);
 
         if (MapObject_IsOnBikeBridgeNorthSouth(v1, usageContext->currTileBehavior) == TRUE || MapObject_IsOnBikeBridgeEastWest(v1, usageContext->currTileBehavior) == TRUE) {
             return ITEM_USE_CANNOT_DISMOUNT;
@@ -502,7 +494,7 @@ static enum ItemUseCheckResult CanUseBicycle(const ItemUseContext *usageContext)
         return ITEM_USE_CANNOT_USE_GENERIC;
     }
 
-    if (usageContext->playerState == PLAYER_STATE_SURFING) {
+    if (usageContext->playerState == PLAYER_AVATAR_SURFING) {
         return ITEM_USE_CANNOT_USE_GENERIC;
     }
 
@@ -515,7 +507,7 @@ static void UseJournalFromMenu(ItemMenuUseContext *usageContext, const ItemUseCo
     StartMenu *v1 = FieldTask_GetEnv(usageContext->fieldTask);
 
     sub_0203D30C(fieldSystem, NULL);
-    StartMenu_SetCallback(v1, sub_0203C50C);
+    StartMenu_SetCallback(v1, StartMenu_ExitJournal);
 }
 
 static BOOL UseJournalInField(ItemFieldUseContext *usageContext)
@@ -559,10 +551,10 @@ static void UseMailFromMenu(ItemMenuUseContext *usageContext, const ItemUseConte
 {
     FieldSystem *fieldSystem = FieldTask_GetFieldSystem(usageContext->fieldTask);
     StartMenu *menu = FieldTask_GetEnv(usageContext->fieldTask);
-    UnkStruct_02097728 *v2 = sub_0203D94C(fieldSystem, 3, Item_MailNumber(usageContext->item), HEAP_ID_FIELD2);
+    MailAppArgs *args = FieldSystem_LaunchMailApp_Read(fieldSystem, MAIL_CONTEXT_CHECK, Item_GetMailType(usageContext->item), HEAP_ID_FIELD2);
 
-    menu->unk_260 = sub_0203C540(usageContext->item, 3, 0);
-    menu->taskData = v2;
+    menu->additionalTaskContext = StartMenu_BuildMailData(usageContext->item, MAIL_READ_FROM_BAG, 0);
+    menu->taskData = args;
 
     StartMenu_SetCallback(menu, StartMenu_ExitMail);
 }
@@ -582,7 +574,7 @@ static void UseBerryFromMenu(ItemMenuUseContext *usageContext, const ItemUseCont
     v1 = FieldTask_GetEnv(usageContext->fieldTask);
 
     if (additionalContext->berryPatchFlags & BERRY_PATCH_FLAG_EMPTY) {
-        sub_02068540(usageContext, additionalContext, 2801);
+        sub_02068540(usageContext, additionalContext, SCRIPT_ID(BERRY_TREE_INTERACTIONS, 1));
     } else {
         UseHealingItemFromMenu(usageContext, additionalContext);
     }
@@ -604,7 +596,7 @@ static void UsePoffinCaseFromMenu(ItemMenuUseContext *usageContext, const ItemUs
     PoffinCaseAppData *poffinCase = FieldSystem_LaunchPoffinCaseApp(fieldSystem, HEAP_ID_FIELD2);
 
     menu->taskData = poffinCase;
-    StartMenu_SetCallback(menu, sub_0203C710);
+    StartMenu_SetCallback(menu, StartMenu_ExitPoffinCase);
 }
 
 static BOOL UsePoffinCaseInField(ItemFieldUseContext *usageContext)
@@ -625,7 +617,7 @@ static void UsePalPadFromMenu(ItemMenuUseContext *usageContext, const ItemUseCon
 
     sub_0203DE78(fieldSystem, fieldSystem->saveData);
     menu->taskData = NULL;
-    StartMenu_SetCallback(menu, sub_0203C750);
+    StartMenu_SetCallback(menu, StartMenu_ExitPalPad);
 }
 
 static BOOL UsePalPadInField(ItemFieldUseContext *usageContext)
@@ -651,7 +643,7 @@ static void UsePokeRadarFromMenu(ItemMenuUseContext *usageContext, const ItemUse
 
     menu->callback = RefreshRadarChain;
     menu->taskData = v2;
-    menu->state = START_MENU_STATE_10;
+    menu->state = START_MENU_STATE_NEW_TASK;
 }
 
 static BOOL UsePokeRadarInField(ItemFieldUseContext *usageContext)
@@ -683,12 +675,12 @@ static enum ItemUseCheckResult CanUsePokeRadar(const ItemUseContext *usageContex
 
 static void UseSprayDuckFromMenu(ItemMenuUseContext *usageContext, const ItemUseContext *additionalContext)
 {
-    sub_02068540(usageContext, additionalContext, 2802);
+    sub_02068540(usageContext, additionalContext, SCRIPT_ID(BERRY_TREE_INTERACTIONS, 2));
 }
 
 static BOOL UseSprayDuckInField(ItemFieldUseContext *usageContext)
 {
-    sub_02068584(usageContext, 2802);
+    sub_02068584(usageContext, SCRIPT_ID(BERRY_TREE_INTERACTIONS, 2));
     return FALSE;
 }
 
@@ -707,7 +699,7 @@ static enum ItemUseCheckResult CanUseSprayDuck(const ItemUseContext *usageContex
 
 static void UseMulchFromMenu(ItemMenuUseContext *usageContext, const ItemUseContext *additionalContext)
 {
-    sub_02068540(usageContext, additionalContext, 2803);
+    sub_02068540(usageContext, additionalContext, SCRIPT_ID(BERRY_TREE_INTERACTIONS, 3));
 }
 
 static enum ItemUseCheckResult CanUseMulch(const ItemUseContext *usageContext)
@@ -738,7 +730,7 @@ static void UseHoneyFromMenu(ItemMenuUseContext *usageContext, const ItemUseCont
 
     menu->callback = ov5_021F0488;
     menu->taskData = v2;
-    menu->state = START_MENU_STATE_10;
+    menu->state = START_MENU_STATE_NEW_TASK;
 
     Bag_TryRemoveItem(SaveData_GetBag(fieldSystem->saveData), usageContext->item, 1, HEAP_ID_FIELD2);
 }
@@ -772,7 +764,7 @@ static void UseOldRodFromMenu(ItemMenuUseContext *usageContext, const ItemUseCon
 
     menu->callback = FieldTask_Fishing;
     menu->taskData = FishingContext_Init(fieldSystem, HEAP_ID_FIELD2, FISHING_TYPE_OLD_ROD);
-    menu->state = START_MENU_STATE_10;
+    menu->state = START_MENU_STATE_NEW_TASK;
 }
 
 static BOOL UseOldRodInField(ItemFieldUseContext *usageContext)
@@ -792,7 +784,7 @@ static void UseGoodRodFromMenu(ItemMenuUseContext *usageContext, const ItemUseCo
 
     menu->callback = FieldTask_Fishing;
     menu->taskData = FishingContext_Init(fieldSystem, HEAP_ID_FIELD2, FISHING_TYPE_GOOD_ROD);
-    menu->state = START_MENU_STATE_10;
+    menu->state = START_MENU_STATE_NEW_TASK;
 }
 
 static BOOL UseGoodRodInField(ItemFieldUseContext *usageContext)
@@ -812,7 +804,7 @@ static void UseSuperRodFromMenu(ItemMenuUseContext *usageContext, const ItemUseC
 
     menu->callback = FieldTask_Fishing;
     menu->taskData = FishingContext_Init(fieldSystem, HEAP_ID_FIELD2, FISHING_TYPE_SUPER_ROD);
-    menu->state = START_MENU_STATE_10;
+    menu->state = START_MENU_STATE_NEW_TASK;
 }
 
 static BOOL UseSuperRodInField(ItemFieldUseContext *usageContext)
@@ -845,9 +837,9 @@ static enum ItemUseCheckResult CanUseFishingRod(const ItemUseContext *usageConte
 
     if (TileBehavior_IsSurfable(usageContext->facingTileBehavior) == TRUE) {
         if ((TileBehavior_IsBridge(usageContext->currTileBehavior) == TRUE) || (TileBehavior_IsBridgeStart(usageContext->currTileBehavior) == TRUE)) {
-            MapObject *v0 = Player_MapObject(usageContext->playerAvatar);
+            MapObject *playerObj = PlayerAvatar_GetMapObject(usageContext->playerAvatar);
 
-            if (sub_02062F30(v0) == TRUE) {
+            if (MapObject_IsStatusOnElevatedBridge(playerObj) == TRUE) {
                 return ITEM_USE_CANNOT_USE_GENERIC;
             }
         }
@@ -940,7 +932,7 @@ static void UseEscapeRopeFromMenu(ItemMenuUseContext *usageContext, const ItemUs
 
     menu->callback = WarpWithEscapeRope;
     menu->taskData = NULL;
-    menu->state = START_MENU_STATE_10;
+    menu->state = START_MENU_STATE_NEW_TASK;
 
     Bag_TryRemoveItem(SaveData_GetBag(fieldSystem->saveData), usageContext->item, 1, HEAP_ID_FIELD2);
 }
@@ -1008,7 +1000,7 @@ static void UseVsRecorderFromMenu(ItemMenuUseContext *usageContext, const ItemUs
 
     sub_0203DE88(fieldSystem, fieldSystem->saveData);
     menu->taskData = NULL;
-    StartMenu_SetCallback(menu, sub_0203C784);
+    StartMenu_SetCallback(menu, StartMenu_ExitVsRecorder);
 }
 
 static BOOL UseVsRecorderInField(ItemFieldUseContext *usageContext)
@@ -1064,8 +1056,8 @@ BOOL sub_02069238(FieldSystem *fieldSystem)
 
     item = (u16)Bag_GetRegisteredItem(SaveData_GetBag(fieldSystem->saveData));
     itemUseFuncIdx = (u16)Item_LoadParam(item, ITEM_PARAM_FIELD_USE_FUNC, HEAP_ID_FIELD2);
-    checkUse = (ItemCheckUseFunc)GetItemUseFunction(USE_ITEM_TASK_CHECK, itemUseFuncIdx);
-    useInField = (ItemFieldUseFunc)GetItemUseFunction(USE_ITEM_TASK_FIELD, itemUseFuncIdx);
+    checkUse = (ItemCheckUseFunc)ItemUseFunction_Get(ITEM_FUNC_CHECK_CAN_USE, itemUseFuncIdx);
+    useInField = (ItemFieldUseFunc)ItemUseFunction_Get(ITEM_FUNC_USE_IN_FIELD, itemUseFuncIdx);
 
     if (useInField == NULL) {
         return FALSE;
@@ -1077,7 +1069,7 @@ BOOL sub_02069238(FieldSystem *fieldSystem)
     usageContext->fieldSystem = fieldSystem;
     usageContext->unk_28 = item;
 
-    sub_0206842C(fieldSystem, &usageContext->unk_04);
+    ItemUseContext_Init(fieldSystem, &usageContext->unk_04);
 
     usageResult = 0;
 

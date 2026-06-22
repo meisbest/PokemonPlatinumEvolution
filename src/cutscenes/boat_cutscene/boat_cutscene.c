@@ -12,6 +12,7 @@
 #include "overlay005/map_prop_animation.h"
 
 #include "camera.h"
+#include "field_bgm.h"
 #include "field_map_change.h"
 #include "field_task.h"
 #include "field_transition.h"
@@ -22,9 +23,8 @@
 #include "sound_playback.h"
 #include "terrain_collision_manager.h"
 #include "unk_0203D1B8.h"
-#include "unk_020553DC.h"
 
-#include "res/field/props/models/prop_models.naix.h"
+#include "res/field/props/models/prop_models.naix"
 
 #define BOAT_CUTSCENE_STATE_START_WITHOUT_BRIDGE 0
 #define BOAT_CUTSCENE_STATE_START_WITH_BRIDGE    1
@@ -99,13 +99,13 @@ void FieldSystem_PlayBoatCutscene(FieldSystem *fieldSystem, const u8 travelDir, 
 
     if (travelDir == BOAT_TRAVEL_DIR_NORTH_TO_SOUTH) {
         targetMapPropModelID = regular_ship_nsbmd;
-        TerrainCollisionHitbox_Init(Player_GetXPos(fieldSystem->playerAvatar), Player_GetZPos(fieldSystem->playerAvatar), 1, -3, 3, 6, &hitbox);
+        TerrainCollisionHitbox_Init(PlayerAvatar_GetXPos(fieldSystem->playerAvatar), PlayerAvatar_GetZPos(fieldSystem->playerAvatar), 1, -3, 3, 6, &hitbox);
         moveBeforeFadeOut = TRUE;
         goalDistance = (25 * MAP_OBJECT_TILE_SIZE);
         boatCutscene->bridgeDistance = (14 * MAP_OBJECT_TILE_SIZE);
     } else if (travelDir == BOAT_TRAVEL_DIR_WEST_TO_EAST) {
         targetMapPropModelID = screw_steamship_spiral_nsbmd;
-        TerrainCollisionHitbox_Init(Player_GetXPos(fieldSystem->playerAvatar), Player_GetZPos(fieldSystem->playerAvatar), -2, 2, 6, 3, &hitbox);
+        TerrainCollisionHitbox_Init(PlayerAvatar_GetXPos(fieldSystem->playerAvatar), PlayerAvatar_GetZPos(fieldSystem->playerAvatar), -2, 2, 6, 3, &hitbox);
         moveBeforeFadeOut = TRUE;
         goalDistance = (12 * MAP_OBJECT_TILE_SIZE);
     }
@@ -119,7 +119,7 @@ void FieldSystem_PlayBoatCutscene(FieldSystem *fieldSystem, const u8 travelDir, 
             boatCutscene->speedTick = 0;
             boatCutscene->speed = FX32_ONE / 4;
 
-            PlayerAvatar_PosVectorOut(fieldSystem->playerAvatar, &boatCutscene->cameraPos);
+            PlayerAvatar_GetPosPtr(fieldSystem->playerAvatar, &boatCutscene->cameraPos);
             Camera_ReleaseTarget(fieldSystem->camera);
             Camera_TrackTarget(&boatCutscene->cameraPos, fieldSystem->camera);
 
@@ -240,7 +240,7 @@ static BOOL FieldSystem_PlayBoatCutsceneStep(FieldTask *taskMan)
         boatCutscene->state = BOAT_CUTSCENE_STATE_FADE_IN;
         break;
     case BOAT_CUTSCENE_STATE_FADE_IN:
-        Sound_PlayMapBGM(fieldSystem, boatCutscene->mapID);
+        FieldBGM_PlayForMapHeader(fieldSystem, boatCutscene->mapID);
         FieldTransition_StartMapAndFadeIn(taskMan);
         boatCutscene->state = BOAT_CUTSCENE_STATE_CLEAN_UP;
         break;

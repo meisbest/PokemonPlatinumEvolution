@@ -2,81 +2,75 @@
 #include "res/text/bank/route_216_house.h"
 
 
-    ScriptEntry _000E
-    ScriptEntry _0071
-    ScriptEntry _0084
+    ScriptEntry Route216House_Hiker
+    ScriptEntry Route216House_SnowpointNPCF
+    ScriptEntry Route216House_Bed
     ScriptEntryEnd
 
-_000E:
-    PlayFanfare SEQ_SE_CONFIRM
+Route216House_Hiker:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message 0
+    Message Route216House_Text_MakeYourselfAtHome
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_YES, _0039
-    GoToIfEq VAR_RESULT, MENU_NO, _0066
+    GoToIfEq VAR_RESULT, MENU_YES, Route216House_HikerRest
+    GoToIfEq VAR_RESULT, MENU_NO, Route216House_YouCanNapInBed
     End
 
-_0039:
+Route216House_HikerRest:
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
-    PlaySound SEQ_ASA
-    WaitSound
+    PlayFanfare SEQ_ASA
+    WaitFanfare
     HealParty
     FadeScreenIn
     WaitFadeScreen
-    Message 1
-    WaitABXPadPress
+    Message Route216House_Text_YourPokemonAreHealthy
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_0066:
-    Message 2
-    WaitABXPadPress
+Route216House_YouCanNapInBed:
+    Message Route216House_Text_YouCanNapInBed
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_0071:
-    PlayFanfare SEQ_SE_CONFIRM
+Route216House_SnowpointNPCF:
+    NPCMessage Route216House_Text_IDontHaveThickFat
+    End
+
+Route216House_Bed:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    FacePlayer
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
-    End
-
-_0084:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 4
+    Message Route216House_Text_WantToRest
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_YES, _00AD
-    GoToIfEq VAR_RESULT, MENU_NO, _00E3
+    GoToIfEq VAR_RESULT, MENU_YES, Route216House_RestInBed
+    GoToIfEq VAR_RESULT, MENU_NO, Route216House_DontRestInBed
     End
 
-_00AD:
+Route216House_RestInBed:
     BufferPlayerName 0
-    Message 5
+    Message Route216House_Text_FellAsleepInBed
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
-    PlaySound SEQ_ASA
-    WaitSound
+    PlayFanfare SEQ_ASA
+    WaitFanfare
     HealParty
     FadeScreenIn
     WaitFadeScreen
     BufferPlayerName 0
-    Message 6
-    WaitABXPadPress
+    Message Route216House_Text_BecameFullyHealed
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_00E3:
+Route216House_DontRestInBed:
     CloseMessage
     ReleaseAll
     End

@@ -16,11 +16,11 @@ VeilstoneGym_Init:
     End
 
 VeilstoneGym_Maylene:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfBadgeAcquired BADGE_ID_COBBLE, VeilstoneGym_MayleneAfterBadge
-    CreateJournalEvent LOCATION_EVENT_GYM_WAS_TOO_TOUGH, 133, 0, 0, 0
+    CreateJournalEvent LOCATION_EVENT_GYM_WAS_TOO_TOUGH, MAP_HEADER_VEILSTONE_CITY_GYM
     Message VeilstoneGym_Text_MayleneIntro
     CloseMessage
     StartTrainerBattle TRAINER_LEADER_MAYLENE
@@ -29,19 +29,19 @@ VeilstoneGym_Maylene:
     Message VeilstoneGym_Text_BeatMaylene
     BufferPlayerName 0
     Message VeilstoneGym_Text_MayleneReceiveBadge
-    PlaySound SEQ_BADGE
-    WaitSound
+    PlayFanfare SEQ_BADGE
+    WaitFanfare
     GiveBadge BADGE_ID_COBBLE
     IncrementTrainerScore2 TRAINER_SCORE_EVENT_BADGE_EARNED
     SetTrainerFlag TRAINER_BLACK_BELT_COLBY
     SetTrainerFlag TRAINER_BLACK_BELT_DARREN
     SetTrainerFlag TRAINER_BLACK_BELT_RAFAEL
     SetTrainerFlag TRAINER_BLACK_BELT_JEFFERY
-    CreateJournalEvent LOCATION_EVENT_BEAT_GYM_LEADER, 133, TRAINER_LEADER_MAYLENE, 0, 0
-    SetFlag FLAG_HIDE_LOOKER_IN_GAME_CORNER
+    CreateJournalEvent LOCATION_EVENT_BEAT_GYM_LEADER, MAP_HEADER_VEILSTONE_CITY_GYM, TRAINER_LEADER_MAYLENE
+    SetFlag FLAG_HIDE_GAME_CORNER_LOOKER
     ClearFlag FLAG_HIDE_VEILSTONE_COUNTERPART
     SetVar VAR_VEILSTONE_WAREHOUSE_GUARDS_FIGHTABLE, TRUE
-    SetVar VAR_VEILSTONE_STATE, 1
+    SetVar VAR_VEILSTONE_CITY_COUNTERPART_NEEDS_HELP_STATE, 1
     Message VeilstoneGym_Text_MayleneExplainBadge
     GoTo VeilstoneGym_MayleneTryGiveTM60
     End
@@ -55,7 +55,7 @@ VeilstoneGym_MayleneTryGiveTM60:
     BufferItemName 0, VAR_0x8004
     BufferTMHMMoveName 1, VAR_0x8004
     Message VeilstoneGym_Text_MayleneExplainTM60
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -70,7 +70,7 @@ VeilstoneGym_MayleneAfterBadge:
     GoToIfUnset FLAG_OBTAINED_MAYLENE_TM60, VeilstoneGym_MayleneTryGiveTM60
     BufferPlayerName 0
     Message VeilstoneGym_Text_MayleneAfterBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -81,12 +81,12 @@ VeilstoneGym_LostBattle:
     End
 
 VeilstoneGym_GymGuide:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfBadgeAcquired BADGE_ID_COBBLE, VeilstoneGym_GymGuideAfterbadge
     Message VeilstoneGym_Text_GymGuideBeforeBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -94,19 +94,19 @@ VeilstoneGym_GymGuide:
 VeilstoneGym_GymGuideAfterbadge:
     BufferPlayerName 0
     Message VeilstoneGym_Text_GymGuideAfterBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneGym_GymStatue:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     GoToIfBadgeAcquired BADGE_ID_COBBLE, VeilstoneGym_GymStatueAfterBadge
     BufferRivalName 0
     BufferRivalName 1
     Message VeilstoneGym_Text_GymStatueBeforeBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -116,36 +116,21 @@ VeilstoneGym_GymStatueAfterBadge:
     BufferPlayerName 1
     BufferRivalName 2
     Message VeilstoneGym_Text_GymStatueAfterBadge
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneGym_LeftPoster:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message VeilstoneGym_Text_GoodDeedEveryDay
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    EventMessage VeilstoneGym_Text_GoodDeedEveryDay
     End
 
 VeilstoneGym_RightPoster:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message VeilstoneGym_Text_TreasureEveryEncounter
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    EventMessage VeilstoneGym_Text_TreasureEveryEncounter
     End
 
 VeilstoneGym_MiddlePoster:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message VeilstoneGym_Text_OneDayAtATime
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    EventMessage VeilstoneGym_Text_OneDayAtATime
     End
 
     .balign 4, 0

@@ -3,26 +3,26 @@
 #include "res/field/events/events_twinleaf_town_rival_house_2f.h"
 
 
-    ScriptEntry TwinleafTownRivalHouse2F_RivalNoticesPlayerAndLeaves
+    ScriptEntry TwinleafTownRivalHouse2F_OnFrame_Rival
     ScriptEntry TwinleafTownRivalHouse2F_Wii
     ScriptEntry TwinleafTownRivalHouse2F_PC
     ScriptEntryEnd
 
-TwinleafTownRivalHouse2F_RivalNoticesPlayerAndLeaves:
+TwinleafTownRivalHouse2F_OnFrame_Rival:
     LockAll
     BufferRivalName 0
-    Message TwinleafTownRivalHouse2F_Text_IdBetterTakeBagAndJournal
+    Message TwinleafTownRivalHouse2F_Text_TakeBagAndJournal
     CloseMessage
     ApplyMovement LOCALID_RIVAL, TwinleafTownRivalHouse2F_Movement_RivalNoticePlayer
     WaitMovement
     Common_SetRivalBGM
     BufferPlayerName 0
-    Message TwinleafTownRivalHouse2F_Text_IllBeWaitingOnTheRoad
+    Message TwinleafTownRivalHouse2F_Text_WaitingOnTheRoad
     CloseMessage
     ApplyMovement LOCALID_RIVAL, TwinleafTownRivalHouse2F_Movement_RivalLeave
     ApplyMovement LOCALID_PLAYER, TwinleafTownRivalHouse2F_Movement_PlayerMoveAwayFromStairs
     WaitMovement
-    PlayFanfare SEQ_SE_DP_KAIDAN2
+    PlaySE SEQ_SE_DP_KAIDAN2
     RemoveObject LOCALID_RIVAL
     Common_FadeToDefaultMusic2
     SetFlag FLAG_RIVAL_LEFT_HOME
@@ -53,20 +53,15 @@ TwinleafTownRivalHouse2F_Movement_PlayerMoveAwayFromStairs:
     EndMovement
 
 TwinleafTownRivalHouse2F_Wii:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message TwinleafTownRivalHouse2F_Text_ItsAWii
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    EventMessage TwinleafTownRivalHouse2F_Text_ItsAWii
     End
 
 TwinleafTownRivalHouse2F_PC:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     BufferPlayerName 0
     Message TwinleafTownRivalHouse2F_Text_PCAdventureRules
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End

@@ -2,20 +2,14 @@
 #include "res/text/bank/great_marsh_1.h"
 
 
-    ScriptEntry _001D
-    ScriptEntry _000A
+    ScriptEntry GreatMarsh1_SignboardArea1
+    ScriptEntry GreatMarsh1_RuinManiac
     ScriptEntryEnd
 
-_000A:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+GreatMarsh1_RuinManiac:
+    NPCMessage GreatMarsh1_Text_ThisIsHowYouWin
     End
 
-_001D:
-    ShowLandmarkSign 1
+GreatMarsh1_SignboardArea1:
+    ShowLandmarkSign GreatMarsh1_Text_SignArea1
     End

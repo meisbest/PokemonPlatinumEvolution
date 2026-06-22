@@ -20,7 +20,7 @@
 #include "sys_task_manager.h"
 #include "system.h"
 
-#include "res/graphics/poketch/poketch.naix.h"
+#include "res/graphics/poketch/poketch.naix"
 
 #define TIME_STEPS_PER_FRAME 16
 
@@ -259,7 +259,7 @@ static void SetupSprites(FriendshipCheckerGraphics *graphics, const FriendshipCh
                 PoketchAnimation_SetSpriteCharNo(graphics->pokemon[slot].actionSprite, POKE_ICON_SIZE * MAX_PARTY_SIZE);
                 PoketchAnimation_SetCParam(graphics->pokemon[slot].actionSprite, 0);
             } else {
-                GF_ASSERT(0);
+                GF_ASSERT(FALSE);
             }
 
             graphics->pokemon[slot].flipSprite = SpeciesData_GetFormValue(friendshipData->party[slot].species, friendshipData->party[slot].form, SPECIES_DATA_FLIP_SPRITE);

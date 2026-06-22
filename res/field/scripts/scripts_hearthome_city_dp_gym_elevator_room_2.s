@@ -2,35 +2,35 @@
 #include "res/text/bank/hearthome_city_dp_gym_elevator_room_2.h"
 
 
-    ScriptEntry _0012
-    ScriptEntry _0016
-    ScriptEntry _001A
-    ScriptEntry _002B
+    ScriptEntry HearthomeCityDPGymElevatorRoom2_OnTransition
+    ScriptEntry HearthomeCityDPGymElevatorRoom2_CoordEvent_MoveLift
+    ScriptEntry HearthomeCityDPGymElevatorRoom2_BgSignCorrect
+    ScriptEntry HearthomeCityDPGymElevatorRoom2_BgSignQuestion
     ScriptEntryEnd
 
-_0012:
+HearthomeCityDPGymElevatorRoom2_OnTransition:
     InitPersistedMapFeaturesForHearthomeGym
     End
 
-_0016:
-    ScrCmd_172
+HearthomeCityDPGymElevatorRoom2_CoordEvent_MoveLift:
+    MoveHearthomeGymDPLift
     End
 
-_001A:
+HearthomeCityDPGymElevatorRoom2_BgSignCorrect:
     LockAll
-    PlayFanfare SEQ_SE_DP_UG_020
-    Message 1
-    WaitABXPadPress
+    PlaySE SEQ_SE_DP_UG_020
+    Message HearthomeCityDPGymElevatorRoom2_Text_Correct
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_002B:
-    PlayFanfare SEQ_SE_CONFIRM
+HearthomeCityDPGymElevatorRoom2_BgSignQuestion:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    Message 0
-    PlayFanfare SEQ_SE_DP_MAZYO4
-    WaitABXPadPress
+    Message HearthomeCityDPGymElevatorRoom2_Text_WhatsFirstRoomsAnswer
+    PlaySE SEQ_SE_DP_MAZYO4
+    WaitButton
     CloseMessage
     ReleaseAll
     End

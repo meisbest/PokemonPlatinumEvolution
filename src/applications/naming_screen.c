@@ -40,15 +40,15 @@
 #include "sprite_util.h"
 #include "string_gf.h"
 #include "string_template.h"
+#include "sys_task_extensions.h"
 #include "sys_task_manager.h"
 #include "system.h"
 #include "text.h"
-#include "unk_0200679C.h"
 #include "unk_02012744.h"
 #include "unk_0201567C.h"
 #include "vram_transfer.h"
 
-#include "res/graphics/naming_screen/namein.naix.h"
+#include "res/graphics/naming_screen/namein.naix"
 #include "res/text/bank/generic_names.h"
 #include "res/text/bank/naming_screen.h"
 
@@ -216,7 +216,7 @@ typedef struct NamingScreen {
     void *monIconRawPlttData;
     NNSG2dPaletteData *plttData;
     u8 pixelBuf[256];
-    UnkStruct_020157E4 *touchscreenIconBlinker;
+    PaletteAnimator *touchscreenIconBlinker;
     BOOL isTouchInput;
     int delayUpdateCounter;
 } NamingScreen;
@@ -2113,7 +2113,7 @@ static void NamingScreen_InitIconSprite(NamingScreen *namingScreen, AffineSprite
     case NAMING_SCREEN_TYPE_RIVAL:
         Sprite_SetAnim(namingScreen->entitySprite[0], 51);
         break;
-    case NAMING_SCREEN_TYPE_UNK6:
+    case NAMING_SCREEN_TYPE_SHAYMIN_TABLET:
         Sprite_SetAnim(namingScreen->entitySprite[0], 55);
         break;
     case NAMING_SCREEN_TYPE_GROUP:

@@ -4,11 +4,11 @@
 
 
     ScriptEntry PokemonLeagueBerthaRoom_Bertha
-    ScriptEntry PokemonLeagueBerthaRoom_OnFrame
+    ScriptEntry PokemonLeagueBerthaRoom_OnFrame_EnterRoom
     ScriptEntryEnd
 
 PokemonLeagueBerthaRoom_Bertha:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfSet FLAG_DEFEATED_BERTHA, PokemonLeagueBerthaRoom_BerthaPostBattle
@@ -20,12 +20,12 @@ PokemonLeagueBerthaRoom_Bertha:
     CheckWonBattle VAR_RESULT
     GoToIfEq VAR_RESULT, FALSE, PokemonLeagueBerthaRoom_BlackOut
     SetFlag FLAG_DEFEATED_BERTHA
-    PlayFanfare SEQ_SE_DP_KI_GASYAN
+    PlaySE SEQ_SE_DP_KI_GASYAN
     RemoveObject LOCALID_EXIT_DOOR
     CallIfUnset FLAG_ARRESTED_CHARON_STARK_MOUNTAIN, PokemonLeagueBerthaRoom_CreateJournalEventDefeatedBertha
     CallIfSet FLAG_ARRESTED_CHARON_STARK_MOUNTAIN, PokemonLeagueBerthaRoom_CreateJournalEventDefeatedRematchBertha
     Message PokemonLeagueBerthaRoom_Text_BerthaDefeat
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -39,11 +39,11 @@ PokemonLeagueBerthaRoom_StartBerthaRematchBattle:
     Return
 
 PokemonLeagueBerthaRoom_CreateJournalEventDefeatedBertha:
-    CreateJournalEvent LOCATION_EVENT_BEAT_ELITE_FOUR_MEMBER, TRAINER_ELITE_FOUR_BERTHA, 0, 0, 0
+    CreateJournalEvent LOCATION_EVENT_BEAT_ELITE_FOUR_MEMBER, TRAINER_ELITE_FOUR_BERTHA
     Return
 
 PokemonLeagueBerthaRoom_CreateJournalEventDefeatedRematchBertha:
-    CreateJournalEvent LOCATION_EVENT_BEAT_ELITE_FOUR_MEMBER, TRAINER_ELITE_FOUR_BERTHA_REMATCH, 0, 0, 0
+    CreateJournalEvent LOCATION_EVENT_BEAT_ELITE_FOUR_MEMBER, TRAINER_ELITE_FOUR_BERTHA_REMATCH
     Return
 
 PokemonLeagueBerthaRoom_BlackOut:
@@ -53,16 +53,16 @@ PokemonLeagueBerthaRoom_BlackOut:
 
 PokemonLeagueBerthaRoom_BerthaPostBattle:
     Message PokemonLeagueBerthaRoom_Text_BerthaPostBattle
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-PokemonLeagueBerthaRoom_OnFrame:
+PokemonLeagueBerthaRoom_OnFrame_EnterRoom:
     LockAll
     ApplyMovement LOCALID_PLAYER, PokemonLeagueBerthaRoom_Movement_PlayerEnterRoom
     WaitMovement
-    PlayFanfare SEQ_SE_DP_KI_GASYAN
+    PlaySE SEQ_SE_DP_KI_GASYAN
     ClearFlag FLAG_HIDE_POKEMON_LEAGUE_BERTHA_ROOM_ENTRANCE_DOOR
     AddObject LOCALID_ENTRANCE_DOOR
     SetVar VAR_MAP_LOCAL_1, 1

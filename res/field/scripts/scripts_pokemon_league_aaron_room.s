@@ -4,11 +4,11 @@
 
 
     ScriptEntry PokemonLeagueAaronRoom_Aaron
-    ScriptEntry PokemonLeagueAaronRoom_OnFrame
+    ScriptEntry PokemonLeagueAaronRoom_OnFrame_EnterRoom
     ScriptEntryEnd
 
 PokemonLeagueAaronRoom_Aaron:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     GoToIfSet FLAG_DEFEATED_AARON, PokemonLeagueAaronRoom_AaronPostBattle
@@ -20,12 +20,12 @@ PokemonLeagueAaronRoom_Aaron:
     CheckWonBattle VAR_RESULT
     GoToIfEq VAR_RESULT, FALSE, PokemonLeagueAaronRoom_BlackOut
     SetFlag FLAG_DEFEATED_AARON
-    PlayFanfare SEQ_SE_DP_KI_GASYAN
+    PlaySE SEQ_SE_DP_KI_GASYAN
     RemoveObject LOCALID_EXIT_DOOR
     CallIfUnset FLAG_ARRESTED_CHARON_STARK_MOUNTAIN, PokemonLeagueAaronRoom_CreateJournalEventDefeatedAaron
     CallIfSet FLAG_ARRESTED_CHARON_STARK_MOUNTAIN, PokemonLeagueAaronRoom_CreateJournalEventDefeatedRematchAaron
     Message PokemonLeagueAaronRoom_Text_AaronDefeat
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
@@ -39,11 +39,11 @@ PokemonLeagueAaronRoom_StartAaronRematchBattle:
     Return
 
 PokemonLeagueAaronRoom_CreateJournalEventDefeatedAaron:
-    CreateJournalEvent LOCATION_EVENT_BEAT_ELITE_FOUR_MEMBER, TRAINER_ELITE_FOUR_AARON, 0, 0, 0
+    CreateJournalEvent LOCATION_EVENT_BEAT_ELITE_FOUR_MEMBER, TRAINER_ELITE_FOUR_AARON
     Return
 
 PokemonLeagueAaronRoom_CreateJournalEventDefeatedRematchAaron:
-    CreateJournalEvent LOCATION_EVENT_BEAT_ELITE_FOUR_MEMBER, TRAINER_ELITE_FOUR_AARON_REMATCH, 0, 0, 0
+    CreateJournalEvent LOCATION_EVENT_BEAT_ELITE_FOUR_MEMBER, TRAINER_ELITE_FOUR_AARON_REMATCH
     Return
 
 PokemonLeagueAaronRoom_BlackOut:
@@ -53,16 +53,16 @@ PokemonLeagueAaronRoom_BlackOut:
 
 PokemonLeagueAaronRoom_AaronPostBattle:
     Message PokemonLeagueAaronRoom_Text_AaronPostBattle
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-PokemonLeagueAaronRoom_OnFrame:
+PokemonLeagueAaronRoom_OnFrame_EnterRoom:
     LockAll
     ApplyMovement LOCALID_PLAYER, PokemonLeagueAaronRoom_Movement_PlayerEnterRoom
     WaitMovement
-    PlayFanfare SEQ_SE_DP_KI_GASYAN
+    PlaySE SEQ_SE_DP_KI_GASYAN
     ClearFlag FLAG_HIDE_POKEMON_LEAGUE_AARON_ROOM_ENTRANCE_DOOR
     AddObject LOCALID_ENTRANCE_DOOR
     SetVar VAR_MAP_LOCAL_1, 1

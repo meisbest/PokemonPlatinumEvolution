@@ -13,7 +13,7 @@
     ScriptEntryEnd
 
 VeilstoneStore4F_Attendant:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     CheckIsDepartmentStoreRegular VAR_RESULT
@@ -28,7 +28,7 @@ VeilstoneStore4F_Attendant:
 
 VeilstoneStore4F_AttendantPersonalized:
     BufferPlayerName 0
-    Message VeilstoneStore4F_Text_MayIHelpYouPersonalized
+    Message VeilstoneStore4F_Text_PlayerMayIHelpYou
     InitGlobalTextMenu 1, 1, 0, VAR_RESULT
     AddMenuEntryImm MenuEntries_Text_WhatIsRecommended, 0
     AddMenuEntryImm MenuEntries_Text_NothingThanks, 1
@@ -42,71 +42,53 @@ VeilstoneStore4F_AttendantPersonalized:
 
 VeilstoneStore4F_AttendantPleaseEnjoyYourself:
     Message VeilstoneStore4F_Text_PleaseEnjoyYourself
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore4F_AttendantYellowCushion:
-    Message VeilstoneStore4F_Text_YellowCushionIsSoftAndFirm
-    WaitABXPadPress
+    Message VeilstoneStore4F_Text_YellowCushionIsPopular
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore4F_AttendantCupboards:
-    Message VeilstoneStore4F_Text_SurprisedHowManyBuyCupboards
-    WaitABXPadPress
+    Message VeilstoneStore4F_Text_ManyBuyCupboards
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore4F_AttendantBuizelDoll:
-    Message VeilstoneStore4F_Text_BuizelDollIsVeryPopular
-    WaitABXPadPress
+    Message VeilstoneStore4F_Text_BuizelDollVeryPopular
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore4F_AttendantMantykeDoll:
-    Message VeilstoneStore4F_Text_MantykeDollHasBeenHotSeller
-    WaitABXPadPress
+    Message VeilstoneStore4F_Text_MantykeDollHotSeller
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
 VeilstoneStore4F_NinjaBoy:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message VeilstoneStore4F_Text_ChuckAQuickBallOrTimerBall
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage VeilstoneStore4F_Text_QuickBallOrTimerBall
     End
 
 VeilstoneStore4F_Pokefan:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message VeilstoneStore4F_Text_ThatBoySaysHeIsTrainingHisImage
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage VeilstoneStore4F_Text_BoyIsTrainingHisImage
     End
 
 VeilstoneStore4F_SchoolBoy:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message VeilstoneStore4F_Text_NeedAnotherCopyOfGameToChallengePapa
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage VeilstoneStore4F_Text_NeedAnotherCopyOfGame
     End
 
 VeilstoneStore4F_TopDecorVendor:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     Common_VendorGreeting
@@ -116,7 +98,7 @@ VeilstoneStore4F_TopDecorVendor:
     End
 
 VeilstoneStore4F_BottomDecorVendor:
-    PlayFanfare SEQ_SE_CONFIRM
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     Common_VendorGreeting
@@ -126,10 +108,5 @@ VeilstoneStore4F_BottomDecorVendor:
     End
 
 VeilstoneStore4F_Directory:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message VeilstoneStore4F_Text_Directory
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    EventMessage VeilstoneStore4F_Text_Directory
     End

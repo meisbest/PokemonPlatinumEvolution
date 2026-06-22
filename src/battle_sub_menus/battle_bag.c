@@ -3,11 +3,10 @@
 #include "generated/text_banks.h"
 
 #include "struct_decls/battle_system.h"
-#include "struct_decls/pc_boxes_decl.h"
 
 #include "battle/battle_lib.h"
 #include "battle/battle_system.h"
-#include "battle/ov16_0226DE44.h"
+#include "battle/indicator.h"
 #include "battle_sub_menus/battle_bag_buttons.h"
 #include "battle_sub_menus/battle_bag_sprites.h"
 #include "battle_sub_menus/battle_bag_text.h"
@@ -33,11 +32,11 @@
 #include "sprite_system.h"
 #include "string_gf.h"
 #include "string_template.h"
+#include "sys_task_extensions.h"
 #include "sys_task_manager.h"
 #include "system.h"
 #include "text.h"
 #include "touch_screen.h"
-#include "unk_0200679C.h"
 
 #include "res/text/bank/battle_bag.h"
 #include "res/text/bank/common_strings.h"
@@ -584,7 +583,7 @@ static u8 BattleBagTask_CatchTutorial(BattleBag *battleBag)
 
     switch (battleBag->catchTutorialState) {
     case CATCH_TUTORIAL_STATE_MENU_SCREEN:
-        if (ov16_0226DFD4(battleBag->catchTutorialCursor) == TRUE) {
+        if (Indicator_GetHasDropped(battleBag->catchTutorialCursor) == TRUE) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
             battleBag->currentBattlePocket = BATTLE_POCKET_INDEX_POKE_BALLS;
             battleBag->queuedState = TASK_STATE_CATCH_TUTORIAL;
@@ -601,7 +600,7 @@ static u8 BattleBagTask_CatchTutorial(BattleBag *battleBag)
         battleBag->catchTutorialState++;
         break;
     case CATCH_TUTORIAL_STATE_POCKET_MENU_SCREEN:
-        if (ov16_0226DFD4(battleBag->catchTutorialCursor) == TRUE) {
+        if (Indicator_GetHasDropped(battleBag->catchTutorialCursor) == TRUE) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
             battleBag->context->pocketCurrentPagePositions[battleBag->currentBattlePocket] = 0;
             battleBag->queuedState = TASK_STATE_CATCH_TUTORIAL;
@@ -618,7 +617,7 @@ static u8 BattleBagTask_CatchTutorial(BattleBag *battleBag)
         battleBag->catchTutorialState++;
         break;
     case CATCH_TUTORIAL_STATE_USE_ITEM_SCREEN:
-        if (ov16_0226DFD4(battleBag->catchTutorialCursor) == TRUE) {
+        if (Indicator_GetHasDropped(battleBag->catchTutorialCursor) == TRUE) {
             Sound_PlayEffect(SEQ_SE_DP_DECIDE);
             battleBag->context->selectedBattleBagItem = BattleBag_GetItem(battleBag, battleBag->context->pocketCurrentPagePositions[battleBag->currentBattlePocket]);
             battleBag->context->selectedBattleBagPocket = battleBag->currentBattlePocket;

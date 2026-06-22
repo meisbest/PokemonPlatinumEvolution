@@ -2,21 +2,16 @@
 #include "res/text/bank/snowpoint_temple_1f.h"
 
 
-    ScriptEntry _000A
-    ScriptEntry _0010
+    ScriptEntry SnowpointTemple1F_OnTransition
+    ScriptEntry SnowpointTemple1F_Statue
     ScriptEntryEnd
 
-_000A:
+SnowpointTemple1F_OnTransition:
     SetFlag FLAG_FIRST_ARRIVAL_SNOWPOINT_TEMPLE
     End
 
-_0010:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+SnowpointTemple1F_Statue:
+    EventMessage SnowpointTemple1F_Text_StatueOfAPokemon
     End
 
 SnowpointTemple1F_Unused:

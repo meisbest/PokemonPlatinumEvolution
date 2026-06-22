@@ -3,7 +3,7 @@
 #include <nitro.h>
 #include <string.h>
 
-#include "struct_decls/struct_02061AB4_decl.h"
+#include "struct_decls/map_object.h"
 
 #include "overlay005/field_effect_manager.h"
 
@@ -161,7 +161,7 @@ void ov5_021F11C0(FieldEffectManager *param0, u32 param1, u32 param2)
     v0 = ov5_021F1174(v1, 0xffff);
 
     if (v0 == NULL) {
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         return;
     }
 

@@ -2,50 +2,26 @@
 #include "res/text/bank/hearthome_city_northeast_house_2f.h"
 
 
-    ScriptEntry _0012
-    ScriptEntry _0025
-    ScriptEntry _0038
-    ScriptEntry _004B
+    ScriptEntry HearthomeCityNortheastHouse2F_OldMan
+    ScriptEntry HearthomeCityNortheastHouse2F_OldWoman
+    ScriptEntry HearthomeCityNortheastHouse2F_ExpertM
+    ScriptEntry HearthomeCityNortheastHouse2F_ExpertF
     ScriptEntryEnd
 
-_0012:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+HearthomeCityNortheastHouse2F_OldMan:
+    NPCMessage HearthomeCityNortheastHouse2F_Text_AllMyGrandchildrenWantPokemon
     End
 
-_0025:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+HearthomeCityNortheastHouse2F_OldWoman:
+    NPCMessage HearthomeCityNortheastHouse2F_Text_ThereAreNoStairs
     End
 
-_0038:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+HearthomeCityNortheastHouse2F_ExpertM:
+    NPCMessage HearthomeCityNortheastHouse2F_Text_SomeActKindly
     End
 
-_004B:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+HearthomeCityNortheastHouse2F_ExpertF:
+    NPCMessage HearthomeCityNortheastHouse2F_Text_HearthomeIsKidFriendly
     End
 
     .balign 4, 0

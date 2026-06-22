@@ -2,52 +2,40 @@
 #include "res/text/bank/eterna_city_east_house.h"
 
 
-    ScriptEntry _000E
-    ScriptEntry _0021
-    ScriptEntry _0034
+    ScriptEntry EternaCityEastHouse_ExpertM
+    ScriptEntry EternaCityEastHouse_ExpertF
+    ScriptEntry EternaCityEastHouse_PokemonBreederM
     ScriptEntryEnd
 
-_000E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+EternaCityEastHouse_ExpertM:
+    NPCMessage EternaCityEastHouse_Text_EternaCameToBeLongAgo
     End
 
-_0021:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+EternaCityEastHouse_ExpertF:
+    NPCMessage EternaCityEastHouse_Text_HaveYouSeenStatue
     End
 
-_0034:
-    PlayFanfare SEQ_SE_CONFIRM
+EternaCityEastHouse_PokemonBreederM:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
-    Message 2
+    Message EternaCityEastHouse_Text_WantToKnowWhatPlateSaid
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_NO, _006F
-    Message 3
+    GoToIfEq VAR_RESULT, MENU_NO, EternaCityEastHouse_DontFeelObligated
+    Message EternaCityEastHouse_Text_FirstInscriptionLikeThisHearOther
     ShowYesNoMenu VAR_RESULT
-    GoToIfEq VAR_RESULT, MENU_NO, _006F
-    Message 4
-    GoTo _007A
+    GoToIfEq VAR_RESULT, MENU_NO, EternaCityEastHouse_DontFeelObligated
+    Message EternaCityEastHouse_Text_SecondInscriptionWentLikeThis
+    GoTo EternaCityEastHouse_PokemonBreederMEnd
     End
 
-_006F:
-    Message 5
-    GoTo _007A
+EternaCityEastHouse_DontFeelObligated:
+    Message EternaCityEastHouse_Text_DontFeelObligated
+    GoTo EternaCityEastHouse_PokemonBreederMEnd
     End
 
-_007A:
-    WaitABXPadPress
+EternaCityEastHouse_PokemonBreederMEnd:
+    WaitButton
     CloseMessage
     ReleaseAll
     End

@@ -2,105 +2,51 @@
 #include "res/text/bank/foreign_building.h"
 
 
-    ScriptEntry _0026
-    ScriptEntry _0039
-    ScriptEntry _004C
-    ScriptEntry _005F
-    ScriptEntry _0072
-    ScriptEntry _0085
-    ScriptEntry _0098
-    ScriptEntry _00AB
-    ScriptEntry _00BE
+    ScriptEntry ForeignBuilding_RuinManiac
+    ScriptEntry ForeignBuilding_OldMan
+    ScriptEntry ForeignBuilding_NinjaBoy
+    ScriptEntry ForeignBuilding_OldWoman
+    ScriptEntry ForeignBuilding_AceTrainerF
+    ScriptEntry ForeignBuilding_PokefanF
+    ScriptEntry ForeignBuilding_ExpertM
+    ScriptEntry ForeignBuilding_Psychic
+    ScriptEntry ForeignBuilding_Lady
     ScriptEntryEnd
 
-_0026:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ForeignBuilding_RuinManiac:
+    NPCMessage ForeignBuilding_Text_ThereDoISeeMyFather
     End
 
-_0039:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ForeignBuilding_OldMan:
+    NPCMessage ForeignBuilding_Text_CraftingFatiguesOnesSpirit
     End
 
-_004C:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ForeignBuilding_NinjaBoy:
+    NPCMessage ForeignBuilding_Text_ItMakesEveryoneComeTogether
     End
 
-_005F:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ForeignBuilding_OldWoman:
+    NPCMessage ForeignBuilding_Text_ThatPeopleAreLonelyIsNatural
     End
 
-_0072:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 4
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ForeignBuilding_AceTrainerF:
+    NPCMessage ForeignBuilding_Text_WordsThatNotEveryoneCanDescribe
     End
 
-_0085:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 5
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ForeignBuilding_PokefanF:
+    NPCMessage ForeignBuilding_Text_OnlyNaturalWeAreDifferent
     End
 
-_0098:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 6
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ForeignBuilding_ExpertM:
+    NPCMessage ForeignBuilding_Text_TheStrongMustShowRestraint
     End
 
-_00AB:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 7
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ForeignBuilding_Psychic:
+    NPCMessage ForeignBuilding_Text_WeCannotReadMinds
     End
 
-_00BE:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 8
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+ForeignBuilding_Lady:
+    NPCMessage ForeignBuilding_Text_BalanceIsWhatsNeeded
     End
 
     .balign 4, 0

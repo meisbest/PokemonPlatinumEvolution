@@ -24,9 +24,11 @@
 #include "brightness_controller.h"
 #include "camera.h"
 #include "char_transfer.h"
+#include "comm_manager.h"
 #include "comm_player_manager.h"
 #include "communication_information.h"
 #include "communication_system.h"
+#include "coordinates.h"
 #include "field_system.h"
 #include "field_task.h"
 #include "game_records.h"
@@ -52,12 +54,11 @@
 #include "system_vars.h"
 #include "terrain_collision_manager.h"
 #include "trainer_info.h"
-#include "tv_episode_segment.h"
+#include "tv_segment.h"
 #include "underground.h"
-#include "unk_020366A0.h"
 #include "vars_flags.h"
 
-#include "res/graphics/trap_effects/trap_effects.naix.h"
+#include "res/graphics/trap_effects/trap_effects.naix"
 #include "res/text/bank/underground_common.h"
 
 #define MAX_BUBBLES 20
@@ -121,11 +122,6 @@ typedef struct TrapRadarResult {
     u8 netID;
 } TrapRadarResult;
 
-typedef struct fx32Coordinates {
-    fx32 x;
-    fx32 y;
-} fx32Coordinates;
-
 typedef struct TrapRadarContext {
     TrapRadarResult results[MAX_PLACED_TRAPS + MAX_SPAWNED_TRAPS];
     u8 index;
@@ -182,7 +178,7 @@ typedef struct LeafTrapContext {
     int state;
     int printerID;
     u16 leafAngleIdx[MAX_TRAP_EFFECT_SPRITES];
-    Coordinates2D leafCoords[MAX_TRAP_EFFECT_SPRITES];
+    CoordinatesU16 leafCoords[MAX_TRAP_EFFECT_SPRITES];
     u8 micBlowIntensities[40];
     u8 micBlowDelay[MAX_TRAP_EFFECT_SPRITES];
     u8 blowIntensityIndex;
@@ -242,7 +238,7 @@ typedef struct BubbleTrapContext {
     int printerID;
     u8 bubbleSizes[MAX_BUBBLES];
     u16 bubbleAngleIdx[MAX_BUBBLES];
-    fx32Coordinates bubbleCoords[MAX_BUBBLES];
+    CoordinatesFX32 bubbleCoords[MAX_BUBBLES];
     BOOL isBubblePopped[MAX_BUBBLES];
     u16 bubbleScaleTimer[MAX_BUBBLES];
     u8 timer;
@@ -1016,7 +1012,7 @@ int CommPacketSizeOf_AllTrapsPlacedPlayer(void)
     return sizeof(BuriedTrap) * MAX_PLACED_TRAPS;
 }
 
-static Coordinates *Traps_GetCoordinatesOfBuriedTrapAtOrderedIndex(Coordinates *coordinates, int index)
+static CoordinatesU16 *Traps_GetCoordinatesOfBuriedTrapAtOrderedIndex(CoordinatesU16 *coordinates, int index)
 {
     if (trapsEnv->buriedTrapsByCoordinates[index] == NULL) {
         return NULL;
@@ -1030,7 +1026,7 @@ static Coordinates *Traps_GetCoordinatesOfBuriedTrapAtOrderedIndex(Coordinates *
 
 static void Traps_AddBuriedTrapToCoordinatesOrdering(BuriedTrap *trap)
 {
-    Coordinates coordinates = {
+    CoordinatesU16 coordinates = {
         .x = trap->x,
         .z = trap->z
     };
@@ -1480,12 +1476,12 @@ void Traps_ClearLinksReceivedPlacedTraps(void)
     trapsEnv->linksReceivedPlacedTraps = FALSE;
 }
 
-int CommPacketSizeOf_Coordinates(void)
+int CommPacketSizeOf_CoordinatesU16(void)
 {
-    return sizeof(Coordinates);
+    return sizeof(CoordinatesU16);
 }
 
-BOOL Traps_TryDisengageTrap(int netID, Coordinates *unused, u8 flags)
+BOOL Traps_TryDisengageTrap(int netID, CoordinatesU16 *unused, u8 flags)
 {
     Underground *underground = SaveData_GetUnderground(FieldSystem_GetSaveData(trapsEnv->fieldSystem));
 
@@ -1594,7 +1590,7 @@ static int Traps_GetBuriedTrapSetterNetID(BuriedTrap *trap)
 
 static BuriedTrap *Traps_GetTrapAtCoordinates(int x, int z)
 {
-    Coordinates coordinates = {
+    CoordinatesU16 coordinates = {
         .x = x,
         .z = z
     };
@@ -1761,7 +1757,7 @@ void Traps_CallSecondTrapEffectServerFunc(int netID, int unused1, void *data, vo
     TrapServerFunc trapEffectFunc = sTrapEffectServerSecondFuncs[*trapID];
 
     if (*trapID != trapsEnv->triggeredTrapIDs[netID]) {
-        sub_020389C4(1);
+        CommManager_SetResetType(1);
         return;
     }
 
@@ -1950,7 +1946,7 @@ static void Traps_StepBackFromTool(int dir)
 {
     int oppositeDir = CommPlayer_GetOppositeDir(dir);
 
-    Player_SetDir(trapsEnv->fieldSystem->playerAvatar, oppositeDir);
+    PlayerAvatar_TryFace(trapsEnv->fieldSystem->playerAvatar, oppositeDir);
 
     int x = trapsEnv->triggeredTraps[CommSys_CurNetId()].trap.x;
     int z = trapsEnv->triggeredTraps[CommSys_CurNetId()].trap.z;
@@ -1962,8 +1958,8 @@ static void Traps_StepBackFromTool(int dir)
 
 static BOOL Traps_CheckPlayerPosRelativeToTrap(int dir, enum TrapRelativePosition position)
 {
-    int playerX = Player_GetXPos(trapsEnv->fieldSystem->playerAvatar);
-    int playerZ = Player_GetZPos(trapsEnv->fieldSystem->playerAvatar);
+    int playerX = PlayerAvatar_GetXPos(trapsEnv->fieldSystem->playerAvatar);
+    int playerZ = PlayerAvatar_GetZPos(trapsEnv->fieldSystem->playerAvatar);
     int oppositeDir = CommPlayer_GetOppositeDir(dir);
     int trapX = trapsEnv->triggeredTraps[CommSys_CurNetId()].trap.x;
     int trapZ = trapsEnv->triggeredTraps[CommSys_CurNetId()].trap.z;
@@ -2143,8 +2139,8 @@ static void Traps_HurlTrapRightEffectClient(int netID, BOOL isTool, int toolInit
 
 static int Traps_NotifyTrapTriggered(void)
 {
-    int x = Player_GetXPos(trapsEnv->fieldSystem->playerAvatar);
-    int z = Player_GetZPos(trapsEnv->fieldSystem->playerAvatar);
+    int x = PlayerAvatar_GetXPos(trapsEnv->fieldSystem->playerAvatar);
+    int z = PlayerAvatar_GetZPos(trapsEnv->fieldSystem->playerAvatar);
 
     ov5_021F5634(trapsEnv->fieldSystem, x, 0, z);
     UndergroundTextPrinter_SetUndergroundTrapNameWithIndex(UndergroundMan_GetCommonTextPrinter(), 0, trapsEnv->triggeredTrapIDClient);
@@ -2372,7 +2368,7 @@ static void Traps_EndSmokeTrapEffectClient(int netID, BOOL allowToolStepBack)
 }
 
 // returns true when less than 13 tiles of smoke remain
-static BOOL Traps_ProcessSmoke(Coordinates2D *touchCoordinates, BgConfig *bgConfig, SmokeTrapContext *ctx)
+static BOOL Traps_ProcessSmoke(CoordinatesU16 *touchCoordinates, BgConfig *bgConfig, SmokeTrapContext *ctx)
 {
     int smokeTilesLeft = 0;
     u8 *tilemap = Bg_GetTilemapBuffer(bgConfig, BG_LAYER_MAIN_2);
@@ -2514,10 +2510,10 @@ static void Traps_SmokeTrapClientTask(SysTask *sysTask, void *data)
         break;
     case SMOKE_TRAP_STATE_MAIN:
         if (gSystem.touchHeld) {
-            Coordinates2D touchCoordinates;
-
-            touchCoordinates.x = gSystem.touchX;
-            touchCoordinates.y = gSystem.touchY;
+            CoordinatesU16 touchCoordinates = {
+                .x = gSystem.touchX,
+                .y = gSystem.touchY
+            };
 
             if (Traps_ProcessSmoke(&touchCoordinates, ctx->bgConfig, ctx)) {
                 if (ctx->isTool) {
@@ -3049,8 +3045,8 @@ static void Traps_HoleTrapClientTask(SysTask *sysTask, void *data)
             UndergroundTextPrinter_EraseMessageBoxWindow(UndergroundMan_GetCommonTextPrinter());
 
             ctx->state = HOLE_TRAP_STATE_MAIN;
-            int x = Player_GetXPos(trapsEnv->fieldSystem->playerAvatar);
-            int z = Player_GetZPos(trapsEnv->fieldSystem->playerAvatar);
+            int x = PlayerAvatar_GetXPos(trapsEnv->fieldSystem->playerAvatar);
+            int z = PlayerAvatar_GetZPos(trapsEnv->fieldSystem->playerAvatar);
 
             if (!ctx->isPitTrap) {
                 ctx->holeTextureManager = ov5_DrawFloorTexture(trapsEnv->fieldSystem, x, z, 2, FLOOR_TEXTURE_BLACK_CIRCLE);
@@ -3062,7 +3058,7 @@ static void Traps_HoleTrapClientTask(SysTask *sysTask, void *data)
         }
         break;
     case HOLE_TRAP_STATE_MAIN:
-        int dir = PlayerAvatar_GetDir(trapsEnv->fieldSystem->playerAvatar);
+        int dir = PlayerAvatar_GetFacingDir(trapsEnv->fieldSystem->playerAvatar);
 
         if (ctx->lastDir != dir) {
             Sound_PlayEffect(SEQ_SE_DP_BOX02);
@@ -3130,7 +3126,7 @@ static void Traps_StartHoleTrapClientTask(BOOL isPitTrap, BOOL isTool, int toolI
     ctx->isPitTrap = isPitTrap;
     ctx->jumpOutOfHoleProgress = 0;
     ctx->isTool = isTool;
-    ctx->lastDir = PlayerAvatar_GetDir(trapsEnv->fieldSystem->playerAvatar);
+    ctx->lastDir = PlayerAvatar_GetFacingDir(trapsEnv->fieldSystem->playerAvatar);
     ctx->toolInitialDir = toolInitialDir;
 
     trapsEnv->currentTrapContext = ctx;
@@ -4048,8 +4044,8 @@ static BOOL Traps_ProcessBoulder(BgConfig *unused, RockTrapContext *ctx)
     switch (ctx->subState) {
     case ROCK_TRAP_SUBSTATE_DRAW_SHADOW:
         ctx->timer = 0;
-        int x = Player_GetXPos(trapsEnv->fieldSystem->playerAvatar);
-        int z = Player_GetZPos(trapsEnv->fieldSystem->playerAvatar);
+        int x = PlayerAvatar_GetXPos(trapsEnv->fieldSystem->playerAvatar);
+        int z = PlayerAvatar_GetZPos(trapsEnv->fieldSystem->playerAvatar);
         ctx->shadowManager = ov5_DrawGrowingFloorTexture(trapsEnv->fieldSystem, x, z, 5, FLOOR_TEXTURE_BLACK_CIRCLE);
         ctx->subState = ROCK_TRAP_SUBSTATE_INIT_BOULDER_FALL;
         Sound_PlayEffect(SEQ_SE_DP_FW466);
@@ -4231,7 +4227,7 @@ static void Traps_LoadDamagedBoulderTiles(RockTrapContext *ctx)
 
     NARC *narc = NARC_ctor(NARC_INDEX_DATA__UG_TRAP, HEAP_ID_FIELD1);
 
-    if (index < (int)NELEMS(narcMemberIndices)) {
+    if (index < SNELEMS(narcMemberIndices)) {
         ctx->boulderSpriteResources[index + 1] = SpriteResourceCollection_AddTilesFrom(trapsEnv->spriteResourceCollection[TRAP_RESOURCES][SPRITE_RESOURCE_CHAR], narc, narcMemberIndices[index], FALSE, index + 1, NNS_G2D_VRAM_TYPE_2DMAIN, HEAP_ID_FIELD1);
     }
 

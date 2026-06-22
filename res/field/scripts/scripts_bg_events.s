@@ -2,91 +2,51 @@
 #include "res/text/bank/bg_events.h"
 
 
-    ScriptEntry _0026
-    ScriptEntry _0037
-    ScriptEntry _0048
-    ScriptEntry _0059
-    ScriptEntry _006A
-    ScriptEntry _007B
-    ScriptEntry _008C
-    ScriptEntry _009D
-    ScriptEntry _00AE
+    ScriptEntry BgEvents_SmallBookshelf1
+    ScriptEntry BgEvents_SmallBookshelf2
+    ScriptEntry BgEvents_Bookshelf1
+    ScriptEntry BgEvents_Bookshelf2
+    ScriptEntry BgEvents_TrashCan
+    ScriptEntry BgEvents_MartShelf1
+    ScriptEntry BgEvents_MartShelf2
+    ScriptEntry BgEvents_MartShelf3
+    ScriptEntry BgEvents_TownMap
     ScriptEntryEnd
 
-_0026:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+BgEvents_SmallBookshelf1:
+    EventMessage BgEvents_Text_SmallBookshelf1
     End
 
-_0037:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 1
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+BgEvents_SmallBookshelf2:
+    EventMessage BgEvents_Text_SmallBookshelf2
     End
 
-_0048:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 2
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+BgEvents_Bookshelf1:
+    EventMessage BgEvents_Text_Bookshelf1
     End
 
-_0059:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 3
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+BgEvents_Bookshelf2:
+    EventMessage BgEvents_Text_Bookshelf2
     End
 
-_006A:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 4
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+BgEvents_TrashCan:
+    EventMessage BgEvents_Text_TrashCan
     End
 
-_007B:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 5
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+BgEvents_MartShelf1:
+    EventMessage BgEvents_Text_MartShelf1
     End
 
-_008C:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 6
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+BgEvents_MartShelf2:
+    EventMessage BgEvents_Text_MartShelf2
     End
 
-_009D:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 7
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+BgEvents_MartShelf3:
+    EventMessage BgEvents_Text_MartShelf3
     End
 
-_00AE:
-    PlayFanfare SEQ_SE_CONFIRM
+BgEvents_TownMap:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FadeScreenOut
     WaitFadeScreen

@@ -2,73 +2,63 @@
 #include "res/text/bank/route_218.h"
 
 
-    ScriptEntry _001E
-    ScriptEntry _0035
-    ScriptEntry _004C
-    ScriptEntry _005D
-    ScriptEntry _006E
-    ScriptEntry _008B
-    ScriptEntry _00A8
+    ScriptEntry Route218_ArrowSignpostCanalaveCity
+    ScriptEntry Route218_ArrowSignpostJubilifeCity
+    ScriptEntry Route218_Guitarist
+    ScriptEntry Route218_Fisherman
+    ScriptEntry Route218_ClefairySouth
+    ScriptEntry Route218_ClefairyNorth
+    ScriptEntry Route218_Pikachu
     ScriptEntryEnd
 
-_001E:
-    ShowArrowSign 5
+Route218_ArrowSignpostCanalaveCity:
+    ShowArrowSign Route218_Text_SignCanalaveCity
     End
 
-_0035:
-    ShowArrowSign 6
+Route218_ArrowSignpostJubilifeCity:
+    ShowArrowSign Route218_Text_SignJubilifeCity
     End
 
-_004C:
-    PlayFanfare SEQ_SE_CONFIRM
+Route218_Guitarist:
+    EventMessage Route218_Text_ClefairyCuterNow
+    End
+
+Route218_Fisherman:
+    EventMessage Route218_Text_PikachuDazzle
+    End
+
+Route218_ClefairySouth:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    Message 0
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
-    End
-
-_005D:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    Message 4
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
-    End
-
-_006E:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    WaitFanfare SEQ_SE_CONFIRM
+    WaitSE SEQ_SE_CONFIRM
     PlayCry SPECIES_CLEFAIRY
-    Message 1
+    Message Route218_Text_ClefairyCryPippiih
     WaitCry
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_008B:
-    PlayFanfare SEQ_SE_CONFIRM
+Route218_ClefairyNorth:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    WaitFanfare SEQ_SE_CONFIRM
+    WaitSE SEQ_SE_CONFIRM
     PlayCry SPECIES_CLEFAIRY
-    Message 2
+    Message Route218_Text_ClefairyCryPippippiih
     WaitCry
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_00A8:
-    PlayFanfare SEQ_SE_CONFIRM
+Route218_Pikachu:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
-    WaitFanfare SEQ_SE_CONFIRM
+    WaitSE SEQ_SE_CONFIRM
     PlayCry SPECIES_PIKACHU
-    Message 3
+    Message Route218_Text_PikachuCry
     WaitCry
-    WaitABXPadPress
+    WaitButton
     CloseMessage
     ReleaseAll
     End

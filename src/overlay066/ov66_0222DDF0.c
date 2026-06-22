@@ -5,17 +5,14 @@
 #include <ppwlobby/ppw_lobby.h>
 #include <string.h>
 
+#include "constants/versions.h"
 #include "generated/game_records.h"
 #include "generated/journal_online_events.h"
 #include "generated/species.h"
 
-#include "struct_decls/pokedexdata_decl.h"
-#include "struct_decls/struct_02014FB0_decl.h"
-#include "struct_decls/struct_02030EC4_decl.h"
 #include "struct_decls/struct_0207E060_decl.h"
 #include "struct_defs/wi_fi_history.h"
 
-#include "global/pm_version.h"
 #include "overlay066/ov66_02231428.h"
 #include "overlay066/ov66_0223177C.h"
 #include "overlay066/ov66_022324F0.h"
@@ -42,11 +39,11 @@
 #include "overlay066/struct_ov66_022589B4.h"
 #include "overlay068/struct_ov68_0225DC74.h"
 
+#include "easy_chat_words.h"
 #include "enums.h"
 #include "font.h"
 #include "game_records.h"
 #include "heap.h"
-#include "inlines.h"
 #include "journal.h"
 #include "math_util.h"
 #include "message.h"
@@ -60,10 +57,9 @@
 #include "string_gf.h"
 #include "system_data.h"
 #include "trainer_info.h"
-#include "unk_02014D38.h"
-#include "unk_0202C858.h"
 #include "unk_02030EA4.h"
 #include "unk_0207E060.h"
+#include "wifi_history_save_data.h"
 
 typedef struct UnkStruct_ov66_0222E71C_t {
     s32 unk_00;
@@ -1146,7 +1142,7 @@ u32 ov66_0222E80C(const UnkStruct_ov66_0222E71C *param0)
     if (ov66_0222E824(param0) == TRUE) {
         language = param0->language;
     } else {
-        language = ENGLISH;
+        language = LANGUAGE_ENGLISH;
     }
 
     return language;
@@ -1156,12 +1152,12 @@ u32 ov66_0222E80C(const UnkStruct_ov66_0222E71C *param0)
 BOOL ov66_0222E824(const UnkStruct_ov66_0222E71C *param0)
 {
     switch (param0->language) {
-    case JAPANESE:
-    case ENGLISH:
-    case FRENCH:
-    case ITALIAN:
-    case GERMAN:
-    case SPANISH:
+    case LANGUAGE_JAPANESE:
+    case LANGUAGE_ENGLISH:
+    case LANGUAGE_FRENCH:
+    case LANGUAGE_ITALIAN:
+    case LANGUAGE_GERMAN:
+    case LANGUAGE_SPANISH:
         return TRUE;
     default:
         break;
@@ -2390,7 +2386,7 @@ static BOOL ov66_0222FA04(const UnkStruct_ov66_0222F6C4 *param0, const SaveData 
     u32 v0 = SaveData_CalculateChecksum(saveData, &param0->unk_20, sizeof(UnkStruct_ov66_0222E71C));
 
     if (v0 != param0->unk_B4) {
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         return 0;
     }
 
@@ -3386,7 +3382,7 @@ static u32 ov66_02230828(const UnkStruct_ov66_022307D4 *param0)
         v2 += param0->unk_00[v0];
     }
 
-    GF_ASSERT(0);
+    GF_ASSERT(FALSE);
     return 0;
 }
 
@@ -3676,7 +3672,7 @@ static void ov66_02230BE0(UnkStruct_ov66_02230A6C *param0)
     u32 v0 = SaveData_CalculateChecksum(param0->saveData, param0, (sizeof(UnkStruct_ov66_02230A6C) - 8));
 
     if (v0 != param0->unk_48) {
-        GF_ASSERT(0);
+        GF_ASSERT(FALSE);
         param0->unk_4A = 1;
     }
 }

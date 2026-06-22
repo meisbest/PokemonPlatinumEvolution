@@ -27,9 +27,11 @@
 #include "underground/traps.h"
 
 #include "bg_window.h"
+#include "comm_manager.h"
 #include "comm_player_manager.h"
 #include "communication_information.h"
 #include "communication_system.h"
+#include "coordinates.h"
 #include "field_map_change.h"
 #include "field_system.h"
 #include "field_task.h"
@@ -57,15 +59,14 @@
 #include "terrain_collision_manager.h"
 #include "trainer_info.h"
 #include "underground.h"
-#include "unk_02030EE0.h"
 #include "unk_02033200.h"
-#include "unk_020366A0.h"
 #include "unk_0205F180.h"
 #include "unk_020655F4.h"
 #include "vars_flags.h"
+#include "wireless_manager.h"
 
-#include "res/field/props/models/prop_models.naix.h"
-#include "res/graphics/trap_effects/trap_effects.naix.h"
+#include "res/field/props/models/prop_models.naix"
+#include "res/graphics/trap_effects/trap_effects.naix"
 #include "res/text/bank/underground_capture_flag.h"
 #include "res/text/bank/underground_common.h"
 
@@ -935,7 +936,7 @@ static void SecretBases_ExitBasePromptTask(SysTask *sysTask, void *data)
     case EXIT_PROMPT_STATE_CONFIRM:
         input = Menu_ProcessInputAndHandleExit(ctx->menu, HEAP_ID_FIELD1);
 
-        if (input == 0) {
+        if (input == MENU_YES) {
             ctx->menu = NULL;
             ctx->state = EXIT_PROMPT_STATE_EXIT_AND_END;
         } else if (input != MENU_NOTHING_CHOSEN) {
@@ -952,7 +953,7 @@ static void SecretBases_ExitBasePromptTask(SysTask *sysTask, void *data)
     case EXIT_PROMPT_STATE_CONFIRM_DOOR_CLOSED:
         input = Menu_ProcessInputAndHandleExit(ctx->menu, HEAP_ID_FIELD1);
 
-        if (input == 0) {
+        if (input == MENU_YES) {
             ctx->menu = NULL;
             UndergroundTextPrinter_PrintText(UndergroundMan_GetCommonTextPrinter(), UndergroundCommon_Text_CommsWillBeLaunched, FALSE, NULL);
             ctx->state = EXIT_PROMPT_STATE_OPEN_COMMS_CONFIRM_MENU;
@@ -970,7 +971,7 @@ static void SecretBases_ExitBasePromptTask(SysTask *sysTask, void *data)
     case EXIT_PROMPT_STATE_CONFIRM_COMMS:
         input = Menu_ProcessInputAndHandleExit(ctx->menu, HEAP_ID_FIELD1);
 
-        if (input == 0) {
+        if (input == MENU_YES) {
             ctx->menu = NULL;
             ctx->state = EXIT_PROMPT_STATE_EXIT_AND_END;
         } else if (input != MENU_NOTHING_CHOSEN) {
@@ -1134,7 +1135,7 @@ static void SecretBases_EnterBasePromptTask(SysTask *sysTask, void *data)
     case ENTER_PROMPT_STATE_CONFIRM_OTHER_BASE:
         input = Menu_ProcessInputAndHandleExit(ctx->menu, HEAP_ID_FIELD1);
 
-        if (input == 0) {
+        if (input == MENU_YES) {
             ctx->menu = NULL;
             ctx->state = ENTER_PROMPT_STATE_ENTER_AFTER_TEXT;
         } else if (input != MENU_NOTHING_CHOSEN) {
@@ -1156,7 +1157,7 @@ static void SecretBases_EnterBasePromptTask(SysTask *sysTask, void *data)
     case ENTER_PROMPT_STATE_CONFIRM_OWN_BASE:
         input = Menu_ProcessInputAndHandleExit(ctx->menu, HEAP_ID_FIELD1);
 
-        if (input == 0) {
+        if (input == MENU_YES) {
             ctx->menu = NULL;
 
             if (UndergroundPlayer_IsHoldingFlag(ctx->baseOwnerNetID) || (SecretBases_CountPlayersInBase(ctx->baseOwnerNetID, 0) > 0)) {
@@ -1513,8 +1514,8 @@ static void SecretBases_DrawBaseEntrancesTask(SysTask *unused, void *unused1)
         return;
     }
 
-    int playerX = Player_GetXPos(secretBasesEnv->fieldSystem->playerAvatar);
-    int playerZ = Player_GetZPos(secretBasesEnv->fieldSystem->playerAvatar);
+    int playerX = PlayerAvatar_GetXPos(secretBasesEnv->fieldSystem->playerAvatar);
+    int playerZ = PlayerAvatar_GetZPos(secretBasesEnv->fieldSystem->playerAvatar);
 
     if (UndergroundMan_AreCoordinatesInSecretBase(playerX, playerZ)) {
         return;
@@ -1801,7 +1802,7 @@ static void SecretBases_DiggerDrillTask(SysTask *sysTask, void *data)
         UndergroundTextPrinter_SetUndergroundTrapName(UndergroundMan_GetCommonTextPrinter(), TRAP_DIGGER_DRILL);
         Sound_PlayEffect(SEQ_SE_DP_DORIRU);
 
-        ov5_021F58FC(Player_MapObject(fieldSystem->playerAvatar), 0, 0, 0);
+        ov5_021F58FC(PlayerAvatar_GetMapObject(fieldSystem->playerAvatar), 0, 0, 0);
         UndergroundTextPrinter_PrintText(UndergroundMan_GetCommonTextPrinter(), UndergroundCommon_Text_ItemWasUsed, FALSE, NULL);
 
         ctx->state = DRILL_STATE_WAIT;
@@ -1819,7 +1820,7 @@ static void SecretBases_DiggerDrillTask(SysTask *sysTask, void *data)
     case DRILL_STATE_CREATE_ENTRANCE: {
         int x = CommPlayer_GetXInFrontOfPlayer(CommSys_CurNetId());
         int z = CommPlayer_GetZInFrontOfPlayer(CommSys_CurNetId());
-        int dir = CommPlayer_GetOppositeDir(PlayerAvatar_GetDir(fieldSystem->playerAvatar));
+        int dir = CommPlayer_GetOppositeDir(PlayerAvatar_GetFacingDir(fieldSystem->playerAvatar));
 
         UndergroundTextPrinter_PrintText(UndergroundMan_GetCommonTextPrinter(), UndergroundCommon_Text_DiscoveredCavern, FALSE, NULL);
         SecretBases_SetBaseEntrancePropLocation(x, z, dir, NETID_CURRENT_PLAYER_BASE);
@@ -1861,7 +1862,7 @@ static void SecretBases_DiggerDrillTask(SysTask *sysTask, void *data)
     case DRILL_STATE_CONFIRM:
         u32 input = Menu_ProcessInputAndHandleExit(ctx->menu, HEAP_ID_FIELD1);
 
-        if (input == 0) {
+        if (input == MENU_YES) {
             ctx->state = DRILL_STATE_REMOVE_DRILL;
             ctx->menu = NULL;
         } else if (input != MENU_NOTHING_CHOSEN) {
@@ -2303,7 +2304,7 @@ static enum Good SecretBases_GetGoodWithCollisionAtCoordinates(SecretBase *secre
     return UG_GOOD_NONE;
 }
 
-BOOL SecretBases_CheckForInteractableGood(int netID, Coordinates *coordinates)
+BOOL SecretBases_CheckForInteractableGood(int netID, CoordinatesU16 *coordinates)
 {
     int x = coordinates->x;
     int z = coordinates->z;
@@ -2758,16 +2759,16 @@ void SecretBases_SetEntranceGraphicsEnabled(BOOL enabled)
 
 static void ov23_0224DC08(void)
 {
-    sub_02032174(TRUE);
-    sub_02032138(TRUE);
-    sub_02036814(TRUE);
+    WirelessManager_SetPauseClientConnection(TRUE);
+    WirelessManager_SetPauseConnection(TRUE);
+    CommManager_SetPauseUnderground(TRUE);
     sub_020340FC();
 }
 
 static void ov23_0224DC24(void)
 {
-    sub_02032174(FALSE);
-    sub_02032138(FALSE);
-    sub_02036814(FALSE);
+    WirelessManager_SetPauseClientConnection(FALSE);
+    WirelessManager_SetPauseConnection(FALSE);
+    CommManager_SetPauseUnderground(FALSE);
     sub_020340FC();
 }

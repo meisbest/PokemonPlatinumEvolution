@@ -56,8 +56,7 @@ relative_build_dir = fs.relative_to(meson.current_build_dir(), meson.project_bui
 
 anim_subscripts_basename = 'anim_subscripts'
 anim_subscripts_narc_name = anim_subscripts_basename + '.narc'
-anim_subscripts_naix_name = anim_subscripts_basename + '.naix.h'
-anim_subscripts_order = files('anim_subscripts.order')
+anim_subscripts_naix_name = anim_subscripts_basename + '.naix'
 
 anim_subscripts_private_dir = relative_build_dir / anim_subscripts_narc_name + '.p'
 
@@ -66,17 +65,18 @@ anim_subscripts_narc = custom_target(anim_subscripts_narc_name,
         anim_subscripts_narc_name,
         anim_subscripts_naix_name,
     ],
-    input: script_bin_gen.process(
+    input: battle_anim_script_bin_gen.process(
         anim_subscript_files,
         extra_args: [ '--out-dir', anim_subscripts_private_dir, ]
     ),
     command: [
-        narc_exe, 'create',
-        '--naix',
-        '--order', anim_subscripts_order,
-        '--output', '@OUTPUT0@',
+        nitroarc_exe,
+        '--create',
+        '--index',
+        '--files-from', files('anim_subscripts.order'),
+        '--file', '@OUTPUT0@',
         '@PRIVATE_DIR@',
-    ]
+    ],
 )
 
 nitrofs_files += anim_subscripts_narc

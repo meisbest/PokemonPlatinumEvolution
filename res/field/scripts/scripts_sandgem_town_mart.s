@@ -3,40 +3,22 @@
 
 
     ScriptEntry SandgemTownMart_CommonVendor
-    ScriptEntry SandgemTownMart_Dummy
+    ScriptEntry SandgemTownMart_Dummy2
     ScriptEntry SandgemTownMart_Breeder
     ScriptEntry SandgemTownMart_SchoolBoy
     ScriptEntryEnd
 
 SandgemTownMart_CommonVendor:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Common_VendorGreeting
-    CloseMessageWithoutErasing
-    PokeMartCommon 0
-    ReleaseAll
+    PokeMartCommonWithGreeting 0
     End
 
-SandgemTownMart_Dummy:
+SandgemTownMart_Dummy2:
     End
 
 SandgemTownMart_Breeder:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message SandgemTownMart_Text_BuyLotsOfPotions
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage SandgemTownMart_Text_BuyLotsOfPotions
     End
 
 SandgemTownMart_SchoolBoy:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message SandgemTownMart_Text_TossAPokeBall
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage SandgemTownMart_Text_TossAPokeBall
     End

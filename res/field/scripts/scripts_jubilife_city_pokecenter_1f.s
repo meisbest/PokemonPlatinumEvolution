@@ -10,37 +10,19 @@
     ScriptEntryEnd
 
 JubilifeCityPokecenter1F_Nurse:
-    Common_CallPokecenterNurse LOCALID_POKECENTER_NURSE
+    Common_CallPokecenterNurse LOCALID_JUBILIFE_NURSE
     End
 
 JubilifeCityPokecenter1F_Twin:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message JubilifeCityPokecenter1F_Text_AllTypesHaveStrengthsAndWeaknesses
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage JubilifeCityPokecenter1F_Text_StrengthsAndWeaknesses
     End
 
 JubilifeCityPokecenter1F_SchoolKidM:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message JubilifeCityPokecenter1F_Text_InTheUnionRoomUpstairsYouCanChatAndTradeWithOtherPeople
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage JubilifeCityPokecenter1F_Text_ChatAndTradeInUnionRoom
     End
 
 JubilifeCityPokecenter1F_TrainerF:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message JubilifeCityPokecenter1F_Text_YouCanStillCatchAPokemonIfYouAlreadyHaveSixTravelingWithYou
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+    NPCMessage JubilifeCityPokecenter1F_Text_CanStillCatchWithSixPokemon
     End
 
     .balign 4, 0

@@ -2,8 +2,8 @@
 #include "res/text/bank/pastoria_city_east_house.h"
 
 
-    ScriptEntry _000A
-    ScriptEntry _0125
+    ScriptEntry PastoriaCityEastHouse_MoveManiac
+    ScriptEntry PastoriaCityEastHouse_Youngster
     ScriptEntry _GuruScript
     ScriptEntryEnd
 
@@ -85,36 +85,36 @@
 .endm
 @ -----------------------------
 
-_000A:
-    PlayFanfare SEQ_SE_CONFIRM
+PastoriaCityEastHouse_MoveManiac:
+    PlaySE SEQ_SE_CONFIRM
     LockAll
     FacePlayer
     @ BufferItemNameWithArticle 4, ITEM_HEART_SCALE
-    GoToIfUnset FLAG_UNK_0x00E9, _003D
+    GoToIfUnset FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC, PastoriaCityEastHouse_CheckHeartScale
     SetVar VAR_0x8008, 5000
     GuruCmd_CheckMoney VAR_0x8008, VAR_RESULT
-    GoToIfEq VAR_RESULT, 0, _005F
-    GoTo _006A
+    GoToIfEq VAR_RESULT, FALSE, PastoriaCityEastHouse_ComeBackWithHeartScale
+    GoTo PastoriaCityEastHouse_TryTeachMove
 
-_003D:
-    SetFlag FLAG_UNK_0x00E9
-    Message 0
+PastoriaCityEastHouse_CheckHeartScale:
+    SetFlag FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC
+    Message PastoriaCityEastHouse_Text_TeachMoveForHeartScale
     @CheckItem ITEM_HEART_SCALE, 1, VAR_RESULT
     SetVar VAR_0x8008, 5000
     GuruCmd_CheckMoney VAR_0x8008, VAR_RESULT
-    GoToIfEq VAR_RESULT, 0, _005F
-    GoTo _006A
+    GoToIfEq VAR_RESULT, 0, PastoriaCityEastHouse_ComeBackWithHeartScale
+    GoTo PastoriaCityEastHouse_TryTeachMove
 
-_005F:
-    Message 2
-    WaitABXPadPress
+PastoriaCityEastHouse_ComeBackWithHeartScale:
+    Message PastoriaCityEastHouse_Text_ComeBackWithHeartScale
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_006A:
-    Message 1
-    Message 3
+PastoriaCityEastHouse_TryTeachMove:
+    Message PastoriaCityEastHouse_Text_ThatsAHeartScale
+    Message PastoriaCityEastHouse_Text_TutorWhichPokemon
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
@@ -123,12 +123,12 @@ _006A:
     ReturnToField
     FadeScreenIn
     WaitFadeScreen
-    GoToIfEq VAR_0x8005, 0xFF, _005F
+    GoToIfEq VAR_0x8005, PARTY_SLOT_NONE, PastoriaCityEastHouse_ComeBackWithHeartScale
     GetPartyMonSpecies VAR_0x8005, VAR_RESULT
-    GoToIfEq VAR_RESULT, 0, _011A
+    GoToIfEq VAR_RESULT, 0, PastoriaCityEastHouse_EggsCantLearnMoves
     CheckHasLearnableReminderMoves VAR_RESULT, VAR_0x8005
-    GoToIfEq VAR_RESULT, FALSE, _010F
-    Message 4
+    GoToIfEq VAR_RESULT, FALSE, PastoriaCityEastHouse_NoMovesToTeach
+    Message PastoriaCityEastHouse_Text_TeachWhichMove
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
@@ -137,42 +137,34 @@ _006A:
     ReturnToField
     FadeScreenIn
     WaitFadeScreen
-    GoToIfEq VAR_RESULT, 0xFF, _005F
+    GoToIfEq VAR_RESULT, 0xFF, PastoriaCityEastHouse_ComeBackWithHeartScale
     @RemoveItem ITEM_HEART_SCALE, 1, VAR_RESULT
     SetVar VAR_0x8008, 5000
     GuruCmd_TakeMoney VAR_0x8008, VAR_RESULT
     BufferPlayerName 3
-    Message 16
-    WaitABXPadPress
+    Message PastoriaCityEastHouse_Text_HandedOverHeartScale
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_010F:
-    Message 5
-    WaitABXPadPress
+PastoriaCityEastHouse_NoMovesToTeach:
+    Message PastoriaCityEastHouse_Text_NoMovesToTeach
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_011A:
-    Message 6
-    WaitABXPadPress
+PastoriaCityEastHouse_EggsCantLearnMoves:
+    Message PastoriaCityEastHouse_Text_EggsCantLearnMoves
+    WaitButton
     CloseMessage
     ReleaseAll
     End
 
-_0125:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 17
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+PastoriaCityEastHouse_Youngster:
+    NPCMessage PastoriaCityEastHouse_Text_NewspaperGivesHeartScales
     End
-
-
 
 _GuruScript:
     LockAll

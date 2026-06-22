@@ -2,92 +2,41 @@
 #include "res/text/bank/route_222_west_house.h"
 
 
-    ScriptEntry _001E
-    ScriptEntry _0024
-    ScriptEntry _0043
-    ScriptEntry _0062
-    ScriptEntry _0081
-    ScriptEntry _00A0
-    ScriptEntry _00BF
+    ScriptEntry Route222WestHouse_OnTransition
+    ScriptEntry Route222WestHouse_Pikachu
+    ScriptEntry Route222WestHouse_Pikachu3_Unused
+    ScriptEntry Route222WestHouse_Pikachu4_Unused
+    ScriptEntry Route222WestHouse_Pikachu5_Unused
+    ScriptEntry Route222WestHouse_Pikachu6_Unused
+    ScriptEntry Route222WestHouse_PokefanM
     ScriptEntryEnd
 
-_001E:
+Route222WestHouse_OnTransition:
     SetFlag FLAG_FIRST_ARRIVAL_PIKACHU_FAN_CLUB
     End
 
-_0024:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    WaitFanfare SEQ_SE_CONFIRM
-    PlayCry SPECIES_PIKACHU
-    Message 0
-    WaitCry
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route222WestHouse_Pikachu:
+    PokemonCryAndMessage SPECIES_PIKACHU, Route222WestHouse_Text_PikachuCryPikachuu
     End
 
-_0043:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    WaitFanfare SEQ_SE_CONFIRM
-    PlayCry SPECIES_PIKACHU
-    Message 1
-    WaitCry
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route222WestHouse_Pikachu3_Unused:
+    PokemonCryAndMessage SPECIES_PIKACHU, Route222WestHouse_Text_PikachuCryPikaah
     End
 
-_0062:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    WaitFanfare SEQ_SE_CONFIRM
-    PlayCry SPECIES_PIKACHU
-    Message 2
-    WaitCry
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route222WestHouse_Pikachu4_Unused:
+    PokemonCryAndMessage SPECIES_PIKACHU, Route222WestHouse_Text_PikachuCryPikaPika
     End
 
-_0081:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    WaitFanfare SEQ_SE_CONFIRM
-    PlayCry SPECIES_PIKACHU
-    Message 3
-    WaitCry
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route222WestHouse_Pikachu5_Unused:
+    PokemonCryAndMessage SPECIES_PIKACHU, Route222WestHouse_Text_PikachuCryPiPikachu
     End
 
-_00A0:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    WaitFanfare SEQ_SE_CONFIRM
-    PlayCry SPECIES_PIKACHU
-    Message 4
-    WaitCry
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route222WestHouse_Pikachu6_Unused:
+    PokemonCryAndMessage SPECIES_PIKACHU, Route222WestHouse_Text_PikachuCryPiiKaahchu
     End
 
-_00BF:
-    PlayFanfare SEQ_SE_CONFIRM
-    LockAll
-    FacePlayer
-    Message 5
-    WaitABXPadPress
-    CloseMessage
-    ReleaseAll
+Route222WestHouse_PokefanM:
+    NPCMessage Route222WestHouse_Text_OnlyPikachu
     End
 
     .balign 4, 0

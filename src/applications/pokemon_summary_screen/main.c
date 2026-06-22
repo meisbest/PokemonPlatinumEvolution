@@ -29,6 +29,7 @@
 #include "message.h"
 #include "move_table.h"
 #include "narc.h"
+#include "network_icon.h"
 #include "overlay_manager.h"
 #include "palette.h"
 #include "party.h"
@@ -50,14 +51,13 @@
 #include "system_flags.h"
 #include "touch_pad.h"
 #include "trainer_info.h"
-#include "unk_020393C8.h"
 #include "unk_0208C098.h"
 #include "unk_02094EDC.h"
 #include "vars_flags.h"
 #include "vram_transfer.h"
 
 #include "constdata/const_020F410C.h"
-#include "res/graphics/pokemon_summary_screen/pl_pst_gra.naix.h"
+#include "res/graphics/pokemon_summary_screen/pl_pst_gra.naix"
 #include "res/text/bank/pokemon_summary_screen.h"
 
 enum SummaryState {
@@ -252,7 +252,7 @@ static int PokemonSummaryScreen_Init(ApplicationManager *appMan, int *state)
     SetVBlankCallback(PokemonSummaryScreenVBlank, summaryScreen);
     GXLayers_TurnBothDispOn();
     Sound_SetSceneAndPlayBGM(SOUND_SCENE_SUB_61, SEQ_NONE, 0);
-    NetworkIcon_Init();
+    NetworkIcon_InitIfConnected();
     NARC_dtor(narc);
 
     return TRUE;
@@ -1068,7 +1068,7 @@ static void SetMonDataFromMon(PokemonSummaryScreen *summaryScreen, Pokemon *mon,
     StringTemplate_SetNickname(summaryScreen->strFormatter, 0, boxMon);
     StringTemplate_Format(summaryScreen->strFormatter, summaryScreen->monData.nickname, summaryScreen->string);
 
-    MessageLoader_GetString(summaryScreen->msgLoader, PokemonSummary_Text_OtnameTemplate, summaryScreen->string);
+    MessageLoader_GetString(summaryScreen->msgLoader, PokemonSummary_Text_OTNameTemplate, summaryScreen->string);
     StringTemplate_SetOTName(summaryScreen->strFormatter, 0, boxMon);
     StringTemplate_Format(summaryScreen->strFormatter, summaryScreen->monData.OTName, summaryScreen->string);
 
