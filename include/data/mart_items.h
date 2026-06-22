@@ -30,7 +30,8 @@ const PokeMartCommonItem PokeMartCommonItems[] = {
     { ITEM_ESCAPE_ROPE, 0x2 },
     { ITEM_REPEL, 0x2 },
     { ITEM_SUPER_REPEL, 0x3 },
-    { ITEM_MAX_REPEL, 0x4 }
+    { ITEM_MAX_REPEL, 0x4 },
+    { ITEM_RARE_CANDY, 0x3 }
 };
 
 const u16 JubilifeMartSpecialties[] = {
@@ -74,6 +75,15 @@ const u16 HearthomeMartSpecialties[] = {
     ITEM_HEAL_BALL,
     ITEM_NET_BALL,
     ITEM_NEST_BALL,
+    ITEM_SUN_STONE,
+    ITEM_MOON_STONE,
+    ITEM_FIRE_STONE,
+    ITEM_THUNDERSTONE,
+    ITEM_WATER_STONE,
+    ITEM_LEAF_STONE,
+    ITEM_SHINY_STONE,
+    ITEM_DUSK_STONE,
+    ITEM_DAWN_STONE,
     SHOP_ITEM_END
 };
 
@@ -90,6 +100,10 @@ const u16 PastoriaMartSpecialties[] = {
     ITEM_NEST_BALL,
     ITEM_DUSK_BALL,
     ITEM_QUICK_BALL,
+    ITEM_RED_SHARD,
+    ITEM_BLUE_SHARD,
+    ITEM_YELLOW_SHARD,
+    ITEM_GREEN_SHARD,
     SHOP_ITEM_END
 };
 
@@ -206,6 +220,8 @@ const u16 PokemonLeagueMartSpecialties[] = {
     ITEM_TIMER_BALL,
     ITEM_REPEAT_BALL,
     ITEM_LUXURY_BALL,
+    ITEM_MAX_ELIXIR,
+    ITEM_MAX_REVIVE,
     SHOP_ITEM_END
 };
 
