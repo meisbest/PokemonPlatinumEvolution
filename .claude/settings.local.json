@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find //wsl.localhost/Ubuntu/home/meis/pokeplatinum/res -type f -name \"*.json\" -o -name \"*.txt\" | grep -i trainer | head -10)",
+      "Read(///wsl.localhost/Ubuntu/home/meis/pokeplatinum/**)",
+      "Bash(find //wsl.localhost/Ubuntu/home/meis/pokeplatinum -type d -name \"trainers\" | head -5)",
+      "Read(///wsl.localhost/Ubuntu/home/meis/**)",
+      "Bash(ls //wsl.localhost/Ubuntu/home/meis/pokeplatinum/res/trainers | head -20)",
+      "Read(///wsl.localhost/Ubuntu/home/meis/pokeplatinum/res/**)",
+      "Bash(find //wsl.localhost/Ubuntu/home/meis/pokeplatinum/res/trainers -name \"*.json\" | head -5)",
+      "Bash(find //wsl.localhost/Ubuntu/home/meis/pokeplatinum/res/trainers/data -name \"*.json\" | head -5)",
+      "Read(///wsl.localhost/Ubuntu/home/meis/pokeplatinum/res/trainers/**)",
+      "Bash(xargs grep -l '\"moves\"')"
+    ]
+  }
+}
