@@ -13,6 +13,8 @@ Lingua di lavoro: **italiano** (messaggi, commit, documentazione).
   entrambi sul branch `ppe` del fork.
 - L'elenco delle modifiche rispetto all'originale è in
   [docs/PPE_CHANGES.md](docs/PPE_CHANGES.md). **Va aggiornato a ogni SALVA.**
+- Setup da zero su Windows (WSL 2, VS Code, gh, clone, prima build) per un nuovo
+  collaboratore: [docs/SETUP.md](docs/SETUP.md).
 
 ## Remote e branch
 
@@ -202,8 +204,8 @@ La lista dei simboli e dei file da cui dipendiamo è nella sezione
 
 ## Build
 
-Ambiente: WSL Ubuntu, repo in `~/pokeplatinum`. Setup rapido per PPE:
-[SETUP.md](SETUP.md). Guida completa upstream: [INSTALL.md](INSTALL.md).
+Ambiente: WSL Ubuntu, repo in `~/pokeplatinum`. Setup da zero per PPE:
+[docs/SETUP.md](docs/SETUP.md). Guida completa upstream: [INSTALL.md](INSTALL.md).
 
 ```bash
 make release        # compila la ROM: build/pokeplatinum.us.nds

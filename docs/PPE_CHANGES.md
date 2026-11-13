@@ -247,8 +247,11 @@ Legenda: ⚠️ = problema noto o da verificare.
 - `.gitignore`: in fondo c'è un blocco `# PPE` con `*.nds` e `.claude/settings.local.json`.
 - `.claude/settings.local.json` era stato committato prima della regola. Dal
   2026-11-13 non è più tracciato e ognuno tiene il proprio in locale.
-- Aggiunti `CLAUDE.md`, `SETUP.md`, `docs/PPE_CHANGES.md` e i comandi `/salva` e
+- Aggiunti `CLAUDE.md`, `docs/PPE_CHANGES.md` e i comandi `/salva` e
   `/aggiorna` in `.claude/commands/`.
+- `docs/SETUP.md`: guida da zero su Windows per un nuovo collaboratore (WSL 2,
+  VS Code con estensione WSL e Claude Code, `gh`, clone con i remote giusti, prima
+  build, uso quotidiano, troubleshooting). Sostituisce il vecchio `SETUP.md` in root.
 - Submodule `subprojects/narc` aggiunto (`f6691cc1d`).
 - `.gitattributes`: in fondo c'è un blocco PPE che forza LF per `*.template`,
   `*.patch`, `*.adoc`, `*.csv` e `Makefile`. Non include `*.order` e `*.txt`,
@@ -313,4 +316,5 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `61d6d28a0` | Enrico | Merge ponte con `b2cd286f3` (nessun file cambiato) |
 | 2026-11-13 | `d454b1d66` | Enrico | Normalizza fine riga e permessi, blocco LF in `.gitattributes` |
 | 2026-11-13 | `491f0364e` | Enrico | Merge di origin/main `62bdaacdc` (121 commit), con Tenda, trainerproc e Guru adattati |
-| 2026-11-13 | (questo) | Enrico | Level cap: condizioni 85 e 77 corrette, nomi al posto dei numeri. Borsa bloccata contro gli allenatori |
+| 2026-11-13 | `b8951696d` | Enrico | Level cap: condizioni 85 e 77 corrette, nomi al posto dei numeri. Borsa bloccata contro gli allenatori |
+| 2026-11-13 | (questo) | Enrico | Guida di setup per collaboratori su Windows (`docs/SETUP.md`) |
