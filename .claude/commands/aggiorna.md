@@ -31,28 +31,70 @@ esistono upstream, bloccano il merge. Se non è pulito, **fermati e chiedi** all
 
 Non eliminare nulla senza ok.
 
-## 2. Fetch e merge
+## 2. Fetch
 
 ```bash
 git fetch origin
-git log --oneline HEAD..origin/main | wc -l    # quanti commit arrivano
+BASE=$(git merge-base HEAD origin/main)
+git log --oneline $BASE..origin/main | wc -l    # quanti commit arrivano
+```
+
+## 3. Controlli semantici PRIMA del merge
+
+Un merge senza conflitti **non** garantisce che le modifiche PPE funzionino ancora:
+vedi la sezione "Controlli semantici dopo il merge" in `CLAUDE.md`.
+
+1. Leggi la sezione **"Punti di aggancio con upstream"** di `docs/PPE_CHANGES.md`:
+   sono i simboli e i file da cui dipendono le nostre modifiche.
+2. Analizza le modifiche di upstream:
+   ```bash
+   git diff --find-renames --diff-filter=RD --name-status $BASE origin/main   # file rinominati/eliminati
+   git diff --find-renames --stat $BASE origin/main -- <file di aggancio>
+   git log --oneline $BASE..origin/main -S<simbolo>                          # per ogni simbolo di aggancio
+   ```
+3. Presenta un report con ogni **rinomina, eliminazione, spostamento o riscrittura**
+   che tocca un punto di aggancio, l'impatto sulla modifica PPE e una **proposta di
+   adattamento**. Se non trovi nulla, scrivilo esplicitamente.
+4. Chiedi all'utente se procedere con il merge.
+
+## 4. Merge
+
+```bash
 git merge origin/main
 ```
 
-## 3a. Merge pulito
+## 5a. Merge pulito
 
 1. `make update`: aggiorna meson locale, metroskrew e subprojects. È obbligatorio dopo ogni merge.
 2. `make release`. Non usare `make` da solo: include `check`, che con un gioco
    modificato fallisce sempre.
-3. Se la build **passa**: aggiorna l'intestazione di `docs/PPE_CHANGES.md` (data,
-   commit di `origin/main` allineato) e controlla che le modifiche PPE elencate
-   siano ancora presenti dopo il merge, come nel caso di `BATTLE_TYPE_NO_ITEMS`.
-   Committa e fai `git push myfork ppe`.
-4. Se la build **fallisce**: **niente push**. Riporta l'errore (le righe utili del
+3. Se la build **fallisce**: **niente push**. Riporta l'errore (le righe utili del
    log), un'analisi della causa (di solito un'API rinominata upstream che il codice
-   PPE usa ancora) e una proposta di soluzione. Aspetta l'ok prima di modificare codice.
+   PPE usa ancora) e una proposta di soluzione. Aspetta l'ok prima di modificare
+   codice. I controlli semantici del punto 4 vanno fatti comunque.
+4. **Controlli semantici DOPO il merge:**
+   - **Nomi vecchi rimasti:** per ogni simbolo o file rinominato o eliminato
+     upstream, `git grep -n <nome_vecchio>` in tutto il repo, compresi `.s`,
+     `.json`, `.order`, `meson.build` e testi.
+   - **Ogni voce di `docs/PPE_CHANGES.md` è ancora attiva:** il codice deve esserci
+     e anche essere **usato**:
+     - le costanti devono essere lette oltre la definizione (`git grep -n <SIMBOLO> -- src include`)
+     - le funzioni devono essere chiamate
+     - gli ID dei comandi script in `include/data/scripts/scrcmd.h` devono puntare
+       ancora alle nostre funzioni
+     - lo strumento deve essere in `item_icon.order` e nei negozi
+     - l'NPC deve essere nel file eventi
+     - i campi JSON degli allenatori devono essere letti da `trainerproc`
+   - Report per voce: ✅ attiva / ⚠️ presente ma non usata / ❌ mancante o rotta.
+   - Proponi gli adattamenti meccanici e **applicali solo dopo l'ok**. Se upstream
+     ha cambiato la **logica** su cui si basa una modifica, **fermati e spiega** le
+     alternative.
+5. Aggiorna `docs/PPE_CHANGES.md`: intestazione (data, commit di `origin/main`),
+   eventuali punti di aggancio rinominati e stato delle voci.
+6. Dai l'**elenco delle aree da testare in gioco** in base a cosa è cambiato.
+7. Commit (procedura SALVA) e `git push myfork ppe`.
 
-## 3b. Conflitti
+## 5b. Conflitti
 
 - **NON risolverli da solo. NON eseguire `git merge --abort`.**
 - Elenca i file: `git diff --name-only --diff-filter=U`
@@ -69,5 +111,6 @@ git merge origin/main
   git add <file risolti>        # oppure: git rm <file eliminati>
   git merge --continue
   make update && make release
-  git push myfork ppe
   ```
+  Dopo, riprendi dal punto 5a.4 (controlli semantici DOPO il merge, aree da
+  testare) prima del `git push myfork ppe`.

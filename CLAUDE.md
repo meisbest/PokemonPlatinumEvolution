@@ -78,9 +78,9 @@ Flusso di collaborazione:
   cambi di permesso dei file (755 → 644), non codice. `stash@{0}` è la copia
   riscritta da filter-branch e `git stash show` non la legge (usare
   `git diff 51a167557 stash@{0}`). Non droppare senza ok.
-- `.claude/settings.local.json` è tracciato nel repo anche se è in `.gitignore`.
-  È stato committato prima della regola. Toglierlo dal tracking
-  (`git rm --cached`) solo se l'utente lo chiede.
+- `.claude/settings.local.json` contiene i permessi locali di Claude Code di
+  ciascuno. Non va mai condiviso: è in `.gitignore` e dal 2026-11-13 non è più
+  tracciato.
 
 ## Procedura SALVA (`/salva`)
 
@@ -113,16 +113,20 @@ Flusso di collaborazione:
    **chiedi all'utente** se committare (SALVA), fare `git stash -u` o, solo per
    avanzi già verificati, ripulire.
 2. `git fetch origin`
-3. `git merge origin/main`
-4. **Se il merge è pulito:**
+3. **Controlli semantici PRIMA del merge.** Vedi la sezione più sotto. Presenta il
+   report e chiedi se procedere con il merge.
+4. `git merge origin/main`
+5. **Se il merge è pulito:**
    - `make update` (aggiorna i subprojects; serve dopo ogni merge da upstream)
    - `make release` (vedi Build: `make` da solo esegue anche `check`, che con un
      gioco modificato fallisce per forza)
-   - se la build passa: aggiorna l'intestazione di `docs/PPE_CHANGES.md` (data e
-     commit di `origin/main`), committala e fai `git push myfork ppe`.
    - se la build fallisce: **non fare push**. Riporta all'utente l'errore, con
      un'analisi della causa e una proposta di soluzione.
-5. **Se ci sono conflitti:**
+   - se la build passa: esegui i **controlli semantici DOPO il merge**. Proponi gli
+     adattamenti e applicali solo con l'ok. Poi aggiorna `docs/PPE_CHANGES.md`
+     (intestazione, punti di aggancio rinominati) e dai l'**elenco delle aree da
+     testare in gioco**. Infine committa e fai `git push myfork ppe`.
+6. **Se ci sono conflitti:**
    - **NON risolverli da solo e NON fare `git merge --abort`.**
    - Per ogni file in conflitto (`git diff --name-only --diff-filter=U`) spiega:
      - cosa ha cambiato upstream: `git log --oneline MERGE_HEAD --not HEAD -- <file>` e `git diff HEAD...MERGE_HEAD -- <file>`
@@ -132,7 +136,52 @@ Flusso di collaborazione:
      modificato, si possono proporre come "da accettare". Comunque **aspetta l'ok**.
    - Alla fine ricorda i comandi per completare:
      `git add <file>` / `git rm <file>` → `git merge --continue` → poi `make update`,
-     `make release` e `git push myfork ppe`.
+     `make release`, i controlli semantici DOPO il merge e `git push myfork ppe`.
+
+## Controlli semantici dopo il merge
+
+**Un merge senza conflitti NON significa che le modifiche PPE funzionino ancora.**
+Upstream rinomina e riscrive spesso costanti, funzioni, label, ID dei testi e file.
+Se il nostro codice usa un nome che upstream ha cambiato altrove, git non segnala
+nessun conflitto. Il risultato è una modifica che non compila oppure, peggio, che
+compila ma non fa più nulla.
+Esempio reale: `BATTLE_TYPE_NO_ITEMS` è ancora definita, ma upstream ha sostituito
+il controllo in `battle_controller_player.c` con `BATTLE_TYPE_FRONTIER_LINK`, e
+"niente strumenti contro allenatori" ha smesso di funzionare senza alcun errore.
+
+La lista dei simboli e dei file da cui dipendiamo è nella sezione
+**"Punti di aggancio con upstream"** di [docs/PPE_CHANGES.md](docs/PPE_CHANGES.md).
+
+**PRIMA del merge** (`BASE=$(git merge-base HEAD origin/main)`):
+1. Prendi i simboli e i file dalla tabella dei punti di aggancio.
+2. Analizza cosa cambia upstream:
+   - `git diff --find-renames --stat $BASE origin/main`
+   - `git diff --find-renames --diff-filter=RD --name-status $BASE origin/main`: file rinominati o eliminati
+   - `git diff --find-renames $BASE origin/main -- <file di aggancio>`
+   - `git log --oneline $BASE..origin/main -S<simbolo>`: commit che aggiungono o tolgono quel nome
+3. Segnala all'utente ogni rinomina, eliminazione, spostamento o riscrittura che
+   tocca un punto di aggancio, con una proposta di adattamento.
+
+**DOPO il merge** (e dopo una build riuscita o fallita):
+1. **Nomi vecchi rimasti:** per ogni simbolo rinominato o eliminato upstream, cerca
+   il vecchio nome in tutto il repo con `git grep -n <nome_vecchio>`, compresi dati,
+   script `.s`, `.json`, `.order`, `meson.build` e testi.
+2. **Ogni voce di PPE_CHANGES.md è ancora attiva:** il codice deve esserci e deve
+   anche essere **usato**. Per esempio la costante deve essere letta da qualche
+   parte (`git grep -n <SIMBOLO> -- src include`, devono esserci usi oltre alla
+   definizione), la funzione deve essere chiamata, l'ID del comando script deve
+   puntare ancora alla nostra funzione in `scrcmd.h`, lo strumento deve essere
+   nell'ordine delle icone e nei negozi, l'NPC deve essere nel file eventi.
+3. Riporta per ogni voce: ✅ attiva / ⚠️ presente ma non usata / ❌ mancante o rotta.
+
+**Regole:**
+- Gli adattamenti meccanici, come rinominare un simbolo o spostare codice nel file
+  nuovo, si applicano **solo dopo l'ok** dell'utente.
+- Se upstream ha **cambiato la logica** su cui si basa una modifica PPE, fermati e
+  spiega le alternative. Non riscrivere la modifica di tua iniziativa.
+- Alla fine dai sempre l'**elenco delle aree da testare in gioco**, in base a cosa
+  è cambiato. Per esempio: lotta contro allenatore con la Borsa, Caramella Rara al
+  cap, menu del Guru, Tenda dal menu squadra, ostacoli MN.
 
 ## Build
 

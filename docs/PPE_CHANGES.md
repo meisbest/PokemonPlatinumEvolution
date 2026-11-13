@@ -202,7 +202,10 @@ Legenda: ⚠️ = problema noto o da verificare.
 ## 6. Build e repository (non toccano il gioco)
 
 - `.gitignore`: aggiunti `*.nds` e `.claude/settings.local.json`.
-- `.claude/settings.local.json` è stato committato prima della regola, quindi è ancora tracciato.
+- `.claude/settings.local.json` era stato committato prima della regola. Dal
+  2026-11-13 non è più tracciato e ognuno tiene il proprio in locale.
+- Aggiunti `CLAUDE.md`, `docs/PPE_CHANGES.md` e i comandi `/salva` e `/aggiorna`
+  in `.claude/commands/`.
 - Submodule `subprojects/narc` aggiunto (`f6691cc1d`).
 - **Rumore da Windows, senza effetti sul gioco:**
   - Circa 60 script in `tools/`, `.github/` e `replace.sh` hanno perso il permesso di
@@ -212,6 +215,30 @@ Legenda: ⚠️ = problema noto o da verificare.
   - Il commit `bb3ac00e1` (wip, 25/06/2026) ha convertito in CRLF `Makefile`, molti
     `.order` in `res/`, i template di `tools/dataproc/data/`, le patch yyjson e la doc
     di nitroarc. Contenuto identico, cambiano solo i fine riga.
+
+---
+
+## Punti di aggancio con upstream
+
+Simboli, file e formati di upstream da cui dipendono le modifiche PPE. Servono
+per i **controlli semantici** di `/aggiorna`: se upstream rinomina, sposta o
+riscrive uno di questi, la modifica corrispondente va verificata.
+**Aggiorna questa tabella quando aggiungi o cambi una modifica.**
+
+| Modifica PPE | Simboli upstream usati / modificati | File |
+|--------------|-------------------------------------|------|
+| Level cap | `VarsFlags_GetVarAddress`, `VarsFlags_CheckFlag`, `SaveData_GetVarsFlags`, `SaveData_GetTrainerInfo`, `TrainerInfo_HasBadge`, `BADGE_ID_*`, variabili `0x4055`–`0x410D` e flag `318` (numeri grezzi), `Pokemon_GetSpeciesBaseExpAt`, `ITEM_PARAM_LEVEL_UP`, `Pokemon_CheckItemEffects`, `Pokemon_ApplyItemEffects`, `Daycare_MoveToPartyFromDaycareMon`, `BoxPokemon_GiveExperience`, `ov5_021E63E0`, `DaycareMon_GetSteps`, `SaveData_Init` | `src/field_battle_data_transfer.c`, `include/field_battle_data_transfer.h`, `src/item_use_pokemon.c`, `src/overlay005/daycare.c`, `src/savedata.c` |
+| Level cap in battaglia + Condividi Esp. | `BtlCmd_CalcExpGain`, `BattleScript_GetExpTask`, `sideGetExpMask`, `gainedExp`/`sharedExp`, `HOLD_EFFECT_EXP_SHARE`, `MON_DATA_IS_EGG` | `src/battle/battle_script.c` |
+| Level cap nella Scheda Allenatore | `TrainerCard_DrawFrontText`, `TRAINER_CARD_WINDOW_SCORE`, `TrainerCard_DrawNumber`, `TRAINER_CARD_WINDOW_PARTIAL_WIDTH`, `Font_CalcStringWidth` | `src/applications/trainer_case/card_text.c` |
+| Niente strumenti contro allenatori | `BATTLE_TYPE_NO_ITEMS`, il controllo `PLAYER_INPUT_ITEM` (oggi `BATTLE_TYPE_FRONTIER_LINK`) | `include/constants/battle.h`, `src/battle/battle_controller_player.c` |
+| Stile lotta Fisso, testo veloce | `Options_Init`, `Options_BattleStyle`, `OPTIONS_BATTLE_STYLE_SET`, `OPTIONS_TEXT_SPEED_FAST`, `ProcessMainInput`, `ENTRY_BATTLE_STYLE`, `ENTRY_CLOSE` | `src/game_options.c`, `src/applications/options_menu.c` |
+| EV, natura e abilità degli allenatori | `TrainerMonBase`/`WithMoves`/`WithItem`/`WithMovesAndItem`, `TrainerData_BuildParty`, `Pokemon_InitWith`, `NATURE_COUNT`, `SPECIES_DATA_ABILITY_1/2`, `MON_DATA_*_EV`, `proc_trainer`, `include_enum`, `dp_*` (API di dataproc), formato JSON degli allenatori | `include/struct_defs/trainer_data.h`, `src/trainer_data.c`, `tools/dataproc/src/trainerproc.c`, `res/trainers/data/*.json` |
+| Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x242` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount`, `TrainerInfo_Money`/`SetMoney` | `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c` |
+| Guru Lotta: script, testi, NPC | macro con opcode grezzi (`.short 0x009C`…, `0x0045` InitListMenu, `0x0032` WaitAB), `macros/scrcmd.inc`, label `PastoriaCityEastHouse_*`, `FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC`, ID testi `PastoriaCityEastHouse_Text_*` e `pl_msg_00000140_*`, formato del file eventi (⚠️ upstream #1332 "Make scripts and events easier to work with by hand" lo tocca) | `res/field/scripts/scripts_pastoria_city_east_house.s`, `res/text/pastoria_city_east_house.json`, `res/field/events/events_pastoria_city_east_house.json` |
+| MN dalla Borsa | `ScrCmd_CheckPartyMonHasMove`, `ScrCmd_FindPartySlotWithMove`, `Bag_GetItemQuantity`, `SaveData_GetBag`, `ITEM_HM01`–`ITEM_HM08`, `MOVE_CUT`/`STRENGTH`/`ROCK_SMASH`/`WATERFALL`/`ROCK_CLIMB` | `src/scrcmd_party.c` |
+| Tenda | schema JSON degli strumenti (`itemUseParams`, `fieldUseFunc`, `ITEM_USE_FUNC_HEALING`), `ITEM_PARAM_REVIVE_ALL`, `ITEM_PARAM_HEAL_SLEEP`, `sub_02085804`, `GetFirstFaintedMon`, `HEAP_ID_PARTY_MENU` | `res/items/data/tent.json`, `res/items/icons/*`, `res/items/icons/meson.build`, `res/items/item_icon.order`, `generated/items.txt`, `src/applications/party_menu/unk_02084B70.c` |
+| Negozi e prezzi | `PokeMartCommonItems`, `HearthomeMartSpecialties`, `PastoriaMartSpecialties`, `PokemonLeagueMartSpecialties`, `ITEM_*`, campo `price` dei JSON | `include/data/mart_items.h`, `res/items/data/*.json` |
+| Nature colorate | `DrawSkillsPageWindows`, `SUMMARY_TEXT_RED`/`BLUE`/`BLACK`, `SUMMARY_WINDOW_*`, `monData.nature` | `src/applications/pokemon_summary_screen/window.c` |
 
 ---
 
@@ -235,3 +262,4 @@ Legenda: ⚠️ = problema noto o da verificare.
 | 2026-06-25 | `839c9b4c9` | Enrico | `.gitignore` (`*.nds`) |
 | 2026-06-25 | `bb3ac00e1` | meisbest | wip (solo fine riga CRLF) |
 | 2026-11-13 | `e623f2622` | Enrico | Tenda |
+| 2026-11-13 | `4da947f79` | Enrico | Documentazione di gestione (CLAUDE.md, PPE_CHANGES.md, /salva, /aggiorna) |
