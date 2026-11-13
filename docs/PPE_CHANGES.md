@@ -202,6 +202,7 @@ Legenda: ⚠️ = problema noto o da verificare.
 ### Insegnamosse: soldi invece della Squama Cuore
 - **Cosa cambia:** l'Insegnamosse di Pratopoli non chiede più una Squama Cuore ma
   **5.000 ₽** per mossa. Usa i comandi upstream `GoToIfNotEnoughMoney` e `RemoveMoney`.
+  I testi dicono "$5000" (`$` è il simbolo del Pokédollaro nei testi del gioco).
 - **File:** `res/field/maps/pastoria_city_east_house/scripts.s`,
   `res/text/pastoria_city_east_house.json`
 - **Commit:** `ab7c49e63` Ricordamosse a 5000
@@ -360,4 +361,5 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `3711abbad` | Enrico | Guru: testo corretto per il cambio natura gratuito |
 | 2026-11-13 | `c2c3cd096` | Enrico | MN dalla Borsa: mai un Uovo come Pokémon che usa la mossa |
 | 2026-11-13 | `07271878b` | Enrico | Allenatori: la natura dal JSON non cambia più sesso e abilità |
-| 2026-11-13 | (questo) | Enrico | Allenatori: `ability: 1` su specie con una sola abilità |
+| 2026-11-13 | `50eb39cd3` | Enrico | Allenatori: `ability: 1` su specie con una sola abilità |
+| 2026-11-13 | (questo) | Enrico | Testi di Insegnamosse e Guru: prezzi con `$` |

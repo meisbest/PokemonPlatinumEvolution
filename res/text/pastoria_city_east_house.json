@@ -11,13 +11,13 @@
         "teach Pokémon those moves.\r",
         "I can teach a move to a Pokémon\n",
         "of yours if you’d like.\r",
-        "I’ll do it for a price of 5000.\r"
+        "I’ll do it for $5000.\r"
       ]
     },
     {
       "id": "PastoriaCityEastHouse_Text_ThatsAHeartScale",
       "en_US": [
-        "Oh! That’s it!\r",
+        "Oh! You’ve got the money!\r",
         "Let me guess, you want me to teach\n",
         "one of your Pokémon a move?\r"
       ]
@@ -26,7 +26,7 @@
       "id": "PastoriaCityEastHouse_Text_ComeBackWithHeartScale",
       "en_US": [
         "If any of your Pokémon needs to learn a\n",
-        "move, be prepared to pay 5000."
+        "move, come back with $5000."
       ]
     },
     {
@@ -93,7 +93,7 @@
       "id": "PastoriaCityEastHouse_Text_HandedOverHeartScale",
       "en_US": [
         "{STRVAR_1 3, 3, 0} handed over\n",
-        "5000 pokedollars in exchange."
+        "$5000 in exchange."
       ]
     },
     {
@@ -120,7 +120,7 @@
       "id": "PastoriaCityEastHouse_Text_GuruAbilityCost",
       "en_US": [
         "I can awaken its {STRVAR_1 24, 0, 0} Ability!\n",
-        "My services will cost {STRVAR_1 51, 1, 0}.\f",
+        "My services will cost ${STRVAR_1 51, 1, 0}.\f",
         "Do we have a deal?\r"
       ]
     },
@@ -304,7 +304,7 @@
     {
       "id": "PastoriaCityEastHouse_Text_GuruNatureCost",
       "en_US": [
-        "This will cost {STRVAR_1 51, 1, 0}.\n",
+        "This will cost ${STRVAR_1 51, 1, 0}.\n",
         "Do we have a deal?\r"
       ]
     },
@@ -402,7 +402,7 @@
       "id": "PastoriaCityEastHouse_Text_GuruIVCost",
       "en_US": [
         "To modify this Pokémon’s IVs,\n",
-        "I require a payment of {STRVAR_1 51, 1, 0}.\f",
+        "I require a payment of ${STRVAR_1 51, 1, 0}.\f",
         "Is that okay?\r"
       ]
     },
@@ -410,7 +410,7 @@
       "id": "PastoriaCityEastHouse_Text_GuruEVCost",
       "en_US": [
         "To train this Pokémon’s EVs,\n",
-        "I require a payment of {STRVAR_1 51, 1, 0}.\f",
+        "I require a payment of ${STRVAR_1 51, 1, 0}.\f",
         "Is that okay?\r"
       ]
     },
