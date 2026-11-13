@@ -1040,24 +1040,41 @@
     .short \destVar
     .endm
 
-    .macro ScrCmd_Unused_09C
-    .short SCRCMD_UNUSED_09C
+    // PPE: Guru Lotta (comandi 0x09C-0x0A0, in origine inutilizzati)
+    // serviceType: 0 = Abilità/IV, 1 = Natura, 2 = EV, 3 = Azzera EV.
+    // destVar = GURU_PRICE_LOCKED se il giocatore ha meno di 4 medaglie.
+    .macro GetGuruPrice serviceType, destVar
+    .short SCRCMD_GETGURUPRICE
+    .short \serviceType
+    .short \destVar
     .endm
 
-    .macro ScrCmd_Unused_09D
-    .short SCRCMD_UNUSED_09D
+    // destStatus: GURU_STATUS_OK, GURU_STATUS_EGG o GURU_STATUS_ONE_ABILITY.
+    // destAbility riceve l'altra abilità, già scritta nel buffer di testo 0.
+    .macro CheckAbilitySwap partySlot, destStatus, destAbility
+    .short SCRCMD_CHECKABILITYSWAP
+    .short \partySlot
+    .short \destStatus
+    .short \destAbility
     .endm
 
-    .macro ScrCmd_Unused_09E
-    .short SCRCMD_UNUSED_09E
+    .macro ApplyAbilitySwap partySlot, newAbility
+    .short SCRCMD_APPLYABILITYSWAP
+    .short \partySlot
+    .short \newAbility
     .endm
 
-    .macro ScrCmd_Unused_09F
-    .short SCRCMD_UNUSED_09F
+    // destStatus: GURU_STATUS_OK o GURU_STATUS_EGG.
+    .macro CheckNatureSwap partySlot, destStatus
+    .short SCRCMD_CHECKNATURESWAP
+    .short \partySlot
+    .short \destStatus
     .endm
 
-    .macro Dummy0A0
-    .short SCRCMD_DUMMY0A0
+    .macro ApplyNatureSwap partySlot, nature
+    .short SCRCMD_APPLYNATURESWAP
+    .short \partySlot
+    .short \nature
     .endm
 
     .macro ReturnToField
@@ -3462,16 +3479,30 @@
     MysteryGiftGive MYSTERY_GIFT_UNLOAD_RECEIVED
     .endm
 
-    .macro Dummy23F
-    .short SCRCMD_DUMMY23F
+    // PPE: Guru Lotta (comandi 0x23F-0x241, in origine dummy). stat = STAT_*
+    .macro ResetEVs partySlot
+    .short SCRCMD_RESETEVS
+    .short \partySlot
     .endm
 
-    .macro Dummy240
-    .short SCRCMD_DUMMY240
+    // value: 0-31 (costante, non variabile)
+    .macro SetIV partySlot, stat, value
+    .short SCRCMD_SETIV
+    .short \partySlot
+    .short \stat
+    .short \value
     .endm
 
-    .macro Dummy241
-    .short SCRCMD_DUMMY241
+    // isAdd: TRUE aggiunge, FALSE toglie. amount 0 = solo lettura:
+    // destVar riceve gli EV attuali. Altrimenti destVar = TRUE se un limite
+    // (252 per statistica, 510 in totale, minimo 0) ha ridotto la modifica.
+    .macro ModifyEV partySlot, stat, isAdd, amount, destVar
+    .short SCRCMD_MODIFYEV
+    .short \partySlot
+    .short \stat
+    .short \isAdd
+    .short \amount
+    .short \destVar
     .endm
 
     .macro Dummy242

@@ -45,4 +45,14 @@ BOOL ScrCmd_Dummy0A0(ScriptContext *ctx);
 BOOL ScrCmd_FindPartySlotWithFatefulEncounterSpecies(ScriptContext *ctx);
 BOOL ScrCmd_CheckPartyHasHeldItem(ScriptContext *ctx);
 
+// PPE: Guru Lotta
+BOOL ScrCmd_GetGuruPrice(ScriptContext *ctx);
+BOOL ScrCmd_CheckAbilitySwap(ScriptContext *ctx);
+BOOL ScrCmd_ApplyAbilitySwap(ScriptContext *ctx);
+BOOL ScrCmd_CheckNatureSwap(ScriptContext *ctx);
+BOOL ScrCmd_ApplyNatureSwap(ScriptContext *ctx);
+BOOL ScrCmd_ResetEVs(ScriptContext *ctx);
+BOOL ScrCmd_SetIV(ScriptContext *ctx);
+BOOL ScrCmd_ModifyEV(ScriptContext *ctx);
+
 #endif // POKEPLATINUM_SCRCMD_PARTY_H

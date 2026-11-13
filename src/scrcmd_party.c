@@ -5,6 +5,7 @@
 #include "constants/heap.h"
 #include "constants/moves.h"
 #include "constants/items.h"
+#include "constants/scrcmd.h"
 #include "generated/abilities.h"
 #include "generated/natures.h"
 #include "generated/species.h"
@@ -896,12 +897,12 @@ BOOL ScrCmd_CheckPartyHasHeldItem(ScriptContext *ctx)
 BOOL ScrCmd_GetGuruPrice(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
-    
-    // Lo script ci passa il servizio (0 = Abilità/IV, 1 = Natura, 2 = EV)
+
+    // GURU_SERVICE_*
     u16 serviceType = ScriptContext_ReadHalfWord(ctx);
-    
+
     // Lo script ci passa la variabile dove salvare il prezzo finale
-    u16 *priceDest = ScriptContext_GetVarPointer(ctx); 
+    u16 *priceDest = ScriptContext_GetVarPointer(ctx);
 
     TrainerInfo *trainerInfo = SaveData_GetTrainerInfo(fieldSystem->saveData);
 
@@ -914,24 +915,24 @@ BOOL ScrCmd_GetGuruPrice(ScriptContext *ctx)
     // 2. Contiamo le medaglie
     int badges = TrainerInfo_BadgeCount(trainerInfo);
 
-    // 3. Ha meno di 4 medaglie? Prezzo "proibitivo" per bloccarlo
+    // 3. Meno di 4 medaglie: servizio non disponibile
     if (badges < 4) {
-        *priceDest = 65000; // Lo script gestirà il rifiuto se non ha i soldi
+        *priceDest = GURU_PRICE_LOCKED;
         return FALSE;
     }
 
     // 4. Calcolo dello sconto dinamico
     switch (serviceType) {
-        case 0: // Abilità e IVs (Base 10.000, -2000 a medaglia)
+        case GURU_SERVICE_ABILITY_IV: // Abilità e IVs (Base 10.000, -2000 a medaglia)
             *priceDest = 10000 - ((badges - 4) * 2000);
             break;
-        case 1: // Natura (Base 15.000, -3000 a medaglia)
+        case GURU_SERVICE_NATURE: // Natura (Base 15.000, -3000 a medaglia)
             *priceDest = 15000 - ((badges - 4) * 3000);
             break;
-        case 2: // EVs (Base 35.000, -5000 a medaglia)
+        case GURU_SERVICE_EVS: // EVs (Base 35.000, -5000 a medaglia)
             *priceDest = 35000 - ((badges - 4) * 5000);
             break;
-        case 3: // Reset EVs
+        case GURU_SERVICE_RESET_EVS:
             *priceDest = 0;
             break;
     }
@@ -1009,13 +1010,13 @@ BOOL ScrCmd_CheckAbilitySwap(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
     u16 partySlot = ScriptContext_GetVar(ctx);
-    u16 *statusVar = ScriptContext_GetVarPointer(ctx); // 0 = OK, 1 = Uovo, 2 = Solo 1 abilità
+    u16 *statusVar = ScriptContext_GetVarPointer(ctx); // GURU_STATUS_*
     u16 *newAbilityVar = ScriptContext_GetVarPointer(ctx); // nuova abilità, da mostrare a schermo
 
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
 
     if (Pokemon_GetValue(mon, MON_DATA_IS_EGG, NULL) != FALSE) {
-        *statusVar = 1;
+        *statusVar = GURU_STATUS_EGG;
         return FALSE;
     }
 
@@ -1023,11 +1024,11 @@ BOOL ScrCmd_CheckAbilitySwap(ScriptContext *ctx)
     Guru_GetSpeciesAbilities(mon, &ability1, &ability2);
 
     if (ability1 == ability2 || ability2 == ABILITY_NONE) {
-        *statusVar = 2;
+        *statusVar = GURU_STATUS_ONE_ABILITY;
         return FALSE;
     }
 
-    *statusVar = 0;
+    *statusVar = GURU_STATUS_OK;
     *newAbilityVar = Guru_GetCurrentAbilitySlot(mon) == 0 ? ability2 : ability1;
 
     StringTemplate **strTemplate = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_STR_TEMPLATE);
@@ -1062,9 +1063,9 @@ BOOL ScrCmd_CheckNatureSwap(ScriptContext *ctx)
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
 
     if (Pokemon_GetValue(mon, MON_DATA_IS_EGG, NULL) != FALSE) {
-        *statusVar = 1; // È un uovo
+        *statusVar = GURU_STATUS_EGG;
     } else {
-        *statusVar = 0; // Ok!
+        *statusVar = GURU_STATUS_OK;
     }
 
     return FALSE;
@@ -1159,7 +1160,7 @@ BOOL ScrCmd_ModifyEV(ScriptContext *ctx)
     u16 *statusVar = ScriptContext_GetVarPointer(ctx);
 
     if (statIndex >= STAT_MAX) {
-        *statusVar = 0;
+        *statusVar = FALSE;
         return FALSE;
     }
 
@@ -1175,7 +1176,7 @@ BOOL ScrCmd_ModifyEV(ScriptContext *ctx)
     u32 totalEV = Guru_GetEVTotal(mon);
     u32 newVal;
 
-    *statusVar = 0;
+    *statusVar = FALSE;
 
     if (isAdd) {
         u32 availableStat = (currentEV < GURU_MAX_EVS_SINGLE_STAT) ? (GURU_MAX_EVS_SINGLE_STAT - currentEV) : 0;
@@ -1184,14 +1185,14 @@ BOOL ScrCmd_ModifyEV(ScriptContext *ctx)
 
         if (amount > maxAdd) {
             amount = maxAdd;
-            *statusVar = 1;
+            *statusVar = TRUE;
         }
 
         newVal = currentEV + amount;
     } else {
         if (amount > currentEV) {
             amount = currentEV;
-            *statusVar = 1;
+            *statusVar = TRUE;
         }
 
         newVal = currentEV - amount;

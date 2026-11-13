@@ -173,12 +173,22 @@ Legenda: ⚠️ = problema noto o da verificare.
   con i comandi upstream `CheckMoney2` / `RemoveMoney2`, e lo slot è tornato `ScrCmd_Dummy242`.
 
 - **File:** `res/field/maps/pastoria_city_east_house/events.json` (NPC),
-  `res/field/maps/pastoria_city_east_house/scripts.s` (macro `GuruCmd_*` e
-  script `_GuruScript`), `res/text/pastoria_city_east_house.json` (testi in inglese),
-  `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c`
+  `res/field/maps/pastoria_city_east_house/scripts.s` (script `_GuruScript`),
+  `res/text/pastoria_city_east_house.json` (testi in inglese, ID
+  `PastoriaCityEastHouse_Text_Guru*`), `include/data/scripts/scrcmd.h` (tabella dei
+  comandi), `asm/macros/scrcmd.inc` (macro `GetGuruPrice`, `CheckAbilitySwap`,
+  `ApplyAbilitySwap`, `CheckNatureSwap`, `ApplyNatureSwap`, `ResetEVs`, `SetIV`,
+  `ModifyEV`, al posto delle vecchie macro `ScrCmd_Unused_09C`…`Dummy0A0` e
+  `Dummy23F`…`Dummy241`), `include/constants/scrcmd.h` (costanti `GURU_*`, blocco PPE
+  in fondo), `include/scrcmd_party.h` (prototipi), `src/scrcmd_party.c` (codice).
+  `src/scrcmd.c` è identico a upstream. Le funzioni `ScrCmd_Unused_09C`…`09F`,
+  `ScrCmd_Dummy0A0` e `ScrCmd_Dummy23F`…`241` di upstream restano nel codice ma non
+  sono più nella tabella: si lasciano lì apposta, per non allargare il diff.
 - **Commit:** `ff94d873a` Guru lotta. Adattato nel merge del 2026-11-13 ai nuovi
   percorsi e al nuovo formato degli eventi (script per etichetta, direzione `DIR_*`,
-  id `LOCALID_*`) e ai nuovi nomi dei suoni (`SE_CONFIRM_sseq_3`).
+  id `LOCALID_*`) e ai nuovi nomi dei suoni (`SE_CONFIRM_sseq_3`). Dal 2026-11-13 il
+  suono di conferma usa `PlaySE` invece di `PlayFanfare`, che metteva in pausa la musica
+  senza il `WaitFanfare` che la fa ripartire.
 
 ### Insegnamosse: soldi invece della Squama Cuore
 - **Cosa cambia:** l'Insegnamosse di Pratopoli non chiede più una Squama Cuore ma
@@ -295,8 +305,8 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | Niente strumenti contro allenatori | `BATTLE_TYPE_NO_ITEMS`, `BATTLE_TYPE_TRAINER`, il controllo in `case PLAYER_INPUT_ITEM`. Upstream lo riscrive facilmente: ricontrollare dopo ogni merge che usi ancora `BATTLE_TYPE_NO_ITEMS` | `include/constants/battle.h`, `src/battle/battle_controller_player.c` |
 | Stile lotta Fisso, testo veloce | `Options_Init`, `Options_BattleStyle`, `OPTIONS_BATTLE_STYLE_SET`, `OPTIONS_TEXT_SPEED_FAST`, `ProcessMainInput`, `ENTRY_BATTLE_STYLE`, `ENTRY_CLOSE` | `src/game_options.c`, `src/applications/options_menu.c` |
 | EV, natura e abilità degli allenatori | `TrainerMonBase`/`WithMoves`/`WithItem`/`WithMovesAndItem` (layout: i nostri campi **prima di** `item`, perché `PackParty` copia fino a `offsetof(item)`), `TrainerData_BuildParty`, `Pokemon_InitWith`, `NATURE_COUNT`, `SPECIES_DATA_ABILITY_1/2`, `MON_DATA_*_EV`; in trainerproc: `PackParty`, `LOOKUP_ENUM`, `dp_try`, `dp_missing`, `dp_type_of`, `DP_STRING`/`DP_INT`, `dp_bool`, `dp_lookup`, `dp_u8`; formato JSON degli allenatori | `include/struct_defs/trainer_data.h`, `src/trainer_data.c`, `tools/dataproc/src/trainerproc.c`, `tools/dataproc/lib/include/dataproc.h`, `res/trainers/data/*.json` |
-| Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x241` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `Pokemon_CalcAbility` (abilità dal bit 0 del PID: se upstream cambia questa regola, va rivisto `Guru_SetPersonality`), `SpeciesData_GetFormValue`, `Pokemon_GetNature`, `Pokemon_GetNatureOf`, `Pokemon_IsPersonalityShiny`, `SpeciesData_FromMonSpecies`/`GetGenderOf`/`Free`, `ABILITY_NONE`, `STAT_*` e l'ordine di `MON_DATA_HP_EV`…`SPDEF_EV` / `MON_DATA_HP_IV`…`SPDEF_IV` (uguale a `STAT_*`), `MAX_IVS_SINGLE_STAT`, `MAX_EVS_ALL_STATS`, `NATURE_COUNT`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount` | `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c` |
-| Guru Lotta: script, testi, NPC | macro con opcode grezzi (`.short 0x009C`…), comandi upstream `CheckMoney2`, `RemoveMoney2`, `GoToIfNotEnoughMoney`, `RemoveMoney`, `InitLocalTextListMenu`, `WaitABPadPress`, `asm/macros/scrcmd.inc`, nomi dei suoni (`SE_CONFIRM_sseq_3`), label `PastoriaCityEastHouse_*` e `_GuruScript`, `ScriptEntry`, `FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC`, ID testi `PastoriaCityEastHouse_Text_*` e `pl_msg_00000140_*`, formato `events.json` (id `LOCALID_*`, `"script"` per etichetta, `"initial_dir"` = `DIR_*`) | `res/field/maps/pastoria_city_east_house/scripts.s`, `res/field/maps/pastoria_city_east_house/events.json`, `res/text/pastoria_city_east_house.json` |
+| Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x241` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `Pokemon_CalcAbility` (abilità dal bit 0 del PID: se upstream cambia questa regola, va rivisto `Guru_SetPersonality`), `SpeciesData_GetFormValue`, `Pokemon_GetNature`, `Pokemon_GetNatureOf`, `Pokemon_IsPersonalityShiny`, `SpeciesData_FromMonSpecies`/`GetGenderOf`/`Free`, `ABILITY_NONE`, `STAT_*` e l'ordine di `MON_DATA_HP_EV`…`SPDEF_EV` / `MON_DATA_HP_IV`…`SPDEF_IV` (uguale a `STAT_*`), `MAX_IVS_SINGLE_STAT`, `MAX_EVS_ALL_STATS`, `NATURE_COUNT`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount` | `include/data/scripts/scrcmd.h`, `include/scrcmd_party.h`, `include/constants/scrcmd.h`, `src/scrcmd_party.c` |
+| Guru Lotta: script, testi, NPC | le nostre macro in `asm/macros/scrcmd.inc` (al posto di `ScrCmd_Unused_09C`…`Dummy0A0`, `Dummy23F`…`Dummy241`: se upstream le rinomina, conflitto lì) con le costanti `SCRCMD_*`, comandi upstream `CheckMoney2`, `RemoveMoney2`, `GoToIfNotEnoughMoney`, `RemoveMoney`, `InitLocalTextListMenu`, `WaitABPadPress`, `AddListMenuEntry`, `ShowYesNoMenu`, `GoToIfLt`, `PlaySE`, costanti `MENU_YES`, `MENU_CANCEL`, `PARTY_SLOT_NONE`, `STAT_*`, nomi dei suoni (`SE_CONFIRM_sseq_3`), label `PastoriaCityEastHouse_*` e `_GuruScript`, `ScriptEntry`, `FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC`, ID testi `PastoriaCityEastHouse_Text_*` (i nostri sono `..._Text_Guru*`), formato `events.json` (id `LOCALID_*`, `"script"` per etichetta, `"initial_dir"` = `DIR_*`) | `res/field/maps/pastoria_city_east_house/scripts.s`, `res/field/maps/pastoria_city_east_house/events.json`, `res/text/pastoria_city_east_house.json`, `asm/macros/scrcmd.inc` |
 | MN dalla Borsa | `ScrCmd_CheckPartyMonHasMove`, `ScrCmd_FindPartySlotWithMove`, `Bag_GetItemQuantity`, `SaveData_GetBag`, `ITEM_HM01`–`ITEM_HM08`, `MOVE_CUT`/`STRENGTH`/`ROCK_SMASH`/`WATERFALL`/`ROCK_CLIMB` | `src/scrcmd_party.c` |
 | Tenda | schema JSON degli strumenti (`itemUseParams`, `fieldUseFunc`, `ITEM_USE_FUNC_HEALING`, `battleUseCategory`/`BATTLE_USE_CATEGORY_*`), `ITEM_PARAM_REVIVE_ALL`, `ITEM_PARAM_HEAL_SLEEP`, `CheckItemSacredAsh`, `PartyMenuCB_HandleSacredAsh`, `FindNextFaintedMember`, `SACREDASH_STATE_*`, `HEAP_ID_PARTY_MENU`, formato palette JASC (CRLF, `nitrogfx`) | `res/items/data/tent.json`, `res/items/icons/*`, `res/items/icons/meson.build`, `res/items/item_icon.order`, `generated/items.txt`, `src/applications/party_menu/callbacks.c` |
 | Negozi e prezzi | `PokeMartCommonItems`, `HearthomeMartSpecialties`, `PastoriaMartSpecialties`, `PokemonLeagueMartSpecialties`, `ITEM_*`, campo `price` dei JSON | `include/data/mart_items.h`, `res/items/data/*.json` |
@@ -334,4 +344,5 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `7e99c688a` | Enrico | Guida di setup per collaboratori su Windows (`docs/SETUP.md`) |
 | 2026-11-13 | `0062765cd` | Enrico | Guru: cambio abilità che resta dopo l'evoluzione |
 | 2026-11-13 | `fa9b9fc7b` | Enrico | Guru e level cap: funzioni e comandi upstream al posto dei nostri doppioni |
-| 2026-11-13 | (questo) | Enrico | Guru: B nella lista delle nature non blocca più il gioco |
+| 2026-11-13 | `24b75cc95` | Enrico | Guru: B nella lista delle nature non blocca più il gioco |
+| 2026-11-13 | (questo) | Enrico | Guru: macro con nome, costanti, testi con nome, `PlaySE` |

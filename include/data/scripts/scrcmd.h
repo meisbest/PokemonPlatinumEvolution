@@ -161,11 +161,11 @@ ScriptCommand(SCRCMD_RESETPARTYMONMOVESLOT_UNUSED,                         ScrCm
 ScriptCommand(SCRCMD_CHECKPARTYMONHASMOVE,                                 ScrCmd_CheckPartyMonHasMove)
 ScriptCommand(SCRCMD_FINDPARTYSLOTWITHMOVE,                                ScrCmd_FindPartySlotWithMove)
 ScriptCommand(SCRCMD_GETREMATCHTRAINERID,                                  ScrCmd_GetRematchTrainerID)
-ScriptCommand(SCRCMD_GETGURUPRICE,                                         ScrCmd_GetGuruPrice)                     // Era 09C
-ScriptCommand(SCRCMD_CHECKABILITYSWAP,                                     ScrCmd_CheckAbilitySwap)                 // Era 09D
-ScriptCommand(SCRCMD_APPLYABILITYSWAP,                                     ScrCmd_ApplyAbilitySwap)                 // Era 09E
-ScriptCommand(SCRCMD_CHECKNATURESWAP,                                      ScrCmd_CheckNatureSwap)                  // Era 09F
-ScriptCommand(SCRCMD_APPLYNATURESWAP,                                      ScrCmd_ApplyNatureSwap)                  // Era 0A0
+ScriptCommand(SCRCMD_GETGURUPRICE,                                         ScrCmd_GetGuruPrice) // PPE, era ScrCmd_Unused_09C
+ScriptCommand(SCRCMD_CHECKABILITYSWAP,                                     ScrCmd_CheckAbilitySwap) // PPE, era ScrCmd_Unused_09D
+ScriptCommand(SCRCMD_APPLYABILITYSWAP,                                     ScrCmd_ApplyAbilitySwap) // PPE, era ScrCmd_Unused_09E
+ScriptCommand(SCRCMD_CHECKNATURESWAP,                                      ScrCmd_CheckNatureSwap) // PPE, era ScrCmd_Unused_09F
+ScriptCommand(SCRCMD_APPLYNATURESWAP,                                      ScrCmd_ApplyNatureSwap) // PPE, era ScrCmd_Dummy0A0
 ScriptCommand(SCRCMD_RETURNTOFIELD,                                        ScrCmd_ReturnToField)
 ScriptCommand(SCRCMD_0A2,                                                  ScrCmd_0A2)
 ScriptCommand(SCRCMD_0A3,                                                  ScrCmd_0A3)
@@ -580,9 +580,9 @@ ScriptCommand(SCRCMD_PLAYPOKECENTERHEALINGANIMATION,                       ScrCm
 ScriptCommand(SCRCMD_PLAYELEVATORANIMATION,                                ScrCmd_PlayElevatorAnimation)
 ScriptCommand(SCRCMD_PLAYBOATCUTSCENE,                                     ScrCmd_PlayBoatCutscene)
 ScriptCommand(SCRCMD_MYSTERYGIFTGIVE,                                      ScrCmd_MysteryGiftGive)
-ScriptCommand(SCRCMD_RESETEVS,                                             ScrCmd_ResetEVs)                         // Era ScrCmd_Dummy23F (Indice 0x023F)
-ScriptCommand(SCRCMD_SETIV,                                                ScrCmd_SetIV)                            // Era ScrCmd_Dummy240 (Indice 0x0240)  
-ScriptCommand(SCRCMD_MODIFYEV,                                             ScrCmd_ModifyEV)                         // Era ScrCmd_Dummy241 (Indice 0x0241)
+ScriptCommand(SCRCMD_RESETEVS,                                             ScrCmd_ResetEVs) // PPE, era ScrCmd_Dummy23F
+ScriptCommand(SCRCMD_SETIV,                                                ScrCmd_SetIV) // PPE, era ScrCmd_Dummy240
+ScriptCommand(SCRCMD_MODIFYEV,                                             ScrCmd_ModifyEV) // PPE, era ScrCmd_Dummy241
 ScriptCommand(SCRCMD_DUMMY242,                                             ScrCmd_Dummy242)
 ScriptCommand(SCRCMD_CHOOSECUSTOMMESSAGEWORD,                              ScrCmd_ChooseCustomMessageWord)
 ScriptCommand(SCRCMD_CHOOSETWOCUSTOMMESSAGEWORDS,                          ScrCmd_ChooseTwoCustomMessageWords)

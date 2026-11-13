@@ -355,15 +355,10 @@ static BOOL ScrCmd_GiveOrTakeSeal(ScriptContext *ctx);
 static BOOL ScrCmd_GetPartyMonForm(ScriptContext *ctx);
 static BOOL ScrCmd_GetRematchTrainerID(ScriptContext *ctx);
 static BOOL ScrCmd_GetOverworldWeather(ScriptContext *ctx);
-//static BOOL ScrCmd_Unused_09C(ScriptContext *ctx);
-//static BOOL ScrCmd_Unused_09D(ScriptContext *ctx);
-//static BOOL ScrCmd_Unused_09E(ScriptContext *ctx);
-BOOL ScrCmd_GetGuruPrice(ScriptContext *ctx);
-BOOL ScrCmd_CheckAbilitySwap(ScriptContext *ctx);
-BOOL ScrCmd_ApplyAbilitySwap(ScriptContext *ctx);
-//static BOOL ScrCmd_Unused_09F(ScriptContext *ctx);
-BOOL ScrCmd_CheckNatureSwap(ScriptContext *ctx);
-BOOL ScrCmd_ApplyNatureSwap(ScriptContext *ctx);
+static BOOL ScrCmd_Unused_09C(ScriptContext *ctx);
+static BOOL ScrCmd_Unused_09D(ScriptContext *ctx);
+static BOOL ScrCmd_Unused_09E(ScriptContext *ctx);
+static BOOL ScrCmd_Unused_09F(ScriptContext *ctx);
 static BOOL ScrCmd_ReturnToField(ScriptContext *ctx);
 static BOOL ScrCmd_WaitForTransition(ScriptContext *ctx);
 static BOOL ScrCmd_0A2(ScriptContext *ctx);
@@ -616,9 +611,6 @@ static BOOL ScrCmd_GetSetNationalDexEnabled(ScriptContext *ctx);
 static BOOL ScrCmd_GetPartyMonEVTotal(ScriptContext *ctx);
 static BOOL ScrCmd_GetDayOfWeek(ScriptContext *ctx);
 static BOOL ScrCmd_OpenBattleRegulationMenu(ScriptContext *ctx);
-BOOL ScrCmd_ResetEVs(ScriptContext *ctx);
-BOOL ScrCmd_SetIV(ScriptContext *ctx);
-BOOL ScrCmd_ModifyEV(ScriptContext *ctx);
 static BOOL ScrCmd_GetPartyMonFootprintType(ScriptContext *ctx);
 static BOOL ScrCmd_PlayPokecenterHealingAnimation(ScriptContext *ctx);
 static BOOL ScrCmd_PlayElevatorAnimation(ScriptContext *ctx);
@@ -2844,7 +2836,6 @@ static BOOL ScrCmd_GetOverworldWeather(ScriptContext *ctx)
     return FALSE;
 }
 
-/*
 static BOOL ScrCmd_Unused_09C(ScriptContext *ctx)
 {
     return FALSE;
@@ -2859,7 +2850,6 @@ static BOOL ScrCmd_Unused_09E(ScriptContext *ctx)
 {
     return TRUE;
 }
-*/
 
 static BOOL ScrCmd_Unused_09F(ScriptContext *ctx)
 {

@@ -106,18 +106,18 @@
       ]
     },
     {
-      "id": "pl_msg_00000140_00018",
+      "id": "PastoriaCityEastHouse_Text_GuruWelcome",
       "en_US": [
         "Welcome to the Guru’s Dojo!\n",
         "How can I enhance your Pokémon?\r"
       ]
     },
     {
-      "id": "pl_msg_00000140_00019",
+      "id": "PastoriaCityEastHouse_Text_GuruWhichPokemon",
       "en_US": "Which Pokémon needs my help?\r"
     },
     {
-      "id": "pl_msg_00000140_00020",
+      "id": "PastoriaCityEastHouse_Text_GuruAbilityCost",
       "en_US": [
         "I can awaken its {STRVAR_1 24, 0, 0} Ability!\n",
         "My services will cost {STRVAR_1 51, 1, 0}.\f",
@@ -125,7 +125,7 @@
       ]
     },
     {
-      "id": "pl_msg_00000140_00021",
+      "id": "PastoriaCityEastHouse_Text_GuruChampionFree",
       "en_US": [
         "Oh, you are the Pokémon Champion!\n",
         "I’ll awaken {STRVAR_1 24, 0, 0} for free.\f",
@@ -133,7 +133,7 @@
       ]
     },
     {
-      "id": "pl_msg_00000140_00022",
+      "id": "PastoriaCityEastHouse_Text_GuruDone",
       "en_US": [
         "Done!\n",
         "Your Pokémon’s hidden potential\f",
@@ -141,21 +141,21 @@
       ]
     },
     {
-      "id": "pl_msg_00000140_00023",
+      "id": "PastoriaCityEastHouse_Text_GuruNotEnoughMoney",
       "en_US": [
         "I’m sorry, but you don’t have\n",
         "enough money for my services.\r"
       ]
     },
     {
-      "id": "pl_msg_00000140_00024",
+      "id": "PastoriaCityEastHouse_Text_GuruNeedFourBadges",
       "en_US": [
         "Hmm... you lack experience.\n",
         "Come back when you have 4 Badges.\r"
       ]
     },
     {
-      "id": "pl_msg_00000140_00025",
+      "id": "PastoriaCityEastHouse_Text_GuruOnlyOneAbility",
       "en_US": [
         "This Pokémon already possesses a\n",
         "unique Ability.\f",
@@ -163,243 +163,243 @@
       ]
     },
     {
-      "id": "pl_msg_00000140_00026",
+      "id": "PastoriaCityEastHouse_Text_GuruEggCantBeHelped",
       "en_US": [
         "That’s an Egg...\n",
         "Come back when it hatches!\r"
       ]
     },
     {
-      "id": "pl_msg_00000140_00027",
+      "id": "PastoriaCityEastHouse_Text_GuruComeBackAnytime",
       "en_US": "Come back if you change your mind!\r"
     },
     {
-      "id": "pl_msg_00000140_00028",
+      "id": "PastoriaCityEastHouse_Text_GuruMenuChangeAbility",
       "en_US": "Change Ability"
     },
     {
-      "id": "pl_msg_00000140_00029",
+      "id": "PastoriaCityEastHouse_Text_GuruMenuChangeNature",
       "en_US": "Change Nature"
     },
     {
-      "id": "pl_msg_00000140_00030",
+      "id": "PastoriaCityEastHouse_Text_GuruMenuSetIVs",
       "en_US": "Set IVs"
     },
     {
-      "id": "pl_msg_00000140_00031",
+      "id": "PastoriaCityEastHouse_Text_GuruMenuSetEVs",
       "en_US": "Set EVs"
     },
     {
-      "id": "pl_msg_00000140_00032",
+      "id": "PastoriaCityEastHouse_Text_GuruMenuResetEVs",
       "en_US": "Reset EVs"
     },
     {
-      "id": "pl_msg_00000140_00033",
+      "id": "PastoriaCityEastHouse_Text_GuruMenuCancel",
       "en_US": "Cancel"
     },
     {
-      "id": "pl_msg_00000140_00034",
+      "id": "PastoriaCityEastHouse_Text_GuruWhichNature",
       "en_US": "Which Nature do you want?\r"
     },
     {
-      "id": "pl_msg_00000140_00035",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureHardy",
       "en_US": "Hardy"
     },
     {
-      "id": "pl_msg_00000140_00036",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureLonely",
       "en_US": "Lonely"
     },
     {
-      "id": "pl_msg_00000140_00037",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureBrave",
       "en_US": "Brave"
     },
     {
-      "id": "pl_msg_00000140_00038",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureAdamant",
       "en_US": "Adamant"
     },
     {
-      "id": "pl_msg_00000140_00039",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureNaughty",
       "en_US": "Naughty"
     },
     {
-      "id": "pl_msg_00000140_00040",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureBold",
       "en_US": "Bold"
     },
     {
-      "id": "pl_msg_00000140_00041",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureDocile",
       "en_US": "Docile"
     },
     {
-      "id": "pl_msg_00000140_00042",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureRelaxed",
       "en_US": "Relaxed"
     },
     {
-      "id": "pl_msg_00000140_00043",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureImpish",
       "en_US": "Impish"
     },
     {
-      "id": "pl_msg_00000140_00044",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureLax",
       "en_US": "Lax"
     },
     {
-      "id": "pl_msg_00000140_00045",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureTimid",
       "en_US": "Timid"
     },
     {
-      "id": "pl_msg_00000140_00046",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureHasty",
       "en_US": "Hasty"
     },
     {
-      "id": "pl_msg_00000140_00047",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureSerious",
       "en_US": "Serious"
     },
     {
-      "id": "pl_msg_00000140_00048",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureJolly",
       "en_US": "Jolly"
     },
     {
-      "id": "pl_msg_00000140_00049",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureNaive",
       "en_US": "Naive"
     },
     {
-      "id": "pl_msg_00000140_00050",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureModest",
       "en_US": "Modest"
     },
     {
-      "id": "pl_msg_00000140_00051",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureMild",
       "en_US": "Mild"
     },
     {
-      "id": "pl_msg_00000140_00052",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureQuiet",
       "en_US": "Quiet"
     },
     {
-      "id": "pl_msg_00000140_00053",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureBashful",
       "en_US": "Bashful"
     },
     {
-      "id": "pl_msg_00000140_00054",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureRash",
       "en_US": "Rash"
     },
     {
-      "id": "pl_msg_00000140_00055",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureCalm",
       "en_US": "Calm"
     },
     {
-      "id": "pl_msg_00000140_00056",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureGentle",
       "en_US": "Gentle"
     },
     {
-      "id": "pl_msg_00000140_00057",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureSassy",
       "en_US": "Sassy"
     },
     {
-      "id": "pl_msg_00000140_00058",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureCareful",
       "en_US": "Careful"
     },
     {
-      "id": "pl_msg_00000140_00059",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureQuirky",
       "en_US": "Quirky"
     },
     {
-      "id": "pl_msg_00000140_00060",
+      "id": "PastoriaCityEastHouse_Text_GuruNatureCost",
       "en_US": [
         "This will cost {STRVAR_1 51, 1, 0}.\n",
         "Do we have a deal?\r"
       ]
     },
     {
-      "id": "pl_msg_00000140_00061",
+      "id": "PastoriaCityEastHouse_Text_GuruWhichStat",
       "en_US": "Which stat do you want to modify?\r"
     },
     {
-      "id": "pl_msg_00000140_00062",
+      "id": "PastoriaCityEastHouse_Text_GuruStatHP",
       "en_US": "HP"
     },
     {
-      "id": "pl_msg_00000140_00063",
+      "id": "PastoriaCityEastHouse_Text_GuruStatAttack",
       "en_US": "Attack"
     },
     {
-      "id": "pl_msg_00000140_00064",
+      "id": "PastoriaCityEastHouse_Text_GuruStatDefense",
       "en_US": "Defense"
     },
     {
-      "id": "pl_msg_00000140_00065",
+      "id": "PastoriaCityEastHouse_Text_GuruStatSpAtk",
       "en_US": "Sp. Atk"
     },
     {
-      "id": "pl_msg_00000140_00066",
+      "id": "PastoriaCityEastHouse_Text_GuruStatSpDef",
       "en_US": "Sp. Def"
     },
     {
-      "id": "pl_msg_00000140_00067",
+      "id": "PastoriaCityEastHouse_Text_GuruStatSpeed",
       "en_US": "Speed"
     },
     {
-      "id": "pl_msg_00000140_00068",
+      "id": "PastoriaCityEastHouse_Text_GuruBack",
       "en_US": "Back"
     },
     {
-      "id": "pl_msg_00000140_00069",
+      "id": "PastoriaCityEastHouse_Text_GuruWhichIV",
       "en_US": "Which IV potential?\r"
     },
     {
-      "id": "pl_msg_00000140_00070",
+      "id": "PastoriaCityEastHouse_Text_GuruIV31",
       "en_US": "31 (Maximum)"
     },
     {
-      "id": "pl_msg_00000140_00071",
+      "id": "PastoriaCityEastHouse_Text_GuruIV30",
       "en_US": "30 (Hidden Power)"
     },
     {
-      "id": "pl_msg_00000140_00072",
+      "id": "PastoriaCityEastHouse_Text_GuruIV1",
       "en_US": "1 (Minimum Power)"
     },
     {
-      "id": "pl_msg_00000140_00073",
+      "id": "PastoriaCityEastHouse_Text_GuruIV0",
       "en_US": "0 (Zero)"
     },
     {
-      "id": "pl_msg_00000140_00074",
+      "id": "PastoriaCityEastHouse_Text_GuruCurrentEVHowToTrain",
       "en_US": [
         "Current EV: {STRVAR_1 51, 0, 0}\n",
         "How should I train it?\r"
       ]
     },
     {
-      "id": "pl_msg_00000140_00075",
+      "id": "PastoriaCityEastHouse_Text_GuruEVPlus252",
       "en_US": "+ 252"
     },
     {
-      "id": "pl_msg_00000140_00076",
+      "id": "PastoriaCityEastHouse_Text_GuruEVPlus10",
       "en_US": "+ 10"
     },
     {
-      "id": "pl_msg_00000140_00077",
+      "id": "PastoriaCityEastHouse_Text_GuruEVPlus1",
       "en_US": "+ 1"
     },
     {
-      "id": "pl_msg_00000140_00078",
+      "id": "PastoriaCityEastHouse_Text_GuruEVMinus1",
       "en_US": "- 1"
     },
     {
-      "id": "pl_msg_00000140_00079",
+      "id": "PastoriaCityEastHouse_Text_GuruEVMinus10",
       "en_US": "- 10"
     },
     {
-      "id": "pl_msg_00000140_00080",
+      "id": "PastoriaCityEastHouse_Text_GuruEVMinus252",
       "en_US": "- 252"
     },
     {
-      "id": "pl_msg_00000140_00081",
+      "id": "PastoriaCityEastHouse_Text_GuruStatAtLimit",
       "en_US": [
         "This stat has reached its limit!\n",
         "It can’t go any further!\r"
       ]
     },
     {
-      "id": "pl_msg_00000140_00082",
+      "id": "PastoriaCityEastHouse_Text_GuruIVCost",
       "en_US": [
         "To modify this Pokémon’s IVs,\n",
         "I require a payment of {STRVAR_1 51, 1, 0}.\f",
@@ -407,7 +407,7 @@
       ]
     },
     {
-      "id": "pl_msg_00000140_00083",
+      "id": "PastoriaCityEastHouse_Text_GuruEVCost",
       "en_US": [
         "To train this Pokémon’s EVs,\n",
         "I require a payment of {STRVAR_1 51, 1, 0}.\f",
@@ -415,25 +415,25 @@
       ]
     },
     {
-      "id": "pl_msg_00000140_00084",
+      "id": "PastoriaCityEastHouse_Text_GuruEVsReset",
       "en_US": [
         "Done! Your Pokémon’s EVs have\n",
         "been completely wiped clean.\r"
       ]
     },
     {
-      "id": "pl_msg_00000140_00085",
+      "id": "PastoriaCityEastHouse_Text_GuruPaymentReceived",
       "en_US": [
         "Payment received!\n",
         "Let’s get to work!\r"
       ]
     },
     {
-      "id": "pl_msg_00000140_00086",
+      "id": "PastoriaCityEastHouse_Text_GuruStatAdjusted",
       "en_US": "Stat adjusted!\r"
     },
     {
-      "id": "pl_msg_00000140_00087",
+      "id": "PastoriaCityEastHouse_Text_GuruCurrentEV",
       "en_US": "Current EV: {STRVAR_1 51, 0, 0}\r"
     }
   ]

@@ -7,66 +7,10 @@
     ScriptEntry _GuruScript
     ScriptEntryEnd
 
-@ --- MACRO CUSTOM DEL GURU ---
-.macro GuruCmd_GetPrice serviceType, destVar
-    .short 0x009C
-    .short \serviceType
-    .short \destVar
-.endm
-
-.macro GuruCmd_CheckAbility partySlot, destStatus, destAbility
-    .short 0x009D
-    .short \partySlot
-    .short \destStatus
-    .short \destAbility
-.endm
-
-.macro GuruCmd_ApplyAbility partySlot, newAbility
-    .short 0x009E
-    .short \partySlot
-    .short \newAbility
-.endm
-
-.macro GuruCmd_CheckNature partySlot, destStatus
-    .short 0x009F
-    .short \partySlot
-    .short \destStatus
-.endm
-
-.macro GuruCmd_ApplyNature partySlot, newNature
-    .short 0x00A0
-    .short \partySlot
-    .short \newNature
-.endm
-
-.macro GuruCmd_ResetEVs partySlot
-    .short 0x023F
-    .short \partySlot
-.endm
-
-.macro GuruCmd_SetIV partySlot, statIndex, value
-    .short 0x0240
-    .short \partySlot
-    .short \statIndex
-    .short \value
-.endm
-
-.macro GuruCmd_ModifyEV partySlot, statIndex, isAdd, amount, destStatus
-    .short 0x0241
-    .short \partySlot
-    .short \statIndex
-    .short \isAdd
-    .short \amount
-    .short \destStatus
-.endm
-
-@ -----------------------------
-
 PastoriaCityEastHouse_MoveManiac:
     PlaySE SE_CONFIRM_sseq_3
     LockAll
     FacePlayer
-    @ BufferItemNameWithArticle 4, ITEM_HEART_SCALE
     GoToIfUnset FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC, PastoriaCityEastHouse_CheckHeartScale
     GoToIfNotEnoughMoney 5000, PastoriaCityEastHouse_ComeBackWithHeartScale
     GoTo PastoriaCityEastHouse_TryTeachMove
@@ -74,7 +18,6 @@ PastoriaCityEastHouse_MoveManiac:
 PastoriaCityEastHouse_CheckHeartScale:
     SetFlag FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC
     Message PastoriaCityEastHouse_Text_TeachMoveForHeartScale
-    @CheckItem ITEM_HEART_SCALE, 1, VAR_RESULT
     GoToIfNotEnoughMoney 5000, PastoriaCityEastHouse_ComeBackWithHeartScale
     GoTo PastoriaCityEastHouse_TryTeachMove
 
@@ -111,7 +54,6 @@ PastoriaCityEastHouse_TryTeachMove:
     FadeScreenIn
     WaitFadeScreen
     GoToIfEq VAR_RESULT, 0xFF, PastoriaCityEastHouse_ComeBackWithHeartScale
-    @RemoveItem ITEM_HEART_SCALE, 1, VAR_RESULT
     RemoveMoney 5000
     BufferPlayerName 3
     Message PastoriaCityEastHouse_Text_HandedOverHeartScale
@@ -142,18 +84,18 @@ _GuruScript:
     LockAll
     FacePlayer
 _GuruMenu:
-    Message 18
-    
-    InitLocalTextListMenu 17, 1, 0, VAR_RESULT, 1
-    AddListMenuEntry 28, 0, 255
-    AddListMenuEntry 29, 1, 255
-    AddListMenuEntry 30, 2, 255
-    AddListMenuEntry 31, 3, 255
-    AddListMenuEntry 32, 4, 255
-    AddListMenuEntry 33, 5, 255
+    Message PastoriaCityEastHouse_Text_GuruWelcome
+
+    InitLocalTextListMenu 17, 1, 0, VAR_RESULT
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruMenuChangeAbility, 0
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruMenuChangeNature, 1
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruMenuSetIVs, 2
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruMenuSetEVs, 3
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruMenuResetEVs, 4
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruMenuCancel, 5
     ShowListMenu
     CloseMessage
-    
+
     GoToIfEq VAR_RESULT, 0, _GuruAbility
     GoToIfEq VAR_RESULT, 1, _GuruNature
     GoToIfEq VAR_RESULT, 2, _GuruIVs
@@ -165,12 +107,12 @@ _GuruMenu:
 @ ======================== ABILITA' ========================
 @ ==========================================================
 _GuruAbility:
-    GuruCmd_GetPrice 0, VAR_0x8008
-    GoToIfEq VAR_0x8008, 65000, _GuruNoBadges
+    GetGuruPrice GURU_SERVICE_ABILITY_IV, VAR_0x8008
+    GoToIfEq VAR_0x8008, GURU_PRICE_LOCKED, _GuruNoBadges
     CheckMoney2 VAR_RESULT, VAR_0x8008
-    GoToIfEq VAR_RESULT, 0, _GuruNoMoney
+    GoToIfEq VAR_RESULT, FALSE, _GuruNoMoney
 
-    Message 19 
+    Message PastoriaCityEastHouse_Text_GuruWhichPokemon
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
@@ -179,39 +121,39 @@ _GuruAbility:
     ReturnToField
     FadeScreenIn
     WaitFadeScreen
-    
-    GoToIfEq VAR_0x8005, 255, _GuruMenu
 
-    GuruCmd_CheckAbility VAR_0x8005, VAR_0x8006, VAR_0x8007
-    GoToIfEq VAR_0x8006, 1, _GuruEgg
-    GoToIfEq VAR_0x8006, 2, _GuruOneAbility
-    
+    GoToIfEq VAR_0x8005, PARTY_SLOT_NONE, _GuruMenu
+
+    CheckAbilitySwap VAR_0x8005, VAR_0x8006, VAR_0x8007
+    GoToIfEq VAR_0x8006, GURU_STATUS_EGG, _GuruEgg
+    GoToIfEq VAR_0x8006, GURU_STATUS_ONE_ABILITY, _GuruOneAbility
+
     GoToIfEq VAR_0x8008, 0, _GuruAbilityFree
-    BufferNumber 1, VAR_0x8008 
-    Message 20 
+    BufferNumber 1, VAR_0x8008
+    Message PastoriaCityEastHouse_Text_GuruAbilityCost
     ShowYesNoMenu VAR_RESULT
     CloseMessage
-    GoToIfEq VAR_RESULT, 0, _GuruAbilityPay
+    GoToIfEq VAR_RESULT, MENU_YES, _GuruAbilityPay
     GoTo _GuruMenu
 
 _GuruAbilityFree:
-    Message 21
+    Message PastoriaCityEastHouse_Text_GuruChampionFree
     ShowYesNoMenu VAR_RESULT
     CloseMessage
-    GoToIfEq VAR_RESULT, 0, _GuruExecuteAbility
+    GoToIfEq VAR_RESULT, MENU_YES, _GuruExecuteAbility
     GoTo _GuruMenu
 
 _GuruAbilityPay:
     RemoveMoney2 VAR_0x8008
-    Message 85
+    Message PastoriaCityEastHouse_Text_GuruPaymentReceived
     WaitABPadPress
     CloseMessage
     GoTo _GuruExecuteAbility
 
 _GuruExecuteAbility:
-    GuruCmd_ApplyAbility VAR_0x8005, VAR_0x8007
-    PlayFanfare SE_CONFIRM_sseq_3
-    Message 22
+    ApplyAbilitySwap VAR_0x8005, VAR_0x8007
+    PlaySE SE_CONFIRM_sseq_3
+    Message PastoriaCityEastHouse_Text_GuruDone
     WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
@@ -220,12 +162,12 @@ _GuruExecuteAbility:
 @ ======================== NATURE ==========================
 @ ==========================================================
 _GuruNature:
-    GuruCmd_GetPrice 1, VAR_0x8008
-    GoToIfEq VAR_0x8008, 65000, _GuruNoBadges
+    GetGuruPrice GURU_SERVICE_NATURE, VAR_0x8008
+    GoToIfEq VAR_0x8008, GURU_PRICE_LOCKED, _GuruNoBadges
     CheckMoney2 VAR_RESULT, VAR_0x8008
-    GoToIfEq VAR_RESULT, 0, _GuruNoMoney
+    GoToIfEq VAR_RESULT, FALSE, _GuruNoMoney
 
-    Message 19 
+    Message PastoriaCityEastHouse_Text_GuruWhichPokemon
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
@@ -234,39 +176,39 @@ _GuruNature:
     ReturnToField
     FadeScreenIn
     WaitFadeScreen
-    
-    GoToIfEq VAR_0x8005, 255, _GuruMenu
 
-    GuruCmd_CheckNature VAR_0x8005, VAR_0x8006
-    GoToIfEq VAR_0x8006, 1, _GuruEgg
+    GoToIfEq VAR_0x8005, PARTY_SLOT_NONE, _GuruMenu
 
-    Message 34
-    InitLocalTextListMenu 17, 1, 0, VAR_0x8007, 1
-    AddListMenuEntry 35, 0, 255
-    AddListMenuEntry 36, 1, 255
-    AddListMenuEntry 37, 2, 255
-    AddListMenuEntry 38, 3, 255
-    AddListMenuEntry 39, 4, 255
-    AddListMenuEntry 40, 5, 255
-    AddListMenuEntry 41, 6, 255
-    AddListMenuEntry 42, 7, 255
-    AddListMenuEntry 43, 8, 255
-    AddListMenuEntry 44, 9, 255
-    AddListMenuEntry 45, 10, 255
-    AddListMenuEntry 46, 11, 255
-    AddListMenuEntry 47, 12, 255
-    AddListMenuEntry 48, 13, 255
-    AddListMenuEntry 49, 14, 255
-    AddListMenuEntry 50, 15, 255
-    AddListMenuEntry 51, 16, 255
-    AddListMenuEntry 52, 17, 255
-    AddListMenuEntry 53, 18, 255
-    AddListMenuEntry 54, 19, 255
-    AddListMenuEntry 55, 20, 255
-    AddListMenuEntry 56, 21, 255
-    AddListMenuEntry 57, 22, 255
-    AddListMenuEntry 58, 23, 255
-    AddListMenuEntry 59, 24, 255
+    CheckNatureSwap VAR_0x8005, VAR_0x8006
+    GoToIfEq VAR_0x8006, GURU_STATUS_EGG, _GuruEgg
+
+    Message PastoriaCityEastHouse_Text_GuruWhichNature
+    InitLocalTextListMenu 17, 1, 0, VAR_0x8007
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureHardy, 0
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureLonely, 1
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureBrave, 2
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureAdamant, 3
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureNaughty, 4
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureBold, 5
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureDocile, 6
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureRelaxed, 7
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureImpish, 8
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureLax, 9
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureTimid, 10
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureHasty, 11
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureSerious, 12
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureJolly, 13
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureNaive, 14
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureModest, 15
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureMild, 16
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureQuiet, 17
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureBashful, 18
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureRash, 19
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureCalm, 20
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureGentle, 21
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureSassy, 22
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureCareful, 23
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruNatureQuirky, 24
     ShowListMenu
     CloseMessage
 
@@ -274,31 +216,31 @@ _GuruNature:
 
     GoToIfEq VAR_0x8008, 0, _GuruNatureFree
 
-    BufferNumber 1, VAR_0x8008 
-    Message 60 
+    BufferNumber 1, VAR_0x8008
+    Message PastoriaCityEastHouse_Text_GuruNatureCost
     ShowYesNoMenu VAR_RESULT
     CloseMessage
-    GoToIfEq VAR_RESULT, 0, _GuruNaturePay
+    GoToIfEq VAR_RESULT, MENU_YES, _GuruNaturePay
     GoTo _GuruMenu
 
 _GuruNatureFree:
-    Message 21
+    Message PastoriaCityEastHouse_Text_GuruChampionFree
     ShowYesNoMenu VAR_RESULT
     CloseMessage
-    GoToIfEq VAR_RESULT, 0, _GuruExecuteNature
+    GoToIfEq VAR_RESULT, MENU_YES, _GuruExecuteNature
     GoTo _GuruMenu
 
 _GuruNaturePay:
     RemoveMoney2 VAR_0x8008
-    Message 85
+    Message PastoriaCityEastHouse_Text_GuruPaymentReceived
     WaitABPadPress
     CloseMessage
     GoTo _GuruExecuteNature
 
 _GuruExecuteNature:
-    GuruCmd_ApplyNature VAR_0x8005, VAR_0x8007
-    PlayFanfare SE_CONFIRM_sseq_3
-    Message 22
+    ApplyNatureSwap VAR_0x8005, VAR_0x8007
+    PlaySE SE_CONFIRM_sseq_3
+    Message PastoriaCityEastHouse_Text_GuruDone
     WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
@@ -307,7 +249,7 @@ _GuruExecuteNature:
 @ ================= RESET EVs (GRATIS) =====================
 @ ==========================================================
 _GuruResetEVs:
-    Message 19 
+    Message PastoriaCityEastHouse_Text_GuruWhichPokemon
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
@@ -316,15 +258,15 @@ _GuruResetEVs:
     ReturnToField
     FadeScreenIn
     WaitFadeScreen
-    
-    GoToIfEq VAR_0x8005, 255, _GuruMenu
 
-    GuruCmd_CheckNature VAR_0x8005, VAR_0x8006
-    GoToIfEq VAR_0x8006, 1, _GuruEgg
+    GoToIfEq VAR_0x8005, PARTY_SLOT_NONE, _GuruMenu
 
-    GuruCmd_ResetEVs VAR_0x8005
-    PlayFanfare SE_CONFIRM_sseq_3
-    Message 84 
+    CheckNatureSwap VAR_0x8005, VAR_0x8006
+    GoToIfEq VAR_0x8006, GURU_STATUS_EGG, _GuruEgg
+
+    ResetEVs VAR_0x8005
+    PlaySE SE_CONFIRM_sseq_3
+    Message PastoriaCityEastHouse_Text_GuruEVsReset
     WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
@@ -333,12 +275,12 @@ _GuruResetEVs:
 @ ======================== SET IVs =========================
 @ ==========================================================
 _GuruIVs:
-    GuruCmd_GetPrice 0, VAR_0x8008
-    GoToIfEq VAR_0x8008, 65000, _GuruNoBadges
+    GetGuruPrice GURU_SERVICE_ABILITY_IV, VAR_0x8008
+    GoToIfEq VAR_0x8008, GURU_PRICE_LOCKED, _GuruNoBadges
     CheckMoney2 VAR_RESULT, VAR_0x8008
-    GoToIfEq VAR_RESULT, 0, _GuruNoMoney
+    GoToIfEq VAR_RESULT, FALSE, _GuruNoMoney
 
-    Message 19 
+    Message PastoriaCityEastHouse_Text_GuruWhichPokemon
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
@@ -347,60 +289,55 @@ _GuruIVs:
     ReturnToField
     FadeScreenIn
     WaitFadeScreen
-    
-    GoToIfEq VAR_0x8005, 255, _GuruMenu
 
-    GuruCmd_CheckNature VAR_0x8005, VAR_0x8006
-    GoToIfEq VAR_0x8006, 1, _GuruEgg
+    GoToIfEq VAR_0x8005, PARTY_SLOT_NONE, _GuruMenu
 
-    GoToIfEq VAR_0x8008, 0, _GuruIVLoop 
+    CheckNatureSwap VAR_0x8005, VAR_0x8006
+    GoToIfEq VAR_0x8006, GURU_STATUS_EGG, _GuruEgg
+
+    GoToIfEq VAR_0x8008, 0, _GuruIVLoop
 
     BufferNumber 1, VAR_0x8008
-    Message 82 
+    Message PastoriaCityEastHouse_Text_GuruIVCost
     ShowYesNoMenu VAR_RESULT
     CloseMessage
-    GoToIfEq VAR_RESULT, 0, _GuruIVPay
+    GoToIfEq VAR_RESULT, MENU_YES, _GuruIVPay
     GoTo _GuruMenu
 
 _GuruIVPay:
     RemoveMoney2 VAR_0x8008
-    Message 85
+    Message PastoriaCityEastHouse_Text_GuruPaymentReceived
     WaitABPadPress
     CloseMessage
     GoTo _GuruIVLoop
 
 _GuruIVLoop:
-    Message 61 
-    InitLocalTextListMenu 17, 1, 0, VAR_0x8009, 1
-    AddListMenuEntry 62, STAT_HP, 255 
-    AddListMenuEntry 63, STAT_ATTACK, 255 
-    AddListMenuEntry 64, STAT_DEFENSE, 255 
-    AddListMenuEntry 65, STAT_SPECIAL_ATTACK, 255 
-    AddListMenuEntry 66, STAT_SPECIAL_DEFENSE, 255 
-    AddListMenuEntry 67, STAT_SPEED, 255 
-    AddListMenuEntry 68, 6, 255 
+    Message PastoriaCityEastHouse_Text_GuruWhichStat
+    InitLocalTextListMenu 17, 1, 0, VAR_0x8009
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatHP, STAT_HP
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatAttack, STAT_ATTACK
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatDefense, STAT_DEFENSE
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatSpAtk, STAT_SPECIAL_ATTACK
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatSpDef, STAT_SPECIAL_DEFENSE
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatSpeed, STAT_SPEED
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruBack, 6
     ShowListMenu
     CloseMessage
 
-    @ LISTA BIANCA: Solo 0-5 vanno avanti!
-    GoToIfEq VAR_0x8009, 0, _GuruIVValueLoop
-    GoToIfEq VAR_0x8009, 1, _GuruIVValueLoop
-    GoToIfEq VAR_0x8009, 2, _GuruIVValueLoop
-    GoToIfEq VAR_0x8009, 3, _GuruIVValueLoop
-    GoToIfEq VAR_0x8009, 4, _GuruIVValueLoop
-    GoToIfEq VAR_0x8009, 5, _GuruIVValueLoop
-    
+    @ Solo le statistiche vanno avanti, "Indietro" e B tornano al menu
+    GoToIfLt VAR_0x8009, STAT_MAX, _GuruIVValueLoop
+
     @ PARACADUTE: Tasto B o "Back" (6) tornano al menù principale
     GoTo _GuruMenu
 
 _GuruIVValueLoop:
-    Message 69 
-    InitLocalTextListMenu 17, 1, 0, VAR_RESULT, 1
-    AddListMenuEntry 70, 0, 255 
-    AddListMenuEntry 71, 1, 255 
-    AddListMenuEntry 72, 2, 255 
-    AddListMenuEntry 73, 3, 255 
-    AddListMenuEntry 68, 4, 255 
+    Message PastoriaCityEastHouse_Text_GuruWhichIV
+    InitLocalTextListMenu 17, 1, 0, VAR_RESULT
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruIV31, 0
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruIV30, 1
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruIV1, 2
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruIV0, 3
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruBack, 4
     ShowListMenu
     CloseMessage
 
@@ -409,26 +346,26 @@ _GuruIVValueLoop:
     GoToIfEq VAR_RESULT, 1, _IV30
     GoToIfEq VAR_RESULT, 2, _IV1
     GoToIfEq VAR_RESULT, 3, _IV0
-    
+
     @ PARACADUTE: Torna indietro
     GoTo _GuruIVLoop
 
 _IV31:
-    GuruCmd_SetIV VAR_0x8005, VAR_0x8009, 31
+    SetIV VAR_0x8005, VAR_0x8009, 31
     GoTo _IVSuccess
 _IV30:
-    GuruCmd_SetIV VAR_0x8005, VAR_0x8009, 30
+    SetIV VAR_0x8005, VAR_0x8009, 30
     GoTo _IVSuccess
 _IV1:
-    GuruCmd_SetIV VAR_0x8005, VAR_0x8009, 1
+    SetIV VAR_0x8005, VAR_0x8009, 1
     GoTo _IVSuccess
 _IV0:
-    GuruCmd_SetIV VAR_0x8005, VAR_0x8009, 0
+    SetIV VAR_0x8005, VAR_0x8009, 0
     GoTo _IVSuccess
 
 _IVSuccess:
-    PlayFanfare SE_CONFIRM_sseq_3
-    Message 22
+    PlaySE SE_CONFIRM_sseq_3
+    Message PastoriaCityEastHouse_Text_GuruDone
     WaitABPadPress
     CloseMessage
     GoTo _GuruIVLoop
@@ -437,12 +374,12 @@ _IVSuccess:
 @ ======================== SET EVs =========================
 @ ==========================================================
 _GuruEVs:
-    GuruCmd_GetPrice 2, VAR_0x8008
-    GoToIfEq VAR_0x8008, 65000, _GuruNoBadges
+    GetGuruPrice GURU_SERVICE_EVS, VAR_0x8008
+    GoToIfEq VAR_0x8008, GURU_PRICE_LOCKED, _GuruNoBadges
     CheckMoney2 VAR_RESULT, VAR_0x8008
-    GoToIfEq VAR_RESULT, 0, _GuruNoMoney
+    GoToIfEq VAR_RESULT, FALSE, _GuruNoMoney
 
-    Message 19 
+    Message PastoriaCityEastHouse_Text_GuruWhichPokemon
     CloseMessage
     FadeScreenOut
     WaitFadeScreen
@@ -451,65 +388,60 @@ _GuruEVs:
     ReturnToField
     FadeScreenIn
     WaitFadeScreen
-    
-    GoToIfEq VAR_0x8005, 255, _GuruMenu
 
-    GuruCmd_CheckNature VAR_0x8005, VAR_0x8006
-    GoToIfEq VAR_0x8006, 1, _GuruEgg
+    GoToIfEq VAR_0x8005, PARTY_SLOT_NONE, _GuruMenu
+
+    CheckNatureSwap VAR_0x8005, VAR_0x8006
+    GoToIfEq VAR_0x8006, GURU_STATUS_EGG, _GuruEgg
 
     GoToIfEq VAR_0x8008, 0, _GuruEVLoop
 
     BufferNumber 1, VAR_0x8008
-    Message 83 
+    Message PastoriaCityEastHouse_Text_GuruEVCost
     ShowYesNoMenu VAR_RESULT
     CloseMessage
-    GoToIfEq VAR_RESULT, 0, _GuruEVPay
+    GoToIfEq VAR_RESULT, MENU_YES, _GuruEVPay
     GoTo _GuruMenu
 
 _GuruEVPay:
     RemoveMoney2 VAR_0x8008
-    Message 85
+    Message PastoriaCityEastHouse_Text_GuruPaymentReceived
     WaitABPadPress
     CloseMessage
     GoTo _GuruEVLoop
 
 _GuruEVLoop:
-    Message 61 
-    InitLocalTextListMenu 17, 1, 0, VAR_0x8009, 1
-    AddListMenuEntry 62, STAT_HP, 255
-    AddListMenuEntry 63, STAT_ATTACK, 255
-    AddListMenuEntry 64, STAT_DEFENSE, 255
-    AddListMenuEntry 65, STAT_SPECIAL_ATTACK, 255
-    AddListMenuEntry 66, STAT_SPECIAL_DEFENSE, 255
-    AddListMenuEntry 67, STAT_SPEED, 255
-    AddListMenuEntry 68, 6, 255
+    Message PastoriaCityEastHouse_Text_GuruWhichStat
+    InitLocalTextListMenu 17, 1, 0, VAR_0x8009
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatHP, STAT_HP
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatAttack, STAT_ATTACK
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatDefense, STAT_DEFENSE
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatSpAtk, STAT_SPECIAL_ATTACK
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatSpDef, STAT_SPECIAL_DEFENSE
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruStatSpeed, STAT_SPEED
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruBack, 6
     ShowListMenu
     CloseMessage
 
     @ LISTA BIANCA
-    GoToIfEq VAR_0x8009, 0, _GuruEVValueLoop
-    GoToIfEq VAR_0x8009, 1, _GuruEVValueLoop
-    GoToIfEq VAR_0x8009, 2, _GuruEVValueLoop
-    GoToIfEq VAR_0x8009, 3, _GuruEVValueLoop
-    GoToIfEq VAR_0x8009, 4, _GuruEVValueLoop
-    GoToIfEq VAR_0x8009, 5, _GuruEVValueLoop
-    
+    GoToIfLt VAR_0x8009, STAT_MAX, _GuruEVValueLoop
+
     @ PARACADUTE
     GoTo _GuruMenu
 
 _GuruEVValueLoop:
-    GuruCmd_ModifyEV VAR_0x8005, VAR_0x8009, 1, 0, VAR_0x800A
+    ModifyEV VAR_0x8005, VAR_0x8009, TRUE, 0, VAR_0x800A
     BufferNumber 0, VAR_0x800A
 
-    Message 74 
-    InitLocalTextListMenu 17, 1, 0, VAR_RESULT, 1
-    AddListMenuEntry 75, 0, 255 
-    AddListMenuEntry 76, 1, 255 
-    AddListMenuEntry 77, 2, 255 
-    AddListMenuEntry 78, 3, 255 
-    AddListMenuEntry 79, 4, 255 
-    AddListMenuEntry 80, 5, 255 
-    AddListMenuEntry 68, 6, 255 
+    Message PastoriaCityEastHouse_Text_GuruCurrentEVHowToTrain
+    InitLocalTextListMenu 17, 1, 0, VAR_RESULT
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruEVPlus252, 0
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruEVPlus10, 1
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruEVPlus1, 2
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruEVMinus1, 3
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruEVMinus10, 4
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruEVMinus252, 5
+    AddListMenuEntry PastoriaCityEastHouse_Text_GuruBack, 6
     ShowListMenu
     CloseMessage
 
@@ -520,39 +452,39 @@ _GuruEVValueLoop:
     GoToIfEq VAR_RESULT, 3, _EVSub1
     GoToIfEq VAR_RESULT, 4, _EVSub10
     GoToIfEq VAR_RESULT, 5, _EVSub252
-    
+
     @ PARACADUTE
     GoTo _GuruEVLoop
 
 _EVAdd252:
-    GuruCmd_ModifyEV VAR_0x8005, VAR_0x8009, 1, 252, VAR_0x8006
+    ModifyEV VAR_0x8005, VAR_0x8009, TRUE, 252, VAR_0x8006
     GoTo _EVCheckLimit
 _EVAdd10:
-    GuruCmd_ModifyEV VAR_0x8005, VAR_0x8009, 1, 10, VAR_0x8006
+    ModifyEV VAR_0x8005, VAR_0x8009, TRUE, 10, VAR_0x8006
     GoTo _EVCheckLimit
 _EVAdd1:
-    GuruCmd_ModifyEV VAR_0x8005, VAR_0x8009, 1, 1, VAR_0x8006
+    ModifyEV VAR_0x8005, VAR_0x8009, TRUE, 1, VAR_0x8006
     GoTo _EVCheckLimit
 _EVSub1:
-    GuruCmd_ModifyEV VAR_0x8005, VAR_0x8009, 0, 1, VAR_0x8006
+    ModifyEV VAR_0x8005, VAR_0x8009, FALSE, 1, VAR_0x8006
     GoTo _EVCheckLimit
 _EVSub10:
-    GuruCmd_ModifyEV VAR_0x8005, VAR_0x8009, 0, 10, VAR_0x8006
+    ModifyEV VAR_0x8005, VAR_0x8009, FALSE, 10, VAR_0x8006
     GoTo _EVCheckLimit
 _EVSub252:
-    GuruCmd_ModifyEV VAR_0x8005, VAR_0x8009, 0, 252, VAR_0x8006
+    ModifyEV VAR_0x8005, VAR_0x8009, FALSE, 252, VAR_0x8006
     GoTo _EVCheckLimit
 
 _EVCheckLimit:
-    GoToIfEq VAR_0x8006, 1, _EVLimitReaced
-    PlayFanfare SE_CONFIRM_sseq_3
-    Message 22
+    GoToIfEq VAR_0x8006, TRUE, _GuruEVLimitReached
+    PlaySE SE_CONFIRM_sseq_3
+    Message PastoriaCityEastHouse_Text_GuruDone
     WaitABPadPress
     CloseMessage
     GoTo _GuruEVValueLoop
 
-_EVLimitReaced:
-    Message 81 
+_GuruEVLimitReached:
+    Message PastoriaCityEastHouse_Text_GuruStatAtLimit
     WaitABPadPress
     CloseMessage
     GoTo _GuruEVValueLoop
@@ -561,31 +493,31 @@ _EVLimitReaced:
 @ ==================== ERRORI E USCITA =====================
 @ ==========================================================
 _GuruNoMoney:
-    Message 23
+    Message PastoriaCityEastHouse_Text_GuruNotEnoughMoney
     WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
 _GuruNoBadges:
-    Message 24
+    Message PastoriaCityEastHouse_Text_GuruNeedFourBadges
     WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
 _GuruOneAbility:
-    Message 25
+    Message PastoriaCityEastHouse_Text_GuruOnlyOneAbility
     WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
 _GuruEgg:
-    Message 26
+    Message PastoriaCityEastHouse_Text_GuruEggCantBeHelped
     WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
 _GuruCancel:
-    Message 27
+    Message PastoriaCityEastHouse_Text_GuruComeBackAnytime
     WaitABPadPress
     CloseMessage
     ReleaseAll

@@ -29,4 +29,16 @@
 #define FIELD_MOVE_FUNC_SET_ACTIVE   1
 #define FIELD_MOVE_FUNC_CHECK_ACTIVE 2
 
+// PPE: Guru Lotta (comandi GetGuruPrice, CheckAbilitySwap, CheckNatureSwap)
+#define GURU_SERVICE_ABILITY_IV 0
+#define GURU_SERVICE_NATURE     1
+#define GURU_SERVICE_EVS        2
+#define GURU_SERVICE_RESET_EVS  3
+
+#define GURU_PRICE_LOCKED 65000 // meno di 4 medaglie: servizio non disponibile
+
+#define GURU_STATUS_OK          0
+#define GURU_STATUS_EGG         1
+#define GURU_STATUS_ONE_ABILITY 2
+
 #endif // POKEPLATINUM_CONSTANTS_SCRCMD_H
