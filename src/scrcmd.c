@@ -364,7 +364,6 @@ BOOL ScrCmd_ApplyAbilitySwap(ScriptContext *ctx);
 //static BOOL ScrCmd_Unused_09F(ScriptContext *ctx);
 BOOL ScrCmd_CheckNatureSwap(ScriptContext *ctx);
 BOOL ScrCmd_ApplyNatureSwap(ScriptContext *ctx);
-BOOL ScrCmd_ProcessGuruMoney(ScriptContext *ctx);
 static BOOL ScrCmd_ReturnToField(ScriptContext *ctx);
 static BOOL ScrCmd_WaitForTransition(ScriptContext *ctx);
 static BOOL ScrCmd_0A2(ScriptContext *ctx);

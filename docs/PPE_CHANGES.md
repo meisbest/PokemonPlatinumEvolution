@@ -27,8 +27,9 @@ Legenda: ⚠️ = problema noto o da verificare.
 - **File:** `src/field_battle_data_transfer.c` (funzione `GetHardLevelCap`),
   `include/field_battle_data_transfer.h`, `src/battle/battle_script.c`,
   `src/item_use_pokemon.c`, `src/overlay005/daycare.c`,
-  `src/applications/trainer_case/card_text.c`, `src/savedata.c` (nuovo puntatore
-  globale `gSaveDataPtr`, usato per leggere il salvataggio da ovunque).
+  `src/applications/trainer_case/card_text.c`. Il salvataggio si legge con
+  `SaveData_Ptr()` di upstream. Fino al 2026-11-13 c'era un nostro puntatore
+  globale `gSaveDataPtr` in `src/savedata.c`, ora tolto: `savedata.c` è come upstream.
 - **Condizioni (dal più avanzato):**
 
   | Cap | Condizione |
@@ -140,7 +141,9 @@ Legenda: ⚠️ = problema noto o da verificare.
   - Effetto collaterale noto: cambiare il PID può cambiare l'evoluzione di Wurmple
     (Silcoon/Cascoon dipende dal PID).
   - **Imposta IV** (0–31 per statistica)
-  - **Imposta EV**: aggiunge o toglie EV, con limite di 252 per statistica e 510 in totale.
+  - **Imposta EV**: aggiunge o toglie EV, con limite di 252 per statistica e 510 in totale
+    (`MAX_EVS_ALL_STATS`). 252 e non 255 (`MAX_EVS_SINGLE_STAT`) è voluto: oltre 252 non si guadagna nulla.
+  - Nello script le statistiche sono indicate con `STAT_*`.
   - **Azzera EV** (gratis)
 - **Prezzi:** il servizio è disponibile da **4 medaglie**. Il prezzo scende a ogni
   medaglia in più:
@@ -161,7 +164,9 @@ Legenda: ⚠️ = problema noto o da verificare.
   | 0x23F | `ScrCmd_Dummy23F` | `ScrCmd_ResetEVs` |
   | 0x240 | `ScrCmd_Dummy240` | `ScrCmd_SetIV` |
   | 0x241 | `ScrCmd_Dummy241` | `ScrCmd_ModifyEV` |
-  | 0x242 | `ScrCmd_Dummy242` | `ScrCmd_ProcessGuruMoney` |
+
+  `0x242` (`ScrCmd_ProcessGuruMoney`) è stato tolto il 2026-11-13: i soldi si gestiscono
+  con i comandi upstream `CheckMoney2` / `RemoveMoney2`, e lo slot è tornato `ScrCmd_Dummy242`.
 
 - **File:** `res/field/maps/pastoria_city_east_house/events.json` (NPC),
   `res/field/maps/pastoria_city_east_house/scripts.s` (macro `GuruCmd_*` e
@@ -173,7 +178,7 @@ Legenda: ⚠️ = problema noto o da verificare.
 
 ### Insegnamosse: soldi invece della Squama Cuore
 - **Cosa cambia:** l'Insegnamosse di Pratopoli non chiede più una Squama Cuore ma
-  **5.000 ₽** per mossa. Usa il comando `ProcessGuruMoney`.
+  **5.000 ₽** per mossa. Usa i comandi upstream `GoToIfNotEnoughMoney` e `RemoveMoney`.
 - **File:** `res/field/maps/pastoria_city_east_house/scripts.s`,
   `res/text/pastoria_city_east_house.json`
 - **Commit:** `ab7c49e63` Ricordamosse a 5000
@@ -280,14 +285,14 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 
 | Modifica PPE | Simboli upstream usati / modificati | File |
 |--------------|-------------------------------------|------|
-| Level cap | `VarsFlags_GetVarAddress`, `VarsFlags_CheckFlag`, `SaveData_GetVarsFlags`, `SaveData_GetTrainerInfo`, `TrainerInfo_HasBadge`, `BADGE_ID_*`, `SystemFlag_CheckGameCompleted`, `generated/vars_flags.h` (`VAR_STARK_MOUNTAIN_ROOM_1_STATE`, `VAR_FIGHT_AREA_STATE`, `VAR_RIVAL_BEAT_SUNYSHORE_GYM`, `VAR_DISTORTION_WORLD_PROGRESS`, `VAR_SPEAR_PILLAR_STATE`, `VAR_GALACTIC_HQ_*`, `VAR_LAKE_ACUITY_STATE`, `FLAG_DEFEATED_COMMANDER_SATURN_VALOR_CAVERN`, `VAR_CANALAVE_CITY_STATE`, `VAR_CELESTIC_TOWN_STATE`, `VAR_PASTORIA_CITY_STATE`, `VAR_ROUTE_209_GATE_TO_HEARTHOME_CITY_STATE`, `VAR_ETERNA_CITY_STATE`, `VAR_VALLEY_WINDWORKS_STATE`, `VAR_ROUTE_203_RIVAL_STATE`) e **il significato** dei loro valori negli script delle mappe, `Pokemon_GetSpeciesBaseExpAt`, `ITEM_PARAM_LEVEL_UP`, `Pokemon_CheckItemEffects`, `Pokemon_ApplyItemEffects`, `Daycare_MoveToPartyFromDaycareMon`, `BoxPokemon_GiveExperience`, `ov5_021E63E0`, `DaycareMon_GetSteps`, `SaveData_Init` | `src/field_battle_data_transfer.c`, `include/field_battle_data_transfer.h`, `src/item_use_pokemon.c`, `src/overlay005/daycare.c`, `src/savedata.c` |
+| Level cap | `VarsFlags_GetVarAddress`, `VarsFlags_CheckFlag`, `SaveData_GetVarsFlags`, `SaveData_GetTrainerInfo`, `TrainerInfo_HasBadge`, `BADGE_ID_*`, `SystemFlag_CheckGameCompleted`, `generated/vars_flags.h` (`VAR_STARK_MOUNTAIN_ROOM_1_STATE`, `VAR_FIGHT_AREA_STATE`, `VAR_RIVAL_BEAT_SUNYSHORE_GYM`, `VAR_DISTORTION_WORLD_PROGRESS`, `VAR_SPEAR_PILLAR_STATE`, `VAR_GALACTIC_HQ_*`, `VAR_LAKE_ACUITY_STATE`, `FLAG_DEFEATED_COMMANDER_SATURN_VALOR_CAVERN`, `VAR_CANALAVE_CITY_STATE`, `VAR_CELESTIC_TOWN_STATE`, `VAR_PASTORIA_CITY_STATE`, `VAR_ROUTE_209_GATE_TO_HEARTHOME_CITY_STATE`, `VAR_ETERNA_CITY_STATE`, `VAR_VALLEY_WINDWORKS_STATE`, `VAR_ROUTE_203_RIVAL_STATE`) e **il significato** dei loro valori negli script delle mappe, `Pokemon_GetSpeciesBaseExpAt`, `ITEM_PARAM_LEVEL_UP`, `Pokemon_CheckItemEffects`, `Pokemon_ApplyItemEffects`, `Daycare_MoveToPartyFromDaycareMon`, `BoxPokemon_GiveExperience`, `ov5_021E63E0`, `DaycareMon_GetSteps`, `SaveData_Ptr` | `src/field_battle_data_transfer.c`, `include/field_battle_data_transfer.h`, `src/item_use_pokemon.c`, `src/overlay005/daycare.c`, `src/battle/battle_script.c`, `src/applications/trainer_case/card_text.c` |
 | Level cap in battaglia + Condividi Esp. | `BtlCmd_CalcExpGain`, `BattleScript_GetExpTask`, `sideGetExpMask`, `gainedExp`/`sharedExp`, `HOLD_EFFECT_EXP_SHARE`, `MON_DATA_IS_EGG` | `src/battle/battle_script.c` |
 | Level cap nella Scheda Allenatore | `TrainerCard_DrawFrontText`, `TRAINER_CARD_WINDOW_SCORE`, `TrainerCard_DrawNumber`, `TRAINER_CARD_WINDOW_PARTIAL_WIDTH`, `Font_CalcStringWidth` | `src/applications/trainer_case/card_text.c` |
 | Niente strumenti contro allenatori | `BATTLE_TYPE_NO_ITEMS`, `BATTLE_TYPE_TRAINER`, il controllo in `case PLAYER_INPUT_ITEM`. Upstream lo riscrive facilmente: ricontrollare dopo ogni merge che usi ancora `BATTLE_TYPE_NO_ITEMS` | `include/constants/battle.h`, `src/battle/battle_controller_player.c` |
 | Stile lotta Fisso, testo veloce | `Options_Init`, `Options_BattleStyle`, `OPTIONS_BATTLE_STYLE_SET`, `OPTIONS_TEXT_SPEED_FAST`, `ProcessMainInput`, `ENTRY_BATTLE_STYLE`, `ENTRY_CLOSE` | `src/game_options.c`, `src/applications/options_menu.c` |
 | EV, natura e abilità degli allenatori | `TrainerMonBase`/`WithMoves`/`WithItem`/`WithMovesAndItem` (layout: i nostri campi **prima di** `item`, perché `PackParty` copia fino a `offsetof(item)`), `TrainerData_BuildParty`, `Pokemon_InitWith`, `NATURE_COUNT`, `SPECIES_DATA_ABILITY_1/2`, `MON_DATA_*_EV`; in trainerproc: `PackParty`, `LOOKUP_ENUM`, `dp_try`, `dp_missing`, `dp_type_of`, `DP_STRING`/`DP_INT`, `dp_bool`, `dp_lookup`, `dp_u8`; formato JSON degli allenatori | `include/struct_defs/trainer_data.h`, `src/trainer_data.c`, `tools/dataproc/src/trainerproc.c`, `tools/dataproc/lib/include/dataproc.h`, `res/trainers/data/*.json` |
-| Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x242` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `Pokemon_CalcAbility` (abilità dal bit 0 del PID: se upstream cambia questa regola, va rivisto `Guru_SetPersonality`), `SpeciesData_GetFormValue`, `Pokemon_GetNature`, `ABILITY_NONE`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount`, `TrainerInfo_Money`/`SetMoney` | `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c` |
-| Guru Lotta: script, testi, NPC | macro con opcode grezzi (`.short 0x009C`…, `0x0045` = `INITLOCALTEXTLISTMENU`, `0x0032` = `WAITABPADPRESS`), `asm/macros/scrcmd.inc`, nomi dei suoni (`SE_CONFIRM_sseq_3`), label `PastoriaCityEastHouse_*` e `_GuruScript`, `ScriptEntry`, `FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC`, ID testi `PastoriaCityEastHouse_Text_*` e `pl_msg_00000140_*`, formato `events.json` (id `LOCALID_*`, `"script"` per etichetta, `"initial_dir"` = `DIR_*`) | `res/field/maps/pastoria_city_east_house/scripts.s`, `res/field/maps/pastoria_city_east_house/events.json`, `res/text/pastoria_city_east_house.json` |
+| Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x241` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `Pokemon_CalcAbility` (abilità dal bit 0 del PID: se upstream cambia questa regola, va rivisto `Guru_SetPersonality`), `SpeciesData_GetFormValue`, `Pokemon_GetNature`, `Pokemon_GetNatureOf`, `Pokemon_IsPersonalityShiny`, `SpeciesData_FromMonSpecies`/`GetGenderOf`/`Free`, `ABILITY_NONE`, `STAT_*` e l'ordine di `MON_DATA_HP_EV`…`SPDEF_EV` / `MON_DATA_HP_IV`…`SPDEF_IV` (uguale a `STAT_*`), `MAX_IVS_SINGLE_STAT`, `MAX_EVS_ALL_STATS`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount` | `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c` |
+| Guru Lotta: script, testi, NPC | macro con opcode grezzi (`.short 0x009C`…), comandi upstream `CheckMoney2`, `RemoveMoney2`, `GoToIfNotEnoughMoney`, `RemoveMoney`, `InitLocalTextListMenu`, `WaitABPadPress`, `asm/macros/scrcmd.inc`, nomi dei suoni (`SE_CONFIRM_sseq_3`), label `PastoriaCityEastHouse_*` e `_GuruScript`, `ScriptEntry`, `FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC`, ID testi `PastoriaCityEastHouse_Text_*` e `pl_msg_00000140_*`, formato `events.json` (id `LOCALID_*`, `"script"` per etichetta, `"initial_dir"` = `DIR_*`) | `res/field/maps/pastoria_city_east_house/scripts.s`, `res/field/maps/pastoria_city_east_house/events.json`, `res/text/pastoria_city_east_house.json` |
 | MN dalla Borsa | `ScrCmd_CheckPartyMonHasMove`, `ScrCmd_FindPartySlotWithMove`, `Bag_GetItemQuantity`, `SaveData_GetBag`, `ITEM_HM01`–`ITEM_HM08`, `MOVE_CUT`/`STRENGTH`/`ROCK_SMASH`/`WATERFALL`/`ROCK_CLIMB` | `src/scrcmd_party.c` |
 | Tenda | schema JSON degli strumenti (`itemUseParams`, `fieldUseFunc`, `ITEM_USE_FUNC_HEALING`, `battleUseCategory`/`BATTLE_USE_CATEGORY_*`), `ITEM_PARAM_REVIVE_ALL`, `ITEM_PARAM_HEAL_SLEEP`, `CheckItemSacredAsh`, `PartyMenuCB_HandleSacredAsh`, `FindNextFaintedMember`, `SACREDASH_STATE_*`, `HEAP_ID_PARTY_MENU`, formato palette JASC (CRLF, `nitrogfx`) | `res/items/data/tent.json`, `res/items/icons/*`, `res/items/icons/meson.build`, `res/items/item_icon.order`, `generated/items.txt`, `src/applications/party_menu/callbacks.c` |
 | Negozi e prezzi | `PokeMartCommonItems`, `HearthomeMartSpecialties`, `PastoriaMartSpecialties`, `PokemonLeagueMartSpecialties`, `ITEM_*`, campo `price` dei JSON | `include/data/mart_items.h`, `res/items/data/*.json` |
@@ -323,4 +328,5 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `491f0364e` | Enrico | Merge di origin/main `62bdaacdc` (121 commit), con Tenda, trainerproc e Guru adattati |
 | 2026-11-13 | `b8951696d` | Enrico | Level cap: condizioni 85 e 77 corrette, nomi al posto dei numeri. Borsa bloccata contro gli allenatori |
 | 2026-11-13 | `7e99c688a` | Enrico | Guida di setup per collaboratori su Windows (`docs/SETUP.md`) |
-| 2026-11-13 | (questo) | Enrico | Guru: cambio abilità che resta dopo l'evoluzione |
+| 2026-11-13 | `0062765cd` | Enrico | Guru: cambio abilità che resta dopo l'evoluzione |
+| 2026-11-13 | (questo) | Enrico | Guru e level cap: funzioni e comandi upstream al posto dei nostri doppioni |

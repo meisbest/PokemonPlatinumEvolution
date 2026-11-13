@@ -180,8 +180,7 @@ u8 Pokemon_CheckItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, enum HeapID 
        
         // --- HACK LEVEL CAP ---
         // Peschiamo il SaveData globale e calcoliamo il Cap!
-        extern SaveData *gSaveDataPtr; // Metodo d'emergenza se non hai il puntatore pulito, ma vediamo se compila così
-        u32 currentCap = GetHardLevelCap(gSaveDataPtr); 
+        u32 currentCap = GetHardLevelCap(SaveData_Ptr()); 
         
         // La caramella funziona SOLO se sei sotto il Cap!
         if (Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL) < currentCap) {
@@ -308,8 +307,7 @@ u8 Pokemon_ApplyItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, u16 location
     vApplyLevel = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
 
     if (Item_Get(item, ITEM_PARAM_LEVEL_UP)) {
-        extern SaveData *gSaveDataPtr;
-        u32 currentCap = GetHardLevelCap(gSaveDataPtr);
+        u32 currentCap = GetHardLevelCap(SaveData_Ptr());
 
         // Riapplichiamo il blocco di sicurezza anche qui!
         if (vApplyLevel < currentCap) {

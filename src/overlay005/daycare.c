@@ -180,8 +180,7 @@ static int Daycare_MoveToPartyFromDaycareMon(Party *party, DaycareMon *daycareMo
     Pokemon_FromBoxPokemon(boxMon, mon);
 
     // --- HACK LEVEL CAP: RITIRO ---
-    extern SaveData *gSaveDataPtr;
-    u32 currentCap = GetHardLevelCap(gSaveDataPtr);
+    u32 currentCap = GetHardLevelCap(SaveData_Ptr());
     u32 currentLevel = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
 
     // Sostituiamo il check "MAX_POKEMON_LEVEL" col nostro Cap!
@@ -234,8 +233,7 @@ int BoxPokemon_GiveExperience(BoxPokemon *boxMon, u32 givenExp)
     BoxPokemon_Copy(boxMon, boxMonRef);
 
     // --- HACK LEVEL CAP: SIMULAZIONE ---
-    extern SaveData *gSaveDataPtr;
-    u32 currentCap = GetHardLevelCap(gSaveDataPtr);
+    u32 currentCap = GetHardLevelCap(SaveData_Ptr());
     u32 currentLevel = BoxPokemon_GetLevel(boxMonRef);
     u16 species = BoxPokemon_GetValue(boxMonRef, MON_DATA_SPECIES, NULL);
 

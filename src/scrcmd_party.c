@@ -974,15 +974,11 @@ static void Guru_SetPersonality(Pokemon *mon, u8 desiredNature, u8 abilitySlot)
     u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
     u32 oldPid = Pokemon_GetValue(mon, MON_DATA_PERSONALITY, NULL);
     u32 otid = Pokemon_GetValue(mon, MON_DATA_OT_ID, NULL);
-    u32 oldGender = Pokemon_GetValue(mon, MON_DATA_GENDER, NULL);
+    u8 oldGender = Pokemon_GetValue(mon, MON_DATA_GENDER, NULL);
+    u8 isShiny = Pokemon_IsPersonalityShiny(otid, oldPid);
 
-    u8 genderRatio = SpeciesData_GetSpeciesValue(species, SPECIES_DATA_GENDER_RATIO);
-    u16 tid = otid & 0xFFFF;
-    u16 sid = (otid >> 16) & 0xFFFF;
-
-    u16 oldPLow = oldPid & 0xFFFF;
-    u16 oldPHigh = (oldPid >> 16) & 0xFFFF;
-    u8 isShiny = ((tid ^ sid ^ oldPLow ^ oldPHigh) < 8);
+    // Caricati una volta sola: il ciclo può fare centinaia di tentativi
+    SpeciesData *speciesData = SpeciesData_FromMonSpecies(species, HEAP_ID_SYSTEM);
 
     // I bit 13-17 del PID decidono l'ordine dei blocchi dati cifrati:
     // tenerli uguali evita di dover rimescolare i blocchi.
@@ -990,28 +986,19 @@ static void Guru_SetPersonality(Pokemon *mon, u8 desiredNature, u8 abilitySlot)
 
     u32 newPid;
 
-    while (1) {
+    while (TRUE) {
         newPid = (LCRNG_Next() << 16) | LCRNG_Next();
         newPid = (newPid & ~0x3E000) | blockShuffleBits;
 
-        if ((newPid % 25) != desiredNature) continue;
+        if (Pokemon_GetNatureOf(newPid) != desiredNature) continue;
         if ((newPid & 1) != abilitySlot) continue;
-
-        u8 newGender;
-        if (genderRatio == 255) newGender = 2;
-        else if (genderRatio == 254) newGender = 1;
-        else if (genderRatio == 0) newGender = 0;
-        else newGender = ((newPid & 0xFF) >= genderRatio) ? 0 : 1;
-
-        if (newGender != oldGender) continue;
-
-        u16 pLow = newPid & 0xFFFF;
-        u16 pHigh = (newPid >> 16) & 0xFFFF;
-        u8 newShiny = ((tid ^ sid ^ pLow ^ pHigh) < 8);
-        if (newShiny != isShiny) continue;
+        if (SpeciesData_GetGenderOf(speciesData, species, newPid) != oldGender) continue;
+        if (Pokemon_IsPersonalityShiny(otid, newPid) != isShiny) continue;
 
         break;
     }
+
+    SpeciesData_Free(speciesData);
 
     Pokemon_SetValue(mon, MON_DATA_PERSONALITY, &newPid);
     Pokemon_CalcAbility(mon);
@@ -1096,6 +1083,24 @@ BOOL ScrCmd_ApplyNatureSwap(ScriptContext *ctx)
     return FALSE;
 }
 
+// PPE: il Guru porta gli EV al massimo utile (252), non al limite tecnico
+// MAX_EVS_SINGLE_STAT (255): con 255 l'ultimo punto non dà statistiche.
+#define GURU_MAX_EVS_SINGLE_STAT 252
+
+// Gli indici delle statistiche nello script sono i valori di enum PokemonStat
+// (STAT_HP...STAT_SPECIAL_DEFENSE). I campi MON_DATA_*_EV e MON_DATA_*_IV sono
+// nello stesso ordine, quindi basta sommare l'indice al primo campo.
+static u32 Guru_GetEVTotal(Pokemon *mon)
+{
+    u32 total = 0;
+
+    for (int stat = STAT_HP; stat < STAT_MAX; stat++) {
+        total += Pokemon_GetValue(mon, MON_DATA_HP_EV + stat, NULL);
+    }
+
+    return total;
+}
+
 BOOL ScrCmd_ResetEVs(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
@@ -1103,66 +1108,58 @@ BOOL ScrCmd_ResetEVs(ScriptContext *ctx)
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
 
     u32 zero = 0;
-    Pokemon_SetValue(mon, MON_DATA_HP_EV, &zero);
-    Pokemon_SetValue(mon, MON_DATA_ATK_EV, &zero);
-    Pokemon_SetValue(mon, MON_DATA_DEF_EV, &zero);
-    Pokemon_SetValue(mon, MON_DATA_SPEED_EV, &zero);
-    Pokemon_SetValue(mon, MON_DATA_SPATK_EV, &zero);
-    Pokemon_SetValue(mon, MON_DATA_SPDEF_EV, &zero);
+
+    for (int stat = STAT_HP; stat < STAT_MAX; stat++) {
+        Pokemon_SetValue(mon, MON_DATA_HP_EV + stat, &zero);
+    }
 
     Pokemon_CalcLevelAndStats(mon);
     return FALSE;
 }
 
-// --- 2. IMPOSTA IVs (0 - 31) ---
+// Imposta un IV (0-31). statIndex = STAT_*
 BOOL ScrCmd_SetIV(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
     u16 partySlot = ScriptContext_GetVar(ctx);
-    u16 statIndex = ScriptContext_GetVar(ctx); // 0=HP, 1=Atk, 2=Def, 3=SpA, 4=SpD, 5=Spe
+    u16 statIndex = ScriptContext_GetVar(ctx);
     u16 value = ScriptContext_ReadHalfWord(ctx);
+
+    if (statIndex >= STAT_MAX) {
+        return FALSE;
+    }
 
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
 
-    int monData = MON_DATA_HP_IV;
-    switch(statIndex) {
-        case 0: monData = MON_DATA_HP_IV; break;
-        case 1: monData = MON_DATA_ATK_IV; break;
-        case 2: monData = MON_DATA_DEF_IV; break;
-        case 3: monData = MON_DATA_SPATK_IV; break;
-        case 4: monData = MON_DATA_SPDEF_IV; break;
-        case 5: monData = MON_DATA_SPEED_IV; break;
+    u32 iv = value;
+    if (iv > MAX_IVS_SINGLE_STAT) {
+        iv = MAX_IVS_SINGLE_STAT;
     }
 
-    u32 val32 = value;
-    if (val32 > 31) val32 = 31; // Limite di sicurezza
-    Pokemon_SetValue(mon, monData, &val32);
+    Pokemon_SetValue(mon, MON_DATA_HP_IV + statIndex, &iv);
     Pokemon_CalcLevelAndStats(mon);
     return FALSE;
 }
 
-// --- 3. MODIFICA INTELLIGENTE EVs ---
+// Aggiunge o toglie EV. statIndex = STAT_*. Con amount 0 legge soltanto:
+// statusVar riceve il valore attuale. Altrimenti statusVar = 1 se il limite
+// (252 per statistica, MAX_EVS_ALL_STATS in totale, o 0) ha ridotto la modifica.
 BOOL ScrCmd_ModifyEV(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
     u16 partySlot = ScriptContext_GetVar(ctx);
     u16 statIndex = ScriptContext_GetVar(ctx);
-    u16 isAdd = ScriptContext_ReadHalfWord(ctx); // 1 = Aggiungi, 0 = Sottrai
-    u16 amount = ScriptContext_ReadHalfWord(ctx); // Se 0 legge e basta
-    u16 *statusVar = ScriptContext_GetVarPointer(ctx); // 0 = Ok, 1 = Bloccato dal Limite
+    u16 isAdd = ScriptContext_ReadHalfWord(ctx);
+    u16 amount = ScriptContext_ReadHalfWord(ctx);
+    u16 *statusVar = ScriptContext_GetVarPointer(ctx);
 
-    Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
-
-    int monData = MON_DATA_HP_EV;
-    switch(statIndex) {
-        case 0: monData = MON_DATA_HP_EV; break;
-        case 1: monData = MON_DATA_ATK_EV; break;
-        case 2: monData = MON_DATA_DEF_EV; break;
-        case 3: monData = MON_DATA_SPATK_EV; break;
-        case 4: monData = MON_DATA_SPDEF_EV; break;
-        case 5: monData = MON_DATA_SPEED_EV; break;
+    if (statIndex >= STAT_MAX) {
+        *statusVar = 0;
+        return FALSE;
     }
 
+    Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
+    int monData = MON_DATA_HP_EV + statIndex;
     u32 currentEV = Pokemon_GetValue(mon, monData, NULL);
 
     if (amount == 0) {
@@ -1170,56 +1167,32 @@ BOOL ScrCmd_ModifyEV(ScriptContext *ctx)
         return FALSE;
     }
 
-    u32 totalEV = Pokemon_GetValue(mon, MON_DATA_HP_EV, NULL) +
-                  Pokemon_GetValue(mon, MON_DATA_ATK_EV, NULL) +
-                  Pokemon_GetValue(mon, MON_DATA_DEF_EV, NULL) +
-                  Pokemon_GetValue(mon, MON_DATA_SPATK_EV, NULL) +
-                  Pokemon_GetValue(mon, MON_DATA_SPDEF_EV, NULL) +
-                  Pokemon_GetValue(mon, MON_DATA_SPEED_EV, NULL);
+    u32 totalEV = Guru_GetEVTotal(mon);
+    u32 newVal;
 
-    *statusVar = 0; // Tutto OK di default
+    *statusVar = 0;
 
     if (isAdd) {
-        u32 availableStat = (currentEV < 252) ? (252 - currentEV) : 0;
-        u32 availableTotal = (totalEV < 510) ? (510 - totalEV) : 0;
+        u32 availableStat = (currentEV < GURU_MAX_EVS_SINGLE_STAT) ? (GURU_MAX_EVS_SINGLE_STAT - currentEV) : 0;
+        u32 availableTotal = (totalEV < MAX_EVS_ALL_STATS) ? (MAX_EVS_ALL_STATS - totalEV) : 0;
         u32 maxAdd = (availableStat < availableTotal) ? availableStat : availableTotal;
 
         if (amount > maxAdd) {
             amount = maxAdd;
-            *statusVar = 1; // Ha sbattuto contro il limite!
+            *statusVar = 1;
         }
-        u32 newVal = currentEV + amount;
-        Pokemon_SetValue(mon, monData, &newVal);
+
+        newVal = currentEV + amount;
     } else {
         if (amount > currentEV) {
             amount = currentEV;
-            *statusVar = 1; // Non può scendere sotto 0!
+            *statusVar = 1;
         }
-        u32 newVal = currentEV - amount;
-        Pokemon_SetValue(mon, monData, &newVal);
+
+        newVal = currentEV - amount;
     }
 
+    Pokemon_SetValue(mon, monData, &newVal);
     Pokemon_CalcLevelAndStats(mon);
-    return FALSE;
-}
-
-BOOL ScrCmd_ProcessGuruMoney(ScriptContext *ctx)
-{
-    FieldSystem *fieldSystem = ctx->fieldSystem;
-    u16 price = ScriptContext_GetVar(ctx);
-    u16 actionType = ScriptContext_ReadHalfWord(ctx); // 0 = Controlla, 1 = Paga
-    u16 *statusVar = ScriptContext_GetVarPointer(ctx);
-
-    TrainerInfo *trainerInfo = SaveData_GetTrainerInfo(fieldSystem->saveData);
-    u32 currentMoney = TrainerInfo_Money(trainerInfo);
-
-    if (currentMoney >= price) {
-        if (actionType == 1) { // Se è 1, preleva anche i soldi!
-            TrainerInfo_SetMoney(trainerInfo, currentMoney - price);
-        }
-        *statusVar = 1; // Tutto ok
-    } else {
-        *statusVar = 0; // Soldi insufficienti
-    }
     return FALSE;
 }

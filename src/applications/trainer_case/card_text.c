@@ -221,8 +221,7 @@ void TrainerCard_DrawFrontText(Window windows[], const TrainerCase *trainerCase)
 
     //TrainerCard_DrawNumber(&windows[TRAINER_CARD_WINDOW_SCORE], TRAINER_CARD_WINDOW_PARTIAL_WIDTH * TILE_WIDTH_PIXELS, 0, 0, string, trainerCard->score, 9, PADDING_MODE_SPACES);
     // --- HACK LEVEL CAP: Stampiamo etichetta e numero ---
-    extern SaveData *gSaveDataPtr;
-    u32 currentCap = GetHardLevelCap(gSaveDataPtr);
+    u32 currentCap = GetHardLevelCap(SaveData_Ptr());
 
     // Dividiamo le due parole in due array separati
     charcode_t lvText[] = { 0x0136, 0x0140, 0xFFFF }; // "LV"

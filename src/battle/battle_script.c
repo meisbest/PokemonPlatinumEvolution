@@ -9762,8 +9762,7 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
             }
 
             // --- HACK DEL LEVEL CAP ---
-            extern SaveData *gSaveDataPtr;
-            u32 levelCap = GetHardLevelCap(gSaveDataPtr);
+            u32 levelCap = GetHardLevelCap(SaveData_Ptr());
 
             u32 currentLevel = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
             u32 currentExp = Pokemon_GetValue(mon, MON_DATA_EXPERIENCE, NULL);

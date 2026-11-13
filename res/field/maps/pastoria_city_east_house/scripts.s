@@ -60,29 +60,6 @@
     .short \destStatus
 .endm
 
-.macro GuruCmd_CheckMoney priceVar, destStatus
-    .short 0x0242
-    .short \priceVar
-    .short 0
-    .short \destStatus
-.endm
-
-.macro GuruCmd_TakeMoney priceVar, destStatus
-    .short 0x0242
-    .short \priceVar
-    .short 1
-    .short \destStatus
-.endm
-
-.macro GuruCmd_InitListMenu anchorX, anchorY, initialCursorPos, canExitWithB, destVar
-    .short 0x0045
-    .byte \anchorX, \anchorY, \initialCursorPos, \canExitWithB
-    .short \destVar
-.endm
-
-.macro GuruCmd_WaitAB
-    .short 0x0032
-.endm
 @ -----------------------------
 
 PastoriaCityEastHouse_MoveManiac:
@@ -91,18 +68,14 @@ PastoriaCityEastHouse_MoveManiac:
     FacePlayer
     @ BufferItemNameWithArticle 4, ITEM_HEART_SCALE
     GoToIfUnset FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC, PastoriaCityEastHouse_CheckHeartScale
-    SetVar VAR_0x8008, 5000
-    GuruCmd_CheckMoney VAR_0x8008, VAR_RESULT
-    GoToIfEq VAR_RESULT, FALSE, PastoriaCityEastHouse_ComeBackWithHeartScale
+    GoToIfNotEnoughMoney 5000, PastoriaCityEastHouse_ComeBackWithHeartScale
     GoTo PastoriaCityEastHouse_TryTeachMove
 
 PastoriaCityEastHouse_CheckHeartScale:
     SetFlag FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC
     Message PastoriaCityEastHouse_Text_TeachMoveForHeartScale
     @CheckItem ITEM_HEART_SCALE, 1, VAR_RESULT
-    SetVar VAR_0x8008, 5000
-    GuruCmd_CheckMoney VAR_0x8008, VAR_RESULT
-    GoToIfEq VAR_RESULT, 0, PastoriaCityEastHouse_ComeBackWithHeartScale
+    GoToIfNotEnoughMoney 5000, PastoriaCityEastHouse_ComeBackWithHeartScale
     GoTo PastoriaCityEastHouse_TryTeachMove
 
 PastoriaCityEastHouse_ComeBackWithHeartScale:
@@ -139,8 +112,7 @@ PastoriaCityEastHouse_TryTeachMove:
     WaitFadeScreen
     GoToIfEq VAR_RESULT, 0xFF, PastoriaCityEastHouse_ComeBackWithHeartScale
     @RemoveItem ITEM_HEART_SCALE, 1, VAR_RESULT
-    SetVar VAR_0x8008, 5000
-    GuruCmd_TakeMoney VAR_0x8008, VAR_RESULT
+    RemoveMoney 5000
     BufferPlayerName 3
     Message PastoriaCityEastHouse_Text_HandedOverHeartScale
     WaitButton
@@ -172,7 +144,7 @@ _GuruScript:
 _GuruMenu:
     Message 18
     
-    GuruCmd_InitListMenu 17, 1, 0, 1, VAR_RESULT
+    InitLocalTextListMenu 17, 1, 0, VAR_RESULT, 1
     AddListMenuEntry 28, 0, 255
     AddListMenuEntry 29, 1, 255
     AddListMenuEntry 30, 2, 255
@@ -195,7 +167,7 @@ _GuruMenu:
 _GuruAbility:
     GuruCmd_GetPrice 0, VAR_0x8008
     GoToIfEq VAR_0x8008, 65000, _GuruNoBadges
-    GuruCmd_CheckMoney VAR_0x8008, VAR_RESULT
+    CheckMoney2 VAR_RESULT, VAR_0x8008
     GoToIfEq VAR_RESULT, 0, _GuruNoMoney
 
     Message 19 
@@ -230,9 +202,9 @@ _GuruAbilityFree:
     GoTo _GuruMenu
 
 _GuruAbilityPay:
-    GuruCmd_TakeMoney VAR_0x8008, VAR_RESULT
+    RemoveMoney2 VAR_0x8008
     Message 85
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruExecuteAbility
 
@@ -240,7 +212,7 @@ _GuruExecuteAbility:
     GuruCmd_ApplyAbility VAR_0x8005, VAR_0x8007
     PlayFanfare SE_CONFIRM_sseq_3
     Message 22
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
@@ -250,7 +222,7 @@ _GuruExecuteAbility:
 _GuruNature:
     GuruCmd_GetPrice 1, VAR_0x8008
     GoToIfEq VAR_0x8008, 65000, _GuruNoBadges
-    GuruCmd_CheckMoney VAR_0x8008, VAR_RESULT
+    CheckMoney2 VAR_RESULT, VAR_0x8008
     GoToIfEq VAR_RESULT, 0, _GuruNoMoney
 
     Message 19 
@@ -269,7 +241,7 @@ _GuruNature:
     GoToIfEq VAR_0x8006, 1, _GuruEgg
 
     Message 34
-    GuruCmd_InitListMenu 17, 1, 0, 1, VAR_0x8007
+    InitLocalTextListMenu 17, 1, 0, VAR_0x8007, 1
     AddListMenuEntry 35, 0, 255
     AddListMenuEntry 36, 1, 255
     AddListMenuEntry 37, 2, 255
@@ -318,9 +290,9 @@ _GuruNatureFree:
     GoTo _GuruMenu
 
 _GuruNaturePay:
-    GuruCmd_TakeMoney VAR_0x8008, VAR_RESULT
+    RemoveMoney2 VAR_0x8008
     Message 85
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruExecuteNature
 
@@ -328,7 +300,7 @@ _GuruExecuteNature:
     GuruCmd_ApplyNature VAR_0x8005, VAR_0x8007
     PlayFanfare SE_CONFIRM_sseq_3
     Message 22
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
@@ -354,7 +326,7 @@ _GuruResetEVs:
     GuruCmd_ResetEVs VAR_0x8005
     PlayFanfare SE_CONFIRM_sseq_3
     Message 84 
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
@@ -364,7 +336,7 @@ _GuruResetEVs:
 _GuruIVs:
     GuruCmd_GetPrice 0, VAR_0x8008
     GoToIfEq VAR_0x8008, 65000, _GuruNoBadges
-    GuruCmd_CheckMoney VAR_0x8008, VAR_RESULT
+    CheckMoney2 VAR_RESULT, VAR_0x8008
     GoToIfEq VAR_RESULT, 0, _GuruNoMoney
 
     Message 19 
@@ -392,21 +364,21 @@ _GuruIVs:
     GoTo _GuruMenu
 
 _GuruIVPay:
-    GuruCmd_TakeMoney VAR_0x8008, VAR_RESULT
+    RemoveMoney2 VAR_0x8008
     Message 85
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruIVLoop
 
 _GuruIVLoop:
     Message 61 
-    GuruCmd_InitListMenu 17, 1, 0, 1, VAR_0x8009
-    AddListMenuEntry 62, 0, 255 
-    AddListMenuEntry 63, 1, 255 
-    AddListMenuEntry 64, 2, 255 
-    AddListMenuEntry 65, 3, 255 
-    AddListMenuEntry 66, 4, 255 
-    AddListMenuEntry 67, 5, 255 
+    InitLocalTextListMenu 17, 1, 0, VAR_0x8009, 1
+    AddListMenuEntry 62, STAT_HP, 255 
+    AddListMenuEntry 63, STAT_ATTACK, 255 
+    AddListMenuEntry 64, STAT_DEFENSE, 255 
+    AddListMenuEntry 65, STAT_SPECIAL_ATTACK, 255 
+    AddListMenuEntry 66, STAT_SPECIAL_DEFENSE, 255 
+    AddListMenuEntry 67, STAT_SPEED, 255 
     AddListMenuEntry 68, 6, 255 
     ShowListMenu
     CloseMessage
@@ -424,7 +396,7 @@ _GuruIVLoop:
 
 _GuruIVValueLoop:
     Message 69 
-    GuruCmd_InitListMenu 17, 1, 0, 1, VAR_RESULT
+    InitLocalTextListMenu 17, 1, 0, VAR_RESULT, 1
     AddListMenuEntry 70, 0, 255 
     AddListMenuEntry 71, 1, 255 
     AddListMenuEntry 72, 2, 255 
@@ -458,7 +430,7 @@ _IV0:
 _IVSuccess:
     PlayFanfare SE_CONFIRM_sseq_3
     Message 22
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruIVLoop
 
@@ -468,7 +440,7 @@ _IVSuccess:
 _GuruEVs:
     GuruCmd_GetPrice 2, VAR_0x8008
     GoToIfEq VAR_0x8008, 65000, _GuruNoBadges
-    GuruCmd_CheckMoney VAR_0x8008, VAR_RESULT
+    CheckMoney2 VAR_RESULT, VAR_0x8008
     GoToIfEq VAR_RESULT, 0, _GuruNoMoney
 
     Message 19 
@@ -496,21 +468,21 @@ _GuruEVs:
     GoTo _GuruMenu
 
 _GuruEVPay:
-    GuruCmd_TakeMoney VAR_0x8008, VAR_RESULT
+    RemoveMoney2 VAR_0x8008
     Message 85
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruEVLoop
 
 _GuruEVLoop:
     Message 61 
-    GuruCmd_InitListMenu 17, 1, 0, 1, VAR_0x8009
-    AddListMenuEntry 62, 0, 255
-    AddListMenuEntry 63, 1, 255
-    AddListMenuEntry 64, 2, 255
-    AddListMenuEntry 65, 3, 255
-    AddListMenuEntry 66, 4, 255
-    AddListMenuEntry 67, 5, 255
+    InitLocalTextListMenu 17, 1, 0, VAR_0x8009, 1
+    AddListMenuEntry 62, STAT_HP, 255
+    AddListMenuEntry 63, STAT_ATTACK, 255
+    AddListMenuEntry 64, STAT_DEFENSE, 255
+    AddListMenuEntry 65, STAT_SPECIAL_ATTACK, 255
+    AddListMenuEntry 66, STAT_SPECIAL_DEFENSE, 255
+    AddListMenuEntry 67, STAT_SPEED, 255
     AddListMenuEntry 68, 6, 255
     ShowListMenu
     CloseMessage
@@ -531,7 +503,7 @@ _GuruEVValueLoop:
     BufferNumber 0, VAR_0x800A
 
     Message 74 
-    GuruCmd_InitListMenu 17, 1, 0, 1, VAR_RESULT
+    InitLocalTextListMenu 17, 1, 0, VAR_RESULT, 1
     AddListMenuEntry 75, 0, 255 
     AddListMenuEntry 76, 1, 255 
     AddListMenuEntry 77, 2, 255 
@@ -576,13 +548,13 @@ _EVCheckLimit:
     GoToIfEq VAR_0x8006, 1, _EVLimitReaced
     PlayFanfare SE_CONFIRM_sseq_3
     Message 22
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruEVValueLoop
 
 _EVLimitReaced:
     Message 81 
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruEVValueLoop
 
@@ -591,31 +563,31 @@ _EVLimitReaced:
 @ ==========================================================
 _GuruNoMoney:
     Message 23
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
 _GuruNoBadges:
     Message 24
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
 _GuruOneAbility:
     Message 25
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
 _GuruEgg:
     Message 26
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     GoTo _GuruMenu
 
 _GuruCancel:
     Message 27
-    GuruCmd_WaitAB
+    WaitABPadPress
     CloseMessage
     ReleaseAll
     End

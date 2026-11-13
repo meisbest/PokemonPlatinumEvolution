@@ -583,7 +583,7 @@ ScriptCommand(SCRCMD_MYSTERYGIFTGIVE,                                      ScrCm
 ScriptCommand(SCRCMD_RESETEVS,                                             ScrCmd_ResetEVs)                         // Era ScrCmd_Dummy23F (Indice 0x023F)
 ScriptCommand(SCRCMD_SETIV,                                                ScrCmd_SetIV)                            // Era ScrCmd_Dummy240 (Indice 0x0240)  
 ScriptCommand(SCRCMD_MODIFYEV,                                             ScrCmd_ModifyEV)                         // Era ScrCmd_Dummy241 (Indice 0x0241)
-ScriptCommand(SCRCMD_PROCESSGURUMONEY,                                     ScrCmd_ProcessGuruMoney)                 // Era ScrCmd_Dummy242 (Indice 0x0242)
+ScriptCommand(SCRCMD_DUMMY242,                                             ScrCmd_Dummy242)
 ScriptCommand(SCRCMD_CHOOSECUSTOMMESSAGEWORD,                              ScrCmd_ChooseCustomMessageWord)
 ScriptCommand(SCRCMD_CHOOSETWOCUSTOMMESSAGEWORDS,                          ScrCmd_ChooseTwoCustomMessageWords)
 ScriptCommand(SCRCMD_BUFFERCUSTOMMESSAGEWORD,                              ScrCmd_BufferCustomMessageWord)

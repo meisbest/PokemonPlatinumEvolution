@@ -66,13 +66,10 @@ static void SetBackgroundAndTerrain(FieldBattleDTO *dto, const FieldSystem *fiel
 
 // --- INIZIO LEVEL CAP PERSONALIZZATO ---
 
-// Funzione d'appoggio per leggere le variabili in sicurezza
+// Legge il valore di una variabile di gioco (VAR_*).
+// VarsFlags_GetVarAddress non restituisce mai NULL: con un ID fuori range va in assert.
 static u16 ReadVarSafe(VarsFlags *varsFlags, u16 varID) {
-    u16 *varAddress = VarsFlags_GetVarAddress(varsFlags, varID);
-    if (varAddress == NULL) {
-        return 0; // Se la variabile non esiste, restituisci 0
-    }
-    return *varAddress; // Altrimenti restituisci il suo valore
+    return *VarsFlags_GetVarAddress(varsFlags, varID);
 }
 
 u32 GetHardLevelCap(SaveData *saveData) {
