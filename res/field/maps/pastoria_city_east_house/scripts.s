@@ -224,7 +224,8 @@ _GuruNature:
     GoTo _GuruMenu
 
 _GuruNatureFree:
-    Message PastoriaCityEastHouse_Text_GuruChampionFree
+    BufferNatureName 0, VAR_0x8007
+    Message PastoriaCityEastHouse_Text_GuruChampionFreeNature
     ShowYesNoMenu VAR_RESULT
     CloseMessage
     GoToIfEq VAR_RESULT, MENU_YES, _GuruExecuteNature

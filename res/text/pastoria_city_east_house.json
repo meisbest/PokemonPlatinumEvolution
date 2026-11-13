@@ -435,6 +435,14 @@
     {
       "id": "PastoriaCityEastHouse_Text_GuruCurrentEV",
       "en_US": "Current EV: {STRVAR_1 51, 0, 0}\r"
+    },
+    {
+      "id": "PastoriaCityEastHouse_Text_GuruChampionFreeNature",
+      "en_US": [
+        "Oh, you are the Pokémon Champion!\n",
+        "I’ll do it for free.\f",
+        "Change its Nature to {STRVAR_1 7, 0, 0}?\r"
+      ]
     }
   ]
 }

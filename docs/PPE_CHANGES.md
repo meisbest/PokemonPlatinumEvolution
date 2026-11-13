@@ -140,6 +140,9 @@ Legenda: ⚠️ = problema noto o da verificare.
     mantenendo sesso, abilità attuale e cromaticità.
   - Effetto collaterale noto: cambiare il PID può cambiare l'evoluzione di Wurmple
     (Silcoon/Cascoon dipende dal PID).
+  - Se il servizio è gratis (Campione), il cambio natura ha un testo suo con il nome
+    della natura scelta (`PastoriaCityEastHouse_Text_GuruChampionFreeNature`). Prima
+    riusava il testo dell'abilità.
   - Fino al 2026-11-13, premere B nella lista delle nature e poi confermare (o
     essere Campione) **bloccava il gioco**: lo script non riconosceva `MENU_CANCEL`
     e chiedeva una natura inesistente. Ora B torna al menu e il comando C rifiuta
@@ -346,3 +349,4 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `fa9b9fc7b` | Enrico | Guru e level cap: funzioni e comandi upstream al posto dei nostri doppioni |
 | 2026-11-13 | `24b75cc95` | Enrico | Guru: B nella lista delle nature non blocca più il gioco |
 | 2026-11-13 | `121e1d2d3` | Enrico | Guru: macro con nome, costanti, testi con nome, `PlaySE` |
+| 2026-11-13 | (questo) | Enrico | Guru: testo corretto per il cambio natura gratuito |
