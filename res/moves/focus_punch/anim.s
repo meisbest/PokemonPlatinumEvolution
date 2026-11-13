@@ -1,12 +1,12 @@
 #include "macros/btlanimcmd.inc"
 
 L_0:
-    BtlAnimCmd_013 L_1, L_2
+    JumpIfEffectChanceOdd L_1, L_2
     End
 
 L_1:
     LoadParticleResource 0, focus_punch_spa
-    PlaySoundEffectL SEQ_SE_DP_W082
+    PlaySoundEffectL SEQ_SE_DP_W082_sseq
     CreateEmitter 0, 2, EMITTER_CB_SET_POS_TO_ATTACKER
     WaitForAllEmitters
     UnloadParticleSystem 0
@@ -19,7 +19,7 @@ L_2:
     CreateEmitter 0, 5, EMITTER_CB_SET_POS_TO_DEFENDER
     CreateEmitter 0, 1, EMITTER_CB_SET_POS_TO_DEFENDER
     CreateEmitter 0, 0, EMITTER_CB_SET_POS_TO_DEFENDER
-    PlaySoundEffectR SEQ_SE_DP_W025B
+    PlaySoundEffectR SEQ_SE_DP_W025B_sseq
     ResetVars
     SetVar BATTLE_ANIM_VAR_BG_SCREEN_MODE, 1
     SwitchBg 31, BATTLE_BG_SWITCH_MODE_FADE

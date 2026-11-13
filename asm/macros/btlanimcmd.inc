@@ -1,4 +1,4 @@
-#include "generated/sdat.h"
+#include "res/sound/pl_sound_data.naix"
 #include "constants/battle/battle_anim.h"
 #include "res/graphics/battle/moves/anim_ncer.naix"
 #include "res/graphics/battle/moves/anim_nanr.naix"
@@ -39,7 +39,7 @@
     .endm
 
     // Plays a sound effect.
-    // seqID: The ID of the sound effect to play. See build/generated/sdat.h for a list of sound effect IDs.
+    // seqID: The ID of the sound effect to play. See build/res/sound/pl_sound_data.naix for a list of sound effect IDs.
     .macro PlaySoundEffect seqID:req
     .long BTLANIMCMD_PLAYSOUNDEFFECT
     .long \seqID
@@ -83,16 +83,22 @@
     .long \value
     .endm
 
-    .macro BtlAnimCmd_013 arg0:req, arg1:req
-    .long BTLANIMCMD_013
-    .long (\arg0 - .) / 4
-    .long (\arg1 - .) / 4
+    // Jumps to one of two addresses based on the parity of the secondary effect chance roll
+    // addrEven: Address to jump to if the secondary effect chance roll is even
+    // addrOdd: Address to jump to if the secondary effect chance roll is odd
+    .macro JumpIfEffectChanceOdd addrEven:req, addrOdd:req
+    .long BTLANIMCMD_JUMPIFEFFECTCHANCEODD
+    .long (\addrEven - .) / 4
+    .long (\addrOdd - .) / 4
     .endm
 
-    .macro BtlAnimCmd_014 arg0:req, arg1:req
-    .long BTLANIMCMD_014
-    .long \arg0
-    .long \arg1
+    // Jumps by the specified word offset if the secondary effect chance equals the specified value
+    // effectChance: Effect chance value to compare against the move's effect chance
+    // offset: Number of words to advance the script pointer by if the effect chance matches
+    .macro JumpIfEffectChance effectChance:req, offset:req
+    .long BTLANIMCMD_JUMPIFEFFECTCHANCE
+    .long \effectChance
+    .long \offset
     .endm
 
     // Jumps to the specified address
@@ -152,7 +158,7 @@
     .endm
 
     // Plays a sound effect with panning
-    // seqID: The ID of the sound effect to play. See build/generated/sdat.h
+    // seqID: The ID of the sound effect to play. See build/res/sound/pl_sound_data.naix
     // pan: The pan of the sound effect. [-117, 117] See BATTLE_SOUND_PAN_*
     // Note: In most cases, using PlaySoundEffectL/C/R is preferred.
     .macro PlayPannedSoundEffect seqID:req, pan:req
@@ -182,7 +188,7 @@
     .endm
 
     // Plays a sound effect that moves from startPan to endPan over time, adjusted for attacker/defender positions
-    // seqID: The ID of the sound effect to play. See build/generated/sdat.h
+    // seqID: The ID of the sound effect to play. See build/res/sound/pl_sound_data.naix
     // startPan: The starting pan of the sound effect.
     // endPan: The ending pan of the sound effect.
     // panStep: The amount to change the pan by each interval.
@@ -199,7 +205,7 @@
     .endm
 
     // Plays a sound effect N times in a loop with panning
-    // seqID: The ID of the sound effect to play. See build/generated/sdat.h
+    // seqID: The ID of the sound effect to play. See build/res/sound/pl_sound_data.naix
     // pan: The pan of the sound effect.
     // applyInterval: The number of frames between each sound effect play.
     // repeatCount: The number of times to repeat the sound effect.
@@ -225,7 +231,7 @@
     .endm
 
     // Plays a sound effect after a delay
-    // seqID: The ID of the sound effect to play. See build/generated/sdat.h
+    // seqID: The ID of the sound effect to play. See build/res/sound/pl_sound_data.naix
     // pan: The pan of the sound effect.
     // delay: The number of frames to wait before playing the sound effect.
     .macro PlayDelayedSoundEffect seqID:req, pan:req, delay:req
@@ -288,7 +294,7 @@
     .endm
 
     .macro BtlAnimCmd_033 addr:req
-    .long BTLANIMCMD_033
+    .long BTLANIMCMD_JUMPIFUNK_01
     .long \addr
     .endm
 
@@ -305,7 +311,7 @@
     .endm
 
     // Plays a sound effect that moves from startPan to endPan over time, without adjusting for attacker/defender positions
-    // seqID: The ID of the sound effect to play. See build/generated/sdat.h
+    // seqID: The ID of the sound effect to play. See build/res/sound/pl_sound_data.naix
     // startPan: The starting pan of the sound effect.
     // endPan: The ending pan of the sound effect.
     // panStep: The amount to change the pan by each interval.
@@ -320,7 +326,7 @@
     .endm
 
     // Plays a sound effect that moves from startPan to endPan over time, adjusted for attacker/defender positions
-    // seqID: The ID of the sound effect to play. See build/generated/sdat.h
+    // seqID: The ID of the sound effect to play. See build/res/sound/pl_sound_data.naix
     // startPan: The starting pan of the sound effect.
     // endPan: The ending pan of the sound effect.
     // panStep: The amount to change the pan by each interval.
@@ -345,7 +351,7 @@
     // 43: Nop
 
     // Stops a sound effect
-    // seqID: The ID of the sound effect to stop. See build/generated/sdat.h
+    // seqID: The ID of the sound effect to stop. See build/res/sound/pl_sound_data.naix
     .macro StopSoundEffect seqID:req
     .long BTLANIMCMD_STOPSOUNDEFFECT
     .long \seqID
@@ -550,12 +556,12 @@
     .endm
 
     .macro BtlAnimCmd_068 arg0:req
-    .long BTLANIMCMD_068
+    .long BTLANIMCMD_STARTBATTLERSLIDEIN
     .long \arg0
     .endm
 
     .macro BtlAnimCmd_069 arg0:req
-    .long BTLANIMCMD_069
+    .long BTLANIMCMD_STARTBATTLERSLIDEOUT
     .long \arg0
     .endm
 
@@ -711,14 +717,14 @@
     .endm
 
     .macro BtlAnimCmd_082 arg0:req, arg1:req, arg2:req
-    .long BTLANIMCMD_082
+    .long BTLANIMCMD_STARTPOKEMONSPRITEDRAWTASK
     .long \arg0
     .long \arg1
     .long \arg2
     .endm
 
     .macro BtlAnimCmd_083 arg0:req
-    .long BTLANIMCMD_083
+    .long BTLANIMCMD_STOPPOKEMONSPRITEDRAWTASK
     .long \arg0
     .endm
 

@@ -77,8 +77,11 @@ Flusso di collaborazione:
   ```bash
   git diff b2cd286f3 ppe          # le modifiche di PPE
   ```
-  Dopo il merge ponte e il primo AGGIORNA, `git diff origin/main...ppe` torna a
-  funzionare normalmente.
+  Dopo il merge ponte e il primo AGGIORNA (fatto il 2026-11-13),
+  `git diff origin/main...ppe` funziona normalmente ed è il modo giusto per
+  vedere le modifiche PPE.
+- Il branch locale `backup-pre-aggiorna` (→ `783cb676c`) è un backup di prima
+  del ponte e del primo AGGIORNA. Non va pubblicato.
 - In `stash@{0}`...`stash@{3}` ci sono 4 stash del 22/06/2026. Contengono solo
   cambi di permesso dei file (755 → 644), non codice. `stash@{0}` è la copia
   riscritta da filter-branch e `git stash show` non la legge (usare
@@ -132,7 +135,8 @@ Flusso di collaborazione:
 5. **Se il merge è pulito:**
    - `make update` (aggiorna i subprojects; serve dopo ogni merge da upstream)
    - `make release` (vedi Build: `make` da solo esegue anche `check`, che con un
-     gioco modificato fallisce per forza)
+     gioco modificato fallisce per forza). Se fallisce subito con "old version
+     of meson": `make distclean` e poi di nuovo `make release`.
    - se la build fallisce: **non fare push**. Riporta all'utente l'errore, con
      un'analisi della causa e una proposta di soluzione.
    - se la build passa: esegui i **controlli semantici DOPO il merge**. Proponi gli
@@ -198,7 +202,8 @@ La lista dei simboli e dei file da cui dipendiamo è nella sezione
 
 ## Build
 
-Ambiente: WSL Ubuntu, repo in `~/pokeplatinum`. Guida completa: [INSTALL.md](INSTALL.md).
+Ambiente: WSL Ubuntu, repo in `~/pokeplatinum`. Setup rapido per PPE:
+[SETUP.md](SETUP.md). Guida completa upstream: [INSTALL.md](INSTALL.md).
 
 ```bash
 make release        # compila la ROM: build/pokeplatinum.us.nds
@@ -219,6 +224,10 @@ make clean          # pulisce gli oggetti di build
 | Problema | Soluzione |
 |----------|-----------|
 | Build fallisce dopo un merge da upstream | `make update`, poi rifai `make release`. |
+| Dopo `make update`: `build.dat references functions or classes that don't exist ... generated with an old version of meson` | Upstream ha aggiornato meson (`MESON_VER` nel Makefile). Esegui `make distclean`, che cancella solo `build/`, poi `make release`. |
+| `make update` avvisa "command failed in some subprojects ... yyjson" | Innocuo se `subprojects/yyjson.wrap` e le patch non sono cambiati: meson non aveva niente da aggiornare. |
+| `nitrogfx`: `LF line endings aren't supported` su un `.pal` | Le palette JASC devono essere CRLF sul disco (`*.pal text eol=crlf` in `.gitattributes`). Il file è stato creato con un editor e mai riestratto da git: `rm <file>.pal && git checkout -- <file>.pal`. Nel repo resta LF (`i/lf`), come tutte le palette upstream. |
+| `make release NINJA="ninja -k 0"` → `Could not detect Ninja` | Meson legge la variabile `NINJA`. Per raccogliere tutti gli errori: `make setup_release && ninja -C build -k 0 pokeplatinum.us.nds`. |
 | `get_metroskrew.sh: Permission denied` | `chmod +x tools/devtools/get_metroskrew.sh`. Per salvarlo in git: `git update-index --chmod=+x tools/devtools/get_metroskrew.sh`. |
 | Script in `tools/` che perdono il permesso di esecuzione | Succede quando si modificano i file da Windows. Controlla con `git diff --summary` (righe "mode change 100755 => 100644") e ripristina con `git update-index --chmod=+x <file>`. |
 | Commit bloccato da "untracked content" nel submodule `subprojects/narc` | `cd subprojects/narc && git clean -fd && cd -` |

@@ -67,7 +67,11 @@ git merge origin/main
 
 1. `make update`: aggiorna meson locale, metroskrew e subprojects. È obbligatorio dopo ogni merge.
 2. `make release`. Non usare `make` da solo: include `check`, che con un gioco
-   modificato fallisce sempre.
+   modificato fallisce sempre. Se fallisce subito con "generated with an old
+   version of meson" (upstream ha aggiornato meson): `make distclean` e poi di
+   nuovo `make release`. Per raccogliere tutti gli errori in una sola passata:
+   `make setup_release && ninja -C build -k 0 pokeplatinum.us.nds`. Non usare
+   `NINJA=...`.
 3. Se la build **fallisce**: **niente push**. Riporta l'errore (le righe utili del
    log), un'analisi della causa (di solito un'API rinominata upstream che il codice
    PPE usa ancora) e una proposta di soluzione. Aspetta l'ok prima di modificare

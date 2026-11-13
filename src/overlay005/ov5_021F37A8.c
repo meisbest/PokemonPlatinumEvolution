@@ -13,6 +13,8 @@
 #include "map_object_move.h"
 #include "overworld_anim_manager.h"
 
+#include "res/graphics/field_effects/field_effects.naix"
+
 typedef struct {
     FieldEffectManager *unk_00;
 } UnkStruct_ov5_021F37D4;
@@ -63,9 +65,9 @@ void ov5_021F37C4(void *param0)
 
 static void ov5_021F37D4(UnkStruct_ov5_021F37D4 *param0)
 {
-    ov5_021DF9E0(param0->unk_00, 7, 89);
-    ov5_021DFA14(param0->unk_00, 7, 176);
-    ov5_021DFA3C(param0->unk_00, 8, 8, 1);
+    ov5_021DF9E0(param0->unk_00, 7, very_tall_grass_nsbmd);
+    ov5_021DFA14(param0->unk_00, 7, very_tall_grass_bin);
+    ov5_021DFA3C(param0->unk_00, 8, very_tall_grass_nsbtx, 1);
     ov5_021DF864(param0->unk_00, 9, 7, 7, 8, 0, Unk_ov5_02200634);
 }
 
@@ -114,7 +116,7 @@ static int ov5_021F38AC(OverworldAnimManager *param0, void *param1)
     v3->unk_18 = *v4;
     v3->unk_04 = MapObject_GetEffectiveGraphicsID(v3->unk_18.unk_18);
     v3->unk_08 = MapObject_GetLocalID(v3->unk_18.unk_18);
-    v3->unk_0C = MapObject_GetMapID(v3->unk_18.unk_18);
+    v3->unk_0C = MapObject_GetMapHeaderID(v3->unk_18.unk_18);
 
     v2.x = (((v3->unk_18.unk_00) << 4) * FX32_ONE);
     v2.z = (((v3->unk_18.unk_08) << 4) * FX32_ONE);

@@ -4,9 +4,9 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "constants/fieldmap.h"
 #include "generated/genders.h"
 #include "generated/hidden_locations.h"
-#include "generated/map_headers.h"
 #include "generated/signpost_types.h"
 
 #include "applications/town_map/defs.h"
@@ -62,7 +62,7 @@
 typedef struct TownMapCoordsToHeader {
     u16 x;
     u16 z;
-    enum MapHeader header;
+    enum MapHeaderID header;
 } TownMapCoordsToHeader;
 
 typedef struct TilemapRectCopyParams {
@@ -74,7 +74,7 @@ typedef struct TilemapRectCopyParams {
     u8 height;
 } TilemapRectCopyParams;
 
-static void SetHoveredLocation(TownMapAppData *appData, TownMapBlock *mapBlock, enum MapHeader mapHeader);
+static void SetHoveredLocation(TownMapAppData *appData, TownMapBlock *mapBlock, enum MapHeaderID mapHeader);
 static void EraseSignpost(TownMapAppData *appData);
 static void PrintBottomScreenHeader(TownMapAppData *appData, Window *window);
 static void MakeAppWindows(TownMapAppData *appData);
@@ -87,8 +87,8 @@ static void LoadLocationHistory(TownMapAppData *appData);
 static void Task_UpdateShownLocationHistoryIdx(SysTask *sysTask, void *appData);
 static void DeleteLocationHistorySprites(TownMapAppData *appData);
 static void HandleInput(TownMapAppData *appData, int heldKeys);
-static void LoadMapName(TownMapAppData *appData, enum MapHeader header, int x, int z);
-static void PrintLocationName(TownMapAppData *appData, Window *window, enum MapHeader header, int x, int z);
+static void LoadMapName(TownMapAppData *appData, enum MapHeaderID header, int x, int z);
+static void PrintLocationName(TownMapAppData *appData, Window *window, enum MapHeaderID header, int x, int z);
 static void PrintLocationDescription(TownMapAppData *appData, Window *window, TownMapBlock *mapBlock);
 static void UpdateBottomScreenText(TownMapAppData *appData);
 static void UpdateHoveredLocation(TownMapAppData *appData);
@@ -163,7 +163,7 @@ BOOL TownMap_FadeInBothScreens(TownMapAppData *appData)
     appData->dummy_14 = 0;
 
     StartScreenFade(FADE_MAIN_THEN_SUB, FADE_TYPE_CIRCLE_IN, FADE_TYPE_UNK_37, COLOR_BLACK, 6, 1, appData->heapID);
-    Sound_PlayEffect(SEQ_SE_DP_MEKURU);
+    Sound_PlayEffect(SEQ_SE_DP_MEKURU_sseq);
     ResetScreenMasterBrightness(DS_SCREEN_MAIN);
     ResetScreenMasterBrightness(DS_SCREEN_SUB);
 
@@ -176,7 +176,7 @@ BOOL TownMap_FadeOutBothScreens(TownMapAppData *appData)
     appData->dummy_14 = 0;
 
     StartScreenFade(FADE_SUB_THEN_MAIN, FADE_TYPE_CIRCLE_OUT, FADE_TYPE_UNK_36, COLOR_BLACK, 6, 1, appData->heapID);
-    Sound_PlayEffect(SEQ_SE_DP_MEKURU2);
+    Sound_PlayEffect(SEQ_SE_DP_MEKURU2_sseq);
     return FALSE;
 }
 
@@ -185,7 +185,7 @@ BOOL TownMap_FadeInTopScreen(TownMapAppData *appData)
     appData->dummy_14 = 0;
 
     StartScreenFade(FADE_MAIN_ONLY, FADE_TYPE_CIRCLE_IN, FADE_TYPE_CIRCLE_IN, COLOR_BLACK, 6, 1, appData->heapID);
-    Sound_PlayEffect(SEQ_SE_DP_MEKURU);
+    Sound_PlayEffect(SEQ_SE_DP_MEKURU_sseq);
     ResetScreenMasterBrightness(DS_SCREEN_MAIN);
 
     G2_SetBlendAlpha(GX_BLEND_PLANEMASK_BG2, GX_BLEND_PLANEMASK_BG3, 28, 4);
@@ -197,7 +197,7 @@ BOOL TownMap_FadeOutTopScreen(TownMapAppData *appData)
     appData->dummy_14 = 0;
 
     StartScreenFade(FADE_MAIN_ONLY, FADE_TYPE_CIRCLE_OUT, FADE_TYPE_CIRCLE_OUT, COLOR_BLACK, 6, 1, appData->heapID);
-    Sound_PlayEffect(SEQ_SE_DP_MEKURU2);
+    Sound_PlayEffect(SEQ_SE_DP_MEKURU2_sseq);
 
     return FALSE;
 }
@@ -207,7 +207,7 @@ BOOL TownMap_HandleInput_Item(TownMapAppData *appData)
     TownMapGraphicsManager *graphicsMan = appData->graphicsMan;
 
     if (graphicsMan->zoomedInMapTransitionStage <= 1 && JOY_NEW(PAD_BUTTON_B)) {
-        Sound_PlayEffect(SEQ_SE_DP_DECIDE);
+        Sound_PlayEffect(SEQ_SE_DP_DECIDE_sseq);
         return TRUE;
     }
 
@@ -227,13 +227,13 @@ BOOL TownMap_HandleInput_Fly(TownMapAppData *appData)
     if (graphicsMan->zoomedInMapTransitionStage <= 1) {
         if (JOY_NEW(PAD_BUTTON_A)) {
             if (CanFlyToHoveredLocation(appData)) {
-                Sound_PlayEffect(SEQ_SE_DP_DECIDE);
+                Sound_PlayEffect(SEQ_SE_DP_DECIDE_sseq);
                 return TRUE;
             }
 
             return FALSE;
         } else if (JOY_NEW(PAD_BUTTON_B)) {
-            Sound_PlayEffect(SEQ_SE_DP_DECIDE);
+            Sound_PlayEffect(SEQ_SE_DP_DECIDE_sseq);
             return TRUE;
         }
     }
@@ -249,7 +249,7 @@ BOOL TownMap_HandleInput_Fly(TownMapAppData *appData)
 BOOL TownMap_HandleInput_WallMap(TownMapAppData *appData)
 {
     if (JOY_NEW(PAD_BUTTON_B)) {
-        Sound_PlayEffect(SEQ_SE_DP_DECIDE);
+        Sound_PlayEffect(SEQ_SE_DP_DECIDE_sseq);
         return TRUE;
     }
 
@@ -288,7 +288,7 @@ BOOL TownMap_UpdateDisplayedLocationInfo(TownMapAppData *appData)
 {
     TownMapGraphicsManager *graphicsMan = appData->graphicsMan;
     TownMapBlock *mapBlock = appData->hoveredMapBlock;
-    enum MapHeader header = appData->hoveredMapHeader;
+    enum MapHeaderID header = appData->hoveredMapHeader;
 
     if (!appData->locationChanged) {
         return FALSE;
@@ -305,7 +305,7 @@ BOOL TownMap_UpdateDisplayedLocationInfo(TownMapAppData *appData)
     PrintLocationDescription(appData, &(graphicsMan->windows[TOWN_MAP_WINDOW_LOCATION_DESCRIPTION]), mapBlock);
     String_Clear(appData->hoveredMapName);
     LoadMapName(appData, header, graphicsMan->cursorX, graphicsMan->cursorZ);
-    LoadSignpostContentGraphics(appData->bgConfig, BG_LAYER_SUB_0, BASE_TILE_SIGNPOST_GRAPHIC, PLTT_14, mapBlock->signpostType, mapBlock->signpostNARCMemberIdx, appData->heapID);
+    LoadSignpostContentGraphics(appData->bgConfig, BG_LAYER_SUB_0, BASE_TILE_SIGNPOST_GRAPHIC, 14, mapBlock->signpostType, mapBlock->signpostNARCMemberIdx, appData->heapID);
 
     Window *signpostWindow;
     if (mapBlock->signpostType == SIGNPOST_TYPE_MAP || mapBlock->signpostType == SIGNPOST_TYPE_ARROW) {
@@ -317,7 +317,7 @@ BOOL TownMap_UpdateDisplayedLocationInfo(TownMapAppData *appData)
     graphicsMan->signpostWindow = signpostWindow;
     graphicsMan->signpostType = mapBlock->signpostType;
 
-    Window_DrawSignpost(signpostWindow, 1, BASE_TILE_SIGNPOST_GRAPHIC, PLTT_14, mapBlock->signpostType);
+    Window_DrawSignpost(signpostWindow, 1, BASE_TILE_SIGNPOST_GRAPHIC, 14, mapBlock->signpostType);
     Window_FillTilemap(signpostWindow, 15);
     Text_AddPrinterWithParams(signpostWindow, FONT_MESSAGE, appData->hoveredMapName, 0, 0, TEXT_SPEED_NO_TRANSFER, NULL);
     Window_CopyToVRAM(signpostWindow);
@@ -462,7 +462,7 @@ static void UpdateHoveredLocation(TownMapAppData *appData)
     graphicsMan->hoveredBlock = TownMap_GetMapBlockAtPosition(appData->mapBlockList, graphicsMan->cursorX, graphicsMan->cursorZ, appData->unlockedHiddenLocations);
 }
 
-static void LoadMapName(TownMapAppData *appData, enum MapHeader header, int x, int z)
+static void LoadMapName(TownMapAppData *appData, enum MapHeaderID header, int x, int z)
 {
     static const TownMapCoordsToHeader notOnMainMatrix[] = {
         { .x = 11, .z = 19, .header = MAP_HEADER_MT_CORONET_1F_SOUTH },
@@ -496,7 +496,7 @@ static void LoadMapName(TownMapAppData *appData, enum MapHeader header, int x, i
     return;
 }
 
-static void PrintLocationName(TownMapAppData *appData, Window *window, enum MapHeader header, int x, int z)
+static void PrintLocationName(TownMapAppData *appData, Window *window, enum MapHeaderID header, int x, int z)
 {
     u32 xOffset;
     TextColor textColor;
@@ -605,7 +605,7 @@ static void DoZoomedMapMvt(TownMapAppData *appData)
     }
 }
 
-static void SetHoveredLocation(TownMapAppData *appData, TownMapBlock *block, enum MapHeader header)
+static void SetHoveredLocation(TownMapAppData *appData, TownMapBlock *block, enum MapHeaderID header)
 {
     appData->hoveredMapHeader = header;
     appData->hoveredMapBlock = block;
@@ -649,11 +649,11 @@ static void MakeAppWindows(TownMapAppData *appData)
 {
     TownMapGraphicsManager *graphicsMan = appData->graphicsMan;
 
-    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_LOCATION_NAME], BG_LAYER_MAIN_1, 3, 21, LOCATION_NAME_WINDOW_WIDTH, LOCATION_NAME_WINDOW_HEIGHT, PLTT_15, BASE_TILE_LOCATION_NAME);
-    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_SIGNPOST_NAME_1], BG_LAYER_SUB_0, 9, 3, SIGNPOST_NAME_1_WINDOW_WIDTH, SIGNPOST_NAME_1_WINDOW_HEIGHT, PLTT_14, BASE_TILE_SIGNPOST_NAME_1);
-    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_SIGNPOST_NAME_2], BG_LAYER_SUB_0, 2, 3, SIGNPOST_NAME_2_WINDOW_WIDTH, SIGNPOST_NAME_2_WINDOW_HEIGHT, PLTT_14, BASE_TILE_SIGNPOST_NAME_2);
-    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_LOCATION_DESCRIPTION], BG_LAYER_SUB_0, 1, 8, LOCATION_DESC_WINDOW_WIDTH, LOCATION_DESC_WINDOW_HEIGHT, PLTT_14, BASE_TILE_LOCATION_DESCRIPTION);
-    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_BOTTOM_SCREEN_HEADER], BG_LAYER_SUB_0, 11, 0, BOTTOM_SCREEN_HEADER_WINDOW_WIDTH, BOTTOM_SCREEN_HEADER_WINDOW_HEIGHT, PLTT_15, BASE_TILE_BOTTOM_SCREEN_HEADER);
+    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_LOCATION_NAME], BG_LAYER_MAIN_1, 3, 21, LOCATION_NAME_WINDOW_WIDTH, LOCATION_NAME_WINDOW_HEIGHT, 15, BASE_TILE_LOCATION_NAME);
+    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_SIGNPOST_NAME_1], BG_LAYER_SUB_0, 9, 3, SIGNPOST_NAME_1_WINDOW_WIDTH, SIGNPOST_NAME_1_WINDOW_HEIGHT, 14, BASE_TILE_SIGNPOST_NAME_1);
+    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_SIGNPOST_NAME_2], BG_LAYER_SUB_0, 2, 3, SIGNPOST_NAME_2_WINDOW_WIDTH, SIGNPOST_NAME_2_WINDOW_HEIGHT, 14, BASE_TILE_SIGNPOST_NAME_2);
+    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_LOCATION_DESCRIPTION], BG_LAYER_SUB_0, 1, 8, LOCATION_DESC_WINDOW_WIDTH, LOCATION_DESC_WINDOW_HEIGHT, 14, BASE_TILE_LOCATION_DESCRIPTION);
+    Window_Add(appData->bgConfig, &graphicsMan->windows[TOWN_MAP_WINDOW_BOTTOM_SCREEN_HEADER], BG_LAYER_SUB_0, 11, 0, BOTTOM_SCREEN_HEADER_WINDOW_WIDTH, BOTTOM_SCREEN_HEADER_WINDOW_HEIGHT, 15, BASE_TILE_BOTTOM_SCREEN_HEADER);
     Window_FillTilemap(&(graphicsMan->windows[TOWN_MAP_WINDOW_LOCATION_NAME]), 0);
     Window_FillTilemap(&(graphicsMan->windows[TOWN_MAP_WINDOW_SIGNPOST_NAME_1]), 0);
     Window_FillTilemap(&(graphicsMan->windows[TOWN_MAP_WINDOW_SIGNPOST_NAME_2]), 0);
@@ -810,7 +810,7 @@ static const SpriteTemplateFromResourceHeader sTownMapSpriteTemplates[] = {
         .z = 0,
         .animIdx = 0,
         .priority = 0,
-        .plttIdx = PLTT_0,
+        .plttIdx = 0,
         .vramType = NNS_G2D_VRAM_TYPE_2DSUB,
     },
     [SPRITE_TEMPLATE_CURSOR] = {
@@ -820,7 +820,7 @@ static const SpriteTemplateFromResourceHeader sTownMapSpriteTemplates[] = {
         .z = 0,
         .animIdx = 0,
         .priority = 0,
-        .plttIdx = PLTT_0,
+        .plttIdx = 0,
         .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
     },
     [SPRITE_TEMPLATE_PLAYER_ICONS] = {
@@ -830,7 +830,7 @@ static const SpriteTemplateFromResourceHeader sTownMapSpriteTemplates[] = {
         .z = 0,
         .animIdx = 0,
         .priority = 1,
-        .plttIdx = PLTT_1,
+        .plttIdx = 1,
         .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
     },
 };
@@ -854,9 +854,9 @@ static void CreateSprites(TownMapAppData *appData)
     Sprite_SetPositionXY(graphicsMan->cursorSprite, TOWN_MAP_GRID_X(graphicsMan->cursorX), TOWN_MAP_GRID_Y(graphicsMan->cursorZ));
 
     if (appData->context->trainerGender == GENDER_MALE) {
-        playerIconTemplate.plttIdx = PLTT_1;
+        playerIconTemplate.plttIdx = 1;
     } else {
-        playerIconTemplate.plttIdx = PLTT_0;
+        playerIconTemplate.plttIdx = 0;
     }
 
     graphicsMan->playerSprite = SpriteSystem_NewSpriteFromResourceHeader(appData->spriteSystem, appData->spriteMan, &playerIconTemplate);
@@ -913,7 +913,7 @@ static void LoadLocationHistory(TownMapAppData *appData)
         .z = 0,
         .animIdx = 0,
         .priority = 2,
-        .plttIdx = PLTT_2,
+        .plttIdx = 2,
         .vramType = NNS_G2D_VRAM_TYPE_2DMAIN,
     };
 
@@ -1024,7 +1024,7 @@ static void Task_SwitchBottomScreenToZoomedMap(SysTask *sysTask, void *_appData)
         Sprite_SetDrawFlag(graphicsMan->zoomBtnShockwave, TRUE);
         Sprite_SetAnimateFlag(graphicsMan->zoomBtnShockwave, 1);
         Sprite_SetAnimFrame(graphicsMan->zoomBtnShockwave, 1);
-        Sound_PlayEffect(SEQ_SE_DP_BUTTON9);
+        Sound_PlayEffect(SEQ_SE_DP_BUTTON9_sseq);
         graphicsMan->taskState++;
         break;
     case 1:
@@ -1089,7 +1089,7 @@ static void Task_SwitchBottomScreenToZoomButton(SysTask *sysTask, void *_appData
     case 0:
         appData->dummy_14 = 0;
         StartScreenFade(FADE_SUB_ONLY, FADE_TYPE_UNK_13, FADE_TYPE_DOWNWARD_OUT, COLOR_BLACK, 8, 1, appData->heapID);
-        Sound_PlayEffect(SEQ_SE_DP_MEKURU3);
+        Sound_PlayEffect(SEQ_SE_DP_MEKURU3_sseq);
         graphicsMan->taskState++;
         break;
     case 1:

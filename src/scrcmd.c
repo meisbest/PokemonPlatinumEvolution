@@ -38,17 +38,19 @@
 #include "struct_defs/seal_case.h"
 #include "struct_defs/special_encounter.h"
 #include "struct_defs/struct_02029C88.h"
-#include "struct_defs/struct_0203E608.h"
 #include "struct_defs/struct_02041DC8.h"
 
+#include "applications/capsule_menu/main.h"
 #include "applications/naming_screen.h"
 #include "applications/party_menu/defs.h"
-#include "applications/pc_boxes/pokemon_storage_session.h"
+#include "applications/pc_boxes/defs.h"
 #include "applications/pokemon_summary_screen/main.h"
+#include "applications/scratch_off_cards/main.h"
 #include "applications/town_map/main.h"
 #include "cutscenes/boat_cutscene.h"
 #include "field/field_system.h"
 #include "field/field_system_sub2_t.h"
+#include "overlay005/enable_poketch_task.h"
 #include "overlay005/field_menu.h"
 #include "overlay005/footprint_type.h"
 #include "overlay005/honey_tree.h"
@@ -56,7 +58,6 @@
 #include "overlay005/map_object_anim_cmd.h"
 #include "overlay005/ov5_021D431C.h"
 #include "overlay005/ov5_021D5EB8.h"
-#include "overlay005/ov5_021DDAE4.h"
 #include "overlay005/ov5_021DFB54.h"
 #include "overlay005/ov5_021EA874.h"
 #include "overlay005/ov5_021ECC20.h"
@@ -75,17 +76,16 @@
 #include "overlay006/npc_trade.h"
 #include "overlay006/ov6_0223E140.h"
 #include "overlay006/ov6_02243004.h"
-#include "overlay006/ov6_02247830.h"
 #include "overlay006/ov6_02248948.h"
 #include "overlay006/pc_animation.h"
 #include "overlay006/swarm.h"
 #include "overlay006/trophy_garden_daily_encounters.h"
+#include "overlay006/wallpaper_passwords.h"
 #include "overlay007/battle_regulation_menu.h"
 #include "overlay007/communication_club.h"
 #include "overlay007/shop_menu.h"
 #include "overlay008/gym_features.h"
 #include "overlay009/ov9_02249960.h"
-#include "overlay090/struct_ov90_021D0D80.h"
 #include "overlay098/struct_ov98_02247168.h"
 #include "overlay104/struct_ov104_02230BE4.h"
 #include "savedata/save_table.h"
@@ -93,7 +93,9 @@
 
 #include "appearance.h"
 #include "bag.h"
+#include "ball_seal_info.h"
 #include "battle_frontier.h"
+#include "battle_tower_trainers.h"
 #include "bg_window.h"
 #include "binoculars_vista_lighthouse.h"
 #include "camera.h"
@@ -107,6 +109,7 @@
 #include "field_bgm.h"
 #include "field_comm_manager.h"
 #include "field_map_change.h"
+#include "field_map_change_flags.h"
 #include "field_message.h"
 #include "field_overworld_state.h"
 #include "field_script_context.h"
@@ -138,6 +141,7 @@
 #include "platform_lift.h"
 #include "player_avatar.h"
 #include "poffin.h"
+#include "poffin_berry_selection_context.h"
 #include "pokedex.h"
 #include "pokemon.h"
 #include "pokeradar.h"
@@ -149,7 +153,11 @@
 #include "save_player.h"
 #include "savedata.h"
 #include "scrcmd_amity_square.h"
+#include "scrcmd_battle_arcade.h"
+#include "scrcmd_battle_castle.h"
+#include "scrcmd_battle_factory.h"
 #include "scrcmd_battle_hall.h"
+#include "scrcmd_battle_tower.h"
 #include "scrcmd_berry.h"
 #include "scrcmd_catching_show.h"
 #include "scrcmd_coins.h"
@@ -190,32 +198,23 @@
 #include "trainer_info.h"
 #include "tv_segment.h"
 #include "underground.h"
+#include "union_room.h"
 #include "unk_020298BC.h"
-#include "unk_0202C9F4.h"
 #include "unk_02033200.h"
 #include "unk_020363E8.h"
 #include "unk_02038FFC.h"
 #include "unk_0203D1B8.h"
-#include "unk_020494DC.h"
-#include "unk_0204AEE8.h"
-#include "unk_0204F04C.h"
-#include "unk_0204FAB4.h"
-#include "unk_0205003C.h"
 #include "unk_020528D0.h"
 #include "unk_020559DC.h"
 #include "unk_0205749C.h"
-#include "unk_0205B33C.h"
 #include "unk_0205C22C.h"
 #include "unk_0205DFC4.h"
 #include "unk_020655F4.h"
 #include "unk_02069BE0.h"
-#include "unk_02070428.h"
 #include "unk_020722AC.h"
 #include "unk_0207DA28.h"
-#include "unk_02097B18.h"
 #include "unk_020985E4.h"
 #include "unk_02099500.h"
-#include "unk_02099604.h"
 #include "unk_0209ACF4.h"
 #include "unk_0209B344.h"
 #include "unk_0209C194.h"
@@ -387,9 +386,9 @@ static BOOL ScrCmd_ContestPhotoHasData(ScriptContext *ctx);
 static BOOL ScrCmd_SetDressUpPhotoTitle(ScriptContext *ctx);
 static BOOL ScrCmd_OpenSealCapsuleEditor(ScriptContext *ctx);
 static BOOL ScrCmd_OpenRegionMap(ScriptContext *ctx);
-static BOOL ScrCmd_1D7(ScriptContext *ctx);
+static BOOL ScrCmd_OpenPoffinCooking(ScriptContext *ctx);
 static BOOL ScrCmd_CheckCanCookPoffin(ScriptContext *ctx);
-static BOOL ScrCmd_1D9(ScriptContext *ctx);
+static BOOL ScrCmd_OpenBattleTowerRecordsApp(ScriptContext *ctx);
 static BOOL ScrCmd_OpenPokemonStorage(ScriptContext *ctx);
 static BOOL ScrCmd_0AC(ScriptContext *ctx);
 static BOOL ScrCmd_OpenUnionRoomTrainerCase(ScriptContext *ctx);
@@ -456,7 +455,7 @@ static BOOL ScrCmd_StopHoneyTreeShaking(ScriptContext *ctx);
 static BOOL ScrCmd_StartSignatureApp(ScriptContext *ctx);
 static BOOL ScrCmd_CheckSaveType(ScriptContext *ctx);
 static BOOL ScrCmd_TrySaveGame(ScriptContext *ctx);
-static BOOL ScrCmd_131(ScriptContext *ctx);
+static BOOL ScrCmd_EnablePoketch(ScriptContext *ctx);
 static BOOL ScrCmd_CheckPoketchEnabled(ScriptContext *ctx);
 static BOOL ScrCmd_RegisterPoketchApp(ScriptContext *ctx);
 static BOOL ScrCmd_CheckPoketchAppRegistered(ScriptContext *ctx);
@@ -533,8 +532,8 @@ static BOOL ScriptContext_DecrementABPressTimer(ScriptContext *ctx);
 static BOOL ScrCmd_SelectMoveTutorPokemon(ScriptContext *ctx);
 static BOOL ScrCmd_GetSelectedPartySlot(ScriptContext *ctx);
 static BOOL ScrCmd_GetBattleHallSelectedSlots(ScriptContext *ctx);
-static BOOL ScrCmd_2D4(ScriptContext *ctx);
-static BOOL ScrCmd_2DB(ScriptContext *ctx);
+static BOOL ScrCmd_GetBattleCastleSelectedSlots(ScriptContext *ctx);
+static BOOL ScrCmd_GetBattleArcadeSelectedSlots(ScriptContext *ctx);
 static BOOL ScrCmd_OpenPartyMenuForTrade(ScriptContext *ctx);
 static BOOL ScrCmd_SetMonSummary(ScriptContext *ctx);
 static BOOL ScrCmd_GetMonPartySlot(ScriptContext *ctx);
@@ -722,9 +721,9 @@ static BOOL ScrCmd_SaveExtraData(ScriptContext *ctx);
 static BOOL ScrCmd_CheckIsMiscSaveInit(ScriptContext *ctx);
 static BOOL ScrCmd_PokeMartFrontier(ScriptContext *ctx);
 static BOOL ScrCmd_OpenFrontierRecordsApp(ScriptContext *ctx);
-BOOL ScrCmd_2E2(ScriptContext *ctx);
-BOOL ScrCmd_2E3(ScriptContext *ctx);
-BOOL ScrCmd_2E4(ScriptContext *ctx);
+BOOL ScrCmd_OpenScratchOffCardsApp(ScriptContext *ctx);
+BOOL ScrCmd_FreeScratchOffCardsArgs(ScriptContext *ctx);
+BOOL ScrCmd_GetScratchOffCardsWonItem(ScriptContext *ctx);
 BOOL ScrCmd_GetRandomBattlegroundTrainers(ScriptContext *ctx);
 static u8 GetRandomBattlegroundGymLeaderID(u16 trainer1ID, u16 trainer2ID, u16 trainer3ID, u16 trainer4ID);
 static u8 GetRandomBattlegroundStatTrainerID(u16 trainer1ID, u16 trainer2ID, u16 trainer3ID, u16 trainer4ID);
@@ -1264,7 +1263,7 @@ static BOOL ScrCmd_PrintBattleTowerIntroMessage(ScriptContext *ctx)
         return FALSE;
     }
 
-    u16 *introMsg = battleTower->opponentsDataDTO[opponentID].trDataDTO.introMsg;
+    u16 *introMsg = battleTower->opponents[opponentID].trainer.introMsg;
 
     if (introMsg[0] == 0xFFFF) {
         MessageLoader *msgLoader = MessageLoader_Init(MSG_LOADER_LOAD_ON_DEMAND, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_UNK_0613, HEAP_ID_FIELD3);
@@ -1911,7 +1910,7 @@ static BOOL ResumeOnSelectionOrDisconnect(ScriptContext *ctx)
     FieldMenuManager **fieldMenuMan = FieldSystem_GetScriptMemberPtr(fieldSystem, SCRIPT_MANAGER_FIELD_MENU_MANAGER);
 
     if (*selectedOptionPtr == LIST_MENU_NO_SELECTION_YET) {
-        if (sub_0205B9E8(fieldSystem->unk_7C)) {
+        if (UnionRoom_HasChatEnded(fieldSystem->unionRoomMan)) {
             *selectedOptionPtr = 8;
             FieldMenuManager_DeleteWithMenu(*fieldMenuMan);
             return TRUE;
@@ -2357,7 +2356,7 @@ static BOOL ScrCmd_AddObject(ScriptContext *ctx)
     FieldSystem *fieldSystem = ctx->fieldSystem;
     u16 localID = ScriptContext_GetVar(ctx);
 
-    MapObject *mapObj = MapObjectMan_AddMapObjectFromLocalID(fieldSystem->mapObjMan, localID, MapHeaderData_GetNumObjectEvents(fieldSystem), fieldSystem->location->mapId, MapHeaderData_GetObjectEvents(fieldSystem));
+    MapObject *mapObj = MapObjectMan_AddMapObjectFromLocalID(fieldSystem->mapObjMan, localID, MapHeaderData_GetNumObjectEvents(fieldSystem), fieldSystem->location->mapHeaderID, MapHeaderData_GetObjectEvents(fieldSystem));
 
     if (mapObj == NULL) {
         GF_ASSERT(FALSE);
@@ -2387,7 +2386,7 @@ static BOOL ScrCmd_AddFreeCamera(ScriptContext *ctx)
     u16 zPos = ScriptContext_GetVar(ctx);
     MapObject **cameraObject = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_CAMERA_OBJECT);
 
-    *cameraObject = MapObjectMan_AddMapObject(ctx->fieldSystem->mapObjMan, xPos, zPos, 0, OBJ_EVENT_GFX_INVISIBLE, 0x0, ctx->fieldSystem->location->mapId);
+    *cameraObject = MapObjectMan_AddMapObject(ctx->fieldSystem->mapObjMan, xPos, zPos, 0, OBJ_EVENT_GFX_INVISIBLE, 0x0, ctx->fieldSystem->location->mapHeaderID);
 
     MapObject_RecalculateObjectHeight(*cameraObject);
     MapObject_SetHidden(*cameraObject, TRUE);
@@ -2423,7 +2422,7 @@ static BOOL ScrCmd_AddCameraOverrideObject(ScriptContext *ctx)
     u16 zPos = ScriptContext_GetVar(ctx);
     MapObject **cameraObject = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_CAMERA_OBJECT);
 
-    *cameraObject = MapObjectMan_AddMapObject(ctx->fieldSystem->mapObjMan, xPos, zPos, 0, OBJ_EVENT_GFX_INVISIBLE, 0x0, ctx->fieldSystem->location->mapId);
+    *cameraObject = MapObjectMan_AddMapObject(ctx->fieldSystem->mapObjMan, xPos, zPos, 0, OBJ_EVENT_GFX_INVISIBLE, 0x0, ctx->fieldSystem->location->mapHeaderID);
 
     MapObject_RecalculateObjectHeight(*cameraObject);
     MapObject_SetHidden(*cameraObject, TRUE);
@@ -2664,70 +2663,70 @@ static BOOL ScrCmd_GetBattleHallSelectedSlots(ScriptContext *ctx)
     return FALSE;
 }
 
-static BOOL ScrCmd_2D4(ScriptContext *ctx)
+static BOOL ScrCmd_GetBattleCastleSelectedSlots(ScriptContext *ctx)
 {
-    u16 *v3 = ScriptContext_GetVarPointer(ctx);
-    u16 *v4 = ScriptContext_GetVarPointer(ctx);
-    u16 *v5 = ScriptContext_GetVarPointer(ctx);
-    void **v2 = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
-    PartyMenu *partyMenu = *v2;
+    u16 *selectedSlot1 = ScriptContext_GetVarPointer(ctx);
+    u16 *selectedSlot2 = ScriptContext_GetVarPointer(ctx);
+    u16 *selectedSlot3 = ScriptContext_GetVarPointer(ctx);
+    void **partySelect = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
+    PartyMenu *partyMenu = *partySelect;
 
-    GF_ASSERT(*v2 != 0);
+    GF_ASSERT(*partySelect != NULL);
 
-    int v1 = PartyMenu_GetSelectedSlot(*v2);
+    int slot = PartyMenu_GetSelectedSlot(*partySelect);
 
-    if (v1 == MAX_PARTY_SIZE + 1) {
-        *v3 = PARTY_SLOT_NONE;
-    } else if (v1 == MAX_PARTY_SIZE) {
-        *v3 = partyMenu->selectionOrder[0];
-        *v3 -= 1;
+    if (slot == MAX_PARTY_SIZE + 1) {
+        *selectedSlot1 = PARTY_SLOT_NONE;
+    } else if (slot == MAX_PARTY_SIZE) {
+        *selectedSlot1 = partyMenu->selectionOrder[0];
+        *selectedSlot1 -= 1;
 
-        *v4 = partyMenu->selectionOrder[1];
-        *v4 -= 1;
+        *selectedSlot2 = partyMenu->selectionOrder[1];
+        *selectedSlot2 -= 1;
 
-        *v5 = partyMenu->selectionOrder[2];
+        *selectedSlot3 = partyMenu->selectionOrder[2];
 
-        if (*v5 > 0) {
-            *v5 -= 1;
+        if (*selectedSlot3 > 0) {
+            *selectedSlot3 -= 1;
         }
     }
 
-    Heap_Free(*v2);
-    *v2 = NULL;
+    Heap_Free(*partySelect);
+    *partySelect = NULL;
 
     return FALSE;
 }
 
-static BOOL ScrCmd_2DB(ScriptContext *ctx)
+static BOOL ScrCmd_GetBattleArcadeSelectedSlots(ScriptContext *ctx)
 {
-    u16 *v3 = ScriptContext_GetVarPointer(ctx);
-    u16 *v4 = ScriptContext_GetVarPointer(ctx);
-    u16 *v5 = ScriptContext_GetVarPointer(ctx);
-    void **v2 = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
-    PartyMenu *partyMenu = *v2;
+    u16 *selectedSlot1 = ScriptContext_GetVarPointer(ctx);
+    u16 *selectedSlot2 = ScriptContext_GetVarPointer(ctx);
+    u16 *selectedSlot3 = ScriptContext_GetVarPointer(ctx);
+    void **partySelect = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
+    PartyMenu *partyMenu = *partySelect;
 
-    GF_ASSERT(*v2 != 0);
+    GF_ASSERT(*partySelect != NULL);
 
-    int v1 = PartyMenu_GetSelectedSlot(*v2);
+    int slot = PartyMenu_GetSelectedSlot(*partySelect);
 
-    if (v1 == MAX_PARTY_SIZE + 1) {
-        *v3 = PARTY_SLOT_NONE;
-    } else if (v1 == MAX_PARTY_SIZE) {
-        *v3 = partyMenu->selectionOrder[0];
-        *v3 -= 1;
+    if (slot == MAX_PARTY_SIZE + 1) {
+        *selectedSlot1 = PARTY_SLOT_NONE;
+    } else if (slot == MAX_PARTY_SIZE) {
+        *selectedSlot1 = partyMenu->selectionOrder[0];
+        *selectedSlot1 -= 1;
 
-        *v4 = partyMenu->selectionOrder[1];
-        *v4 -= 1;
+        *selectedSlot2 = partyMenu->selectionOrder[1];
+        *selectedSlot2 -= 1;
 
-        *v5 = partyMenu->selectionOrder[2];
+        *selectedSlot3 = partyMenu->selectionOrder[2];
 
-        if (*v5 > 0) {
-            *v5 -= 1;
+        if (*selectedSlot3 > 0) {
+            *selectedSlot3 -= 1;
         }
     }
 
-    Heap_Free(*v2);
-    *v2 = NULL;
+    Heap_Free(*partySelect);
+    *partySelect = NULL;
 
     return FALSE;
 }
@@ -3232,7 +3231,7 @@ static BOOL ScrCmd_StartLibraryTV(ScriptContext *ctx)
 
 static BOOL ScrCmd_OpenSealCapsuleEditor(ScriptContext *ctx)
 {
-    sub_020980DC(ctx->task, ctx->fieldSystem->saveData);
+    CapsuleMenu_StartFieldTask(ctx->task, ctx->fieldSystem->saveData);
     return TRUE;
 }
 
@@ -3249,12 +3248,12 @@ static BOOL ScrCmd_OpenRegionMap(ScriptContext *ctx)
     return TRUE;
 }
 
-static BOOL ScrCmd_1D7(ScriptContext *ctx)
+static BOOL ScrCmd_OpenPoffinCooking(ScriptContext *ctx)
 {
-    void **v2 = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
+    void **poffinBerrySelectionCtx = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
 
-    u8 v0 = ScriptContext_ReadHalfWord(ctx);
-    *v2 = sub_02099674(ctx->fieldSystem, v0, HEAP_ID_FIELD2);
+    u8 isInGroup = ScriptContext_ReadHalfWord(ctx);
+    *poffinBerrySelectionCtx = PoffinBerrySelectionContext_Create(ctx->fieldSystem, isInGroup, HEAP_ID_FIELD2);
 
     ScriptContext_Pause(ctx, sub_02041CC8);
     return TRUE;
@@ -3262,7 +3261,7 @@ static BOOL ScrCmd_1D7(ScriptContext *ctx)
 
 static BOOL ScrCmd_CheckCanCookPoffin(ScriptContext *ctx)
 {
-    u16 *destVar = FieldSystem_GetVarPointer(ctx->fieldSystem, ScriptContext_ReadHalfWord(ctx));
+    u16 *destVar = ScriptContext_GetVarPointer(ctx);
 
     if (!Bag_HasItemsInPocket(SaveData_GetBag(ctx->fieldSystem->saveData), POCKET_BERRIES)) {
         *destVar = 1;
@@ -3278,22 +3277,22 @@ static BOOL ScrCmd_CheckCanCookPoffin(ScriptContext *ctx)
     return FALSE;
 }
 
-static BOOL ScrCmd_1D9(ScriptContext *ctx)
+static BOOL ScrCmd_OpenBattleTowerRecordsApp(ScriptContext *ctx)
 {
-    u16 v1 = ScriptContext_GetVar(ctx);
-    u16 v2 = ScriptContext_GetVar(ctx);
-    void **v3 = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
+    u16 isRankingsScreen = ScriptContext_GetVar(ctx);
+    u16 resultsType = ScriptContext_GetVar(ctx);
+    void **data = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
 
-    *v3 = Heap_Alloc(HEAP_ID_FIELD2, sizeof(UnkStruct_ov90_021D0D80));
+    *data = Heap_Alloc(HEAP_ID_FIELD2, sizeof(BattleTowerRecordsAppArgs));
 
-    UnkStruct_ov90_021D0D80 *v0 = (UnkStruct_ov90_021D0D80 *)*v3;
-    MI_CpuClear8(v0, sizeof(UnkStruct_ov90_021D0D80));
+    BattleTowerRecordsAppArgs *args = *data;
+    MI_CpuClear8(args, sizeof(BattleTowerRecordsAppArgs));
 
-    v0->unk_04 = v1;
-    v0->unk_06 = v2;
-    v0->saveData = ctx->fieldSystem->saveData;
+    args->isRankingsScreen = isRankingsScreen;
+    args->resultsType = resultsType;
+    args->saveData = ctx->fieldSystem->saveData;
 
-    sub_0203D9D8(ctx->fieldSystem, *v3);
+    FieldSystem_OpenBattleTowerRecordsApp(ctx->fieldSystem, *data);
     ScriptContext_Pause(ctx, sub_02041CC8);
 
     return TRUE;
@@ -3395,9 +3394,7 @@ static BOOL ScrCmd_TryStartGTSApp(ScriptContext *ctx)
 
 static BOOL ScrCmd_0B3(ScriptContext *ctx)
 {
-    u16 v0 = ScriptContext_ReadHalfWord(ctx);
-
-    sub_0207DDE0(ctx->task, FieldSystem_GetVarPointer(ctx->fieldSystem, v0));
+    sub_0207DDE0(ctx->task, ScriptContext_GetVarPointer(ctx));
     return TRUE;
 }
 
@@ -3579,13 +3576,13 @@ static BOOL ScriptContext_ScreenWipeDone(ScriptContext *ctx)
 
 static BOOL ScrCmd_Warp(ScriptContext *ctx)
 {
-    u16 mapID = ScriptContext_GetVar(ctx);
+    enum MapHeaderID mapHeaderID = ScriptContext_GetVar(ctx);
     s16 unused = ScriptContext_ReadHalfWord(ctx);
     u16 x = ScriptContext_GetVar(ctx);
     u16 z = ScriptContext_GetVar(ctx);
     u16 direction = ScriptContext_GetVar(ctx);
 
-    FieldTask_StartMapChangeFull(ctx->task, mapID, -1, x, z, direction);
+    FieldTask_StartMapChangeFull(ctx->task, mapHeaderID, -1, x, z, direction);
     return TRUE;
 }
 
@@ -3617,7 +3614,7 @@ static BOOL ScrCmd_GetPreviousMapID(ScriptContext *ctx)
     Location *location = FieldOverworldState_GetPrevLocation(fieldState);
     u16 *mapId = ScriptContext_GetVarPointer(ctx);
 
-    *mapId = location->mapId;
+    *mapId = location->mapHeaderID;
     return FALSE;
 }
 
@@ -3625,7 +3622,7 @@ static BOOL ScrCmd_GetCurrentMapID(ScriptContext *ctx)
 {
     u16 *mapID = ScriptContext_GetVarPointer(ctx);
 
-    *mapID = ctx->fieldSystem->location->mapId;
+    *mapID = ctx->fieldSystem->location->mapHeaderID;
     return FALSE;
 }
 
@@ -3730,15 +3727,15 @@ static BOOL ScrCmd_SetPlayerBike(ScriptContext *ctx)
     u8 rideBike = ScriptContext_ReadByte(ctx);
 
     if (rideBike == TRUE) {
-        FieldBGM_SetOverride(ctx->fieldSystem, SEQ_BICYCLE);
-        FieldBGM_TryFadeOut(ctx->fieldSystem, SEQ_BICYCLE, 1);
+        FieldBGM_SetOverride(ctx->fieldSystem, SEQ_BICYCLE_sseq);
+        FieldBGM_TryFadeOut(ctx->fieldSystem, SEQ_BICYCLE_sseq, 1);
         PlayerAvatar_SetTransitionState(ctx->fieldSystem->playerAvatar, PLAYER_TRANSITION_CYCLING);
         PlayerAvatar_RequestChangeState(ctx->fieldSystem->playerAvatar);
     } else {
         PlayerAvatar_SetTransitionState(ctx->fieldSystem->playerAvatar, PLAYER_TRANSITION_WALKING);
         PlayerAvatar_RequestChangeState(ctx->fieldSystem->playerAvatar);
         FieldBGM_SetOverride(ctx->fieldSystem, SEQ_NONE);
-        FieldBGM_TryFadeOut(ctx->fieldSystem, FieldBGM_GetEffective(ctx->fieldSystem, ctx->fieldSystem->location->mapId), 1);
+        FieldBGM_TryFadeOut(ctx->fieldSystem, FieldBGM_GetEffective(ctx->fieldSystem, ctx->fieldSystem->location->mapHeaderID), 1);
     }
 
     return FALSE;
@@ -3746,7 +3743,7 @@ static BOOL ScrCmd_SetPlayerBike(ScriptContext *ctx)
 
 static BOOL ScrCmd_SetCyclingBGM(ScriptContext *ctx)
 {
-    FieldBGM_SetOverride(ctx->fieldSystem, SEQ_PL_BICYCLE);
+    FieldBGM_SetOverride(ctx->fieldSystem, SEQ_BICYCLE_sseq_1);
     return FALSE;
 }
 
@@ -3913,7 +3910,7 @@ static BOOL ScrCmd_SetSpecialLocation(ScriptContext *ctx)
 {
     Location location;
 
-    location.mapId = ScriptContext_GetVar(ctx);
+    location.mapHeaderID = ScriptContext_GetVar(ctx);
     location.warpId = ScriptContext_GetVar(ctx);
     location.x = ScriptContext_GetVar(ctx);
     location.z = ScriptContext_GetVar(ctx);
@@ -3929,7 +3926,7 @@ static BOOL ScrCmd_GetFloorsAbove(ScriptContext *ctx)
     u16 *destVar = ScriptContext_GetVarPointer(ctx);
 
     location = FieldOverworldState_GetSpecialLocation(SaveData_GetFieldOverworldState(ctx->fieldSystem->saveData));
-    *destVar = FieldMenu_GetFloorsAbove(location->mapId);
+    *destVar = FieldMenu_GetFloorsAbove(location->mapHeaderID);
 
     return FALSE;
 }
@@ -3999,7 +3996,7 @@ static BOOL ScrCmd_LoadPokedexRating(ScriptContext *ctx)
     u16 pokemonCount;
 
     if (nationalDex == FALSE) {
-        pokemonCount = Pokedex_NumCaught_Local(pokedex);
+        pokemonCount = Pokedex_NumSeen_Local(pokedex);
         *destVar = Pokedex_GetRatingMessageID_Local(pokemonCount, SystemFlag_HandleFirstArrivalToZone(SaveData_GetVarsFlags(ctx->fieldSystem->saveData), HANDLE_FLAG_CHECK, FIRST_ARRIVAL_ETERNA_CITY));
     } else {
         pokemonCount = Pokedex_NumCaught_National(pokedex);
@@ -4146,9 +4143,9 @@ static BOOL ScrCmd_CheckIsMiscSaveInit(ScriptContext *ctx)
     return FALSE;
 }
 
-static BOOL ScrCmd_131(ScriptContext *ctx)
+static BOOL ScrCmd_EnablePoketch(ScriptContext *ctx)
 {
-    ov5_021DDBC8(ctx->task);
+    FieldSystem_EnablePoketch(ctx->task);
     return TRUE;
 }
 
@@ -4227,7 +4224,7 @@ static BOOL ScrCmd_GetUnionRoomTealaMessage(ScriptContext *ctx)
     FieldSystem *fieldSystem = ctx->fieldSystem;
     StringTemplate **strTemplate = FieldSystem_GetScriptMemberPtr(fieldSystem, SCRIPT_MANAGER_STR_TEMPLATE);
 
-    *destVar = UnionRoom_GetTealaMessage(ctx->fieldSystem->unk_7C, *strTemplate);
+    *destVar = UnionRoom_GetTealaMessage(ctx->fieldSystem->unionRoomMan, *strTemplate);
     return FALSE;
 }
 
@@ -4242,7 +4239,7 @@ static BOOL ScrCmd_139(ScriptContext *ctx)
     }
 
     if (CommSys_CurNetId() == 0) {
-        sub_0205BEA8(v0);
+        UnionRoom_SetStatus(v0);
     }
 
     return FALSE;
@@ -4296,7 +4293,7 @@ static BOOL ScrCmd_GetUnionRoomMessage(ScriptContext *ctx)
     u16 *destVar = ScriptContext_GetVarPointer(ctx);
     StringTemplate **strTemplate = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_STR_TEMPLATE);
 
-    *destVar = UnionRoom_GetMessage(ctx->fieldSystem->unk_7C, MapObject_GetLocalID(*mapObj), msgType, *strTemplate);
+    *destVar = UnionRoom_GetMessage(ctx->fieldSystem->unionRoomMan, MapObject_GetLocalID(*mapObj), msgType, *strTemplate);
     return FALSE;
 }
 
@@ -4304,7 +4301,7 @@ static BOOL ScrCmd_2BA(ScriptContext *ctx)
 {
     u16 *v2 = ScriptContext_GetVarPointer(ctx);
 
-    *v2 = sub_0205BA7C(ctx->fieldSystem->unk_7C);
+    *v2 = UnionRoom_GetPartySelectionCancelState(ctx->fieldSystem->unionRoomMan);
 
     if (*v2 != 0) {
         void **v1 = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
@@ -4321,7 +4318,7 @@ static BOOL ScrCmd_140(ScriptContext *ctx)
     MapObject **v1 = FieldSystem_GetScriptMemberPtr(fieldSystem, SCRIPT_MANAGER_TARGET_OBJECT);
     u16 *v2 = ScriptContext_GetVarPointer(ctx);
 
-    *v2 = sub_0205B780(fieldSystem->unk_7C, MapObject_GetLocalID(*v1));
+    *v2 = UnionRoom_GetInteractionType(fieldSystem->unionRoomMan, MapObject_GetLocalID(*v1));
     return FALSE;
 }
 
@@ -4332,7 +4329,7 @@ static BOOL ScrCmd_146(ScriptContext *ctx)
     u16 v2 = ScriptContext_GetVar(ctx);
     u16 *v3 = ScriptContext_GetVarPointer(ctx);
 
-    *v3 = sub_0205B804(fieldSystem->unk_7C, MapObject_GetLocalID(*v1), v2);
+    *v3 = UnionRoom_StartInteraction(fieldSystem->unionRoomMan, MapObject_GetLocalID(*v1), v2);
     return FALSE;
 }
 
@@ -4349,7 +4346,7 @@ static BOOL ScrCmd_141(ScriptContext *ctx)
 static BOOL sub_02043938(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
-    u32 v1 = sub_0205B8D8(fieldSystem->unk_7C);
+    u32 v1 = UnionRoom_GetConnectState(fieldSystem->unionRoomMan);
     u16 *v2 = FieldSystem_GetVarPointer(fieldSystem, ctx->data[0]);
 
     if (v1 == 0) {
@@ -4371,7 +4368,7 @@ static BOOL ScrCmd_142(ScriptContext *ctx)
 
 static BOOL ScrCmd_13A(ScriptContext *ctx)
 {
-    sub_0205BEA8(4);
+    UnionRoom_SetStatus(UR_STATUS_BUSY);
     CommManager_PauseUnionServer();
     return FALSE;
 }
@@ -4380,7 +4377,7 @@ static BOOL ScrCmd_13B(ScriptContext *ctx)
 {
     CommManager_SetState_Union();
     CommManager_UnionRestartSearch();
-    sub_0205BEA8(0);
+    UnionRoom_SetStatus(UR_STATUS_NONE);
     return FALSE;
 }
 
@@ -4390,7 +4387,7 @@ static BOOL ScrCmd_143(ScriptContext *ctx)
     u16 v1 = ScriptContext_GetVar(ctx);
     u16 v2 = ScriptContext_GetVar(ctx);
 
-    sub_0205B930(fieldSystem->unk_7C, v1, v2);
+    UnionRoom_SendActivity(fieldSystem->unionRoomMan, v1, v2);
     return FALSE;
 }
 
@@ -4407,12 +4404,12 @@ static BOOL ScrCmd_144(ScriptContext *ctx)
 static BOOL sub_020439F4(ScriptContext *ctx)
 {
     u16 *v0 = FieldSystem_GetVarPointer(ctx->fieldSystem, ctx->data[0]);
-    u32 v1 = sub_0205B8DC(ctx->fieldSystem->unk_7C);
+    u32 v1 = UnionRoom_GetActivityAnswer(ctx->fieldSystem->unionRoomMan);
 
     if (v1 >= 1) {
         *v0 = v1;
 
-        sub_0205C154(ctx->fieldSystem->unk_7C);
+        UnionRoom_ResetActivity(ctx->fieldSystem->unionRoomMan);
         return TRUE;
     }
 
@@ -4433,10 +4430,10 @@ static BOOL ScrCmd_145(ScriptContext *ctx)
 static BOOL sub_02043A4C(ScriptContext *ctx)
 {
     u16 *v0 = FieldSystem_GetVarPointer(ctx->fieldSystem, ctx->data[0]);
-    u32 v1 = sub_0205B91C(ctx->fieldSystem->unk_7C);
+    u32 v1 = UnionRoom_GetActivityProposal(ctx->fieldSystem->unionRoomMan);
 
     if (gSystem.pressedKeys & PAD_BUTTON_B) {
-        v1 = sub_0205B9EC(ctx->fieldSystem->unk_7C, 8);
+        v1 = UnionRoom_SendChatEnded(ctx->fieldSystem->unionRoomMan, 8);
     }
 
     if (v1 != 0) {
@@ -5307,7 +5304,7 @@ static BOOL ScrCmd_StartEndSafariGame(ScriptContext *ctx)
         break;
     case SAFARI_GAME_INACTIVE:
         SystemFlag_ClearSafariGameActive(varsFlags);
-        FieldSystem_SaveTVSegment_SafariGameSpecialNewsBulletin(ctx->fieldSystem);
+        TVSegment_Save_SafariGameSpecialNewsBulletin(ctx->fieldSystem);
         void *journalEntryLocationEvent = JournalEntry_CreateEventSafariGame(HEAP_ID_FIELD1);
 
         JournalEntry_SaveData(ctx->fieldSystem->journalEntry, journalEntryLocationEvent, JOURNAL_LOCATION);
@@ -5528,9 +5525,7 @@ static BOOL ScrCmd_GetDayOfWeek(ScriptContext *ctx)
 
 static BOOL ScrCmd_OpenBattleRegulationMenu(ScriptContext *ctx)
 {
-    u16 destVar = ScriptContext_ReadHalfWord(ctx);
-
-    OpenBattleRegulationMenu(ctx->task, FieldSystem_GetVarPointer(ctx->fieldSystem, destVar));
+    OpenBattleRegulationMenu(ctx->task, ScriptContext_GetVarPointer(ctx));
     return TRUE;
 }
 
@@ -5570,11 +5565,11 @@ static BOOL ScrCmd_PlayBoatCutscene(ScriptContext *ctx)
 {
     u8 travelDir = ScriptContext_ReadByte(ctx);
     u8 exitDir = ScriptContext_ReadByte(ctx);
-    int mapID = ScriptContext_ReadHalfWord(ctx);
+    enum MapHeaderID mapHeaderID = ScriptContext_ReadHalfWord(ctx);
     int x = ScriptContext_ReadHalfWord(ctx);
     int z = ScriptContext_ReadHalfWord(ctx);
 
-    FieldSystem_PlayBoatCutscene(ctx->fieldSystem, travelDir, exitDir, mapID, x, z);
+    FieldSystem_PlayBoatCutscene(ctx->fieldSystem, travelDir, exitDir, mapHeaderID, x, z);
     return TRUE;
 }
 
@@ -5592,13 +5587,13 @@ static BOOL ScrCmd_GetWallpaperFromCustomMessageWords(ScriptContext *ctx)
     TrainerInfo *trainerInfo = SaveData_GetTrainerInfo(FieldSystem_GetSaveData(ctx->fieldSystem));
     u16 *destVar = ScriptContext_GetVarPointer(ctx);
     PCBoxes *pcBoxes = SaveData_GetPCBoxes(fieldSystem->saveData);
-    u16 customMessageWord1 = ScriptContext_GetVar(ctx);
-    u16 customMessageWord2 = ScriptContext_GetVar(ctx);
-    u16 customMessageWord3 = ScriptContext_GetVar(ctx);
-    u16 customMessageWord4 = ScriptContext_GetVar(ctx);
-    int wallpaper = ov6_022479D0(trainerInfo, customMessageWord1, customMessageWord2, customMessageWord3, customMessageWord4, HEAP_ID_FIELD1);
+    u16 word1 = ScriptContext_GetVar(ctx);
+    u16 word2 = ScriptContext_GetVar(ctx);
+    u16 word3 = ScriptContext_GetVar(ctx);
+    u16 word4 = ScriptContext_GetVar(ctx);
+    int wallpaper = WallpaperPasswords_CheckPassword(trainerInfo, word1, word2, word3, word4, HEAP_ID_FIELD1);
 
-    if (wallpaper == -1 || wallpaper > 7) {
+    if (wallpaper == -1 || wallpaper > MAX_UNLOCKABLE_WALLPAPERS - 1) {
         *destVar = 0xFF;
         return FALSE;
     }
@@ -5889,7 +5884,7 @@ static BOOL ScrCmd_FlickerObject(ScriptContext *ctx)
 
 static BOOL ScrCmd_CheckHasAllLegendaryTitansInParty(ScriptContext *ctx)
 {
-    u16 *destVar = FieldSystem_GetVarPointer(ctx->fieldSystem, ScriptContext_ReadHalfWord(ctx));
+    u16 *destVar = ScriptContext_GetVarPointer(ctx);
 
     *destVar = HasAllLegendaryTitansInParty(ctx->fieldSystem->saveData);
     return FALSE;
@@ -6515,7 +6510,7 @@ static BOOL ScrCmd_2B5(ScriptContext *ctx)
     FieldOverworldState *fieldState = SaveData_GetFieldOverworldState(ctx->fieldSystem->saveData);
     Location *location = FieldOverworldState_GetExitLocation(fieldState);
 
-    location->mapId = mapId;
+    location->mapHeaderID = mapId;
     location->x = x;
     location->z = z;
     location->warpId = WARP_ID_NONE;
@@ -6576,7 +6571,7 @@ static BOOL ScrCmd_CloseSaveInfo(ScriptContext *ctx)
 
 static BOOL ScrCmd_Unused_2C3(ScriptContext *ctx)
 {
-    sub_02070428(ctx->fieldSystem, ScriptContext_ReadByte(ctx));
+    FieldSystem_SetTemporaryMapChange(ctx->fieldSystem, ScriptContext_ReadByte(ctx));
     return FALSE;
 }
 
@@ -6591,15 +6586,15 @@ static BOOL ScrCmd_LaunchBattleFrontierScene(ScriptContext *ctx)
     *dataPtr = fieldData;
 
     if (sceneID == FRONTIER_SCENE_TOWER_CORRIDOR || sceneID == FRONTIER_SCENE_TOWER_MULTI_CORRIDOR) {
-        fieldData->unk_00 = ctx->fieldSystem->battleTower;
+        fieldData->facilityData = ctx->fieldSystem->battleTower;
     } else {
-        fieldData->unk_00 = NULL;
+        fieldData->facilityData = NULL;
     }
 
     fieldData->options = SaveData_GetOptions(ctx->fieldSystem->saveData);
     fieldData->sceneID = sceneID;
     fieldData->saveData = ctx->fieldSystem->saveData;
-    fieldData->mapHeaderID = ctx->fieldSystem->location->mapId;
+    fieldData->mapHeaderID = ctx->fieldSystem->location->mapHeaderID;
     fieldData->journalEntry = ctx->fieldSystem->journalEntry;
     fieldData->bagCursor = ctx->fieldSystem->bagCursor;
     fieldData->subscreenCursorOn = ctx->fieldSystem->battleSubscreenCursorOn;
@@ -6719,38 +6714,38 @@ static BOOL ScrCmd_OpenFrontierRecordsApp(ScriptContext *ctx)
     return TRUE;
 }
 
-BOOL ScrCmd_2E2(ScriptContext *ctx)
+BOOL ScrCmd_OpenScratchOffCardsApp(ScriptContext *ctx)
 {
-    void **v0 = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
+    void **args = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
 
-    *v0 = sub_0203E608(ctx->fieldSystem, HEAP_ID_FIELD3);
+    *args = FieldSystem_OpenScratchOffCardsApp(ctx->fieldSystem, HEAP_ID_FIELD3);
     ScriptContext_Pause(ctx, ScriptContext_WaitForApplicationExit);
 
     return TRUE;
 }
 
-BOOL ScrCmd_2E3(ScriptContext *ctx)
+BOOL ScrCmd_FreeScratchOffCardsArgs(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
 
-    void **v0 = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
-    Heap_Free(*v0);
-    *v0 = NULL;
+    void **args = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
+    Heap_Free(*args);
+    *args = NULL;
 
     return TRUE;
 }
 
-BOOL ScrCmd_2E4(ScriptContext *ctx)
+BOOL ScrCmd_GetScratchOffCardsWonItem(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
-    u16 v3 = ScriptContext_GetVar(ctx);
-    u16 *v4 = ScriptContext_GetVarPointer(ctx);
-    u16 *v5 = ScriptContext_GetVarPointer(ctx);
+    u16 cardIdx = ScriptContext_GetVar(ctx);
+    u16 *item = ScriptContext_GetVarPointer(ctx);
+    u16 *count = ScriptContext_GetVarPointer(ctx);
 
-    void **v0 = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
-    UnkStruct_0203E608 *v1 = (UnkStruct_0203E608 *)*v0;
-    *v4 = v1->unk_08[v3];
-    *v5 = v1->unk_0E[v3];
+    void **argsPtr = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_PARTY_MANAGEMENT_DATA);
+    ScratchOffCardsAppArgs *args = *argsPtr;
+    *item = args->wonItems[cardIdx];
+    *count = args->wonItemsCount[cardIdx];
 
     return FALSE;
 }
@@ -6882,8 +6877,7 @@ static BOOL ScrCmd_2F6(ScriptContext *ctx)
 
 static BOOL ScrCmd_2F7(ScriptContext *ctx)
 {
-    u16 v0 = ScriptContext_ReadHalfWord(ctx);
-    u16 *v1 = FieldSystem_GetVarPointer(ctx->fieldSystem, v0);
+    u16 *v1 = ScriptContext_GetVarPointer(ctx);
 
     if (WiFiList_HasValidLogin(ctx->fieldSystem->saveData)) {
         sub_0205749C(ctx->task, *v1);

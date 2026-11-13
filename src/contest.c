@@ -3,9 +3,9 @@
 #include <nitro.h>
 #include <string.h>
 
+#include "constants/accessories.h"
 #include "constants/contests.h"
 #include "constants/heap.h"
-#include "generated/accessories.h"
 #include "generated/game_records.h"
 #include "generated/object_events_gfx.h"
 #include "generated/pokemon_contest_ranks.h"
@@ -102,7 +102,7 @@ const ApplicationManagerTemplate DanceCompetitionAppTemplate = {
 };
 
 const ApplicationManagerTemplate VisualCompetitionScoringAppTemplate = {
-    VisualCompetitonScoring_Init,
+    VisualCompetitionScoring_Init,
     VisualCompetitionScoring_Main,
     VisualCompetitionScoring_Exit,
     FS_OVERLAY_ID(overlay17)
@@ -1477,7 +1477,7 @@ static void SysTask_DoContestCameraFlash(SysTask *sysTask, void *contestParam)
 
         if (cameraFlashTask->frameCounter > cameraFlashTask->cameraFlashFrameDelays[cameraFlashTask->flashCounter]) {
             BrightnessController_StartTransition(6, 0, 4, GX_BLEND_PLANEMASK_BG0 | GX_BLEND_PLANEMASK_BG1 | GX_BLEND_PLANEMASK_BG2 | GX_BLEND_PLANEMASK_BG3 | GX_BLEND_PLANEMASK_OBJ | GX_BLEND_PLANEMASK_BD, BRIGHTNESS_MAIN_SCREEN);
-            Sound_PlayEffect(SEQ_SE_DP_CON_014); // camera shutter sound
+            Sound_PlayEffect(SEQ_SE_DP_KATI_sseq_1); // camera shutter sound
             cameraFlashTask->flashCounter++;
             cameraFlashTask->frameCounter = 0;
 
@@ -1564,7 +1564,7 @@ void Contest_EndContest(Contest *contest, SaveData *saveData, u32 mapID, Journal
             }
 
             Pokemon_SetValue(contest->playerMon, monDataRibbon, &v3);
-            sub_0206DDB8(contest->saveData, contest->playerMon, monDataRibbon);
+            TVSegment_Save_RibbonMaster(contest->saveData, contest->playerMon, monDataRibbon);
         }
 
         TVBroadcast *broadcast = SaveData_GetTVBroadcast(contest->saveData);

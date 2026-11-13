@@ -17,14 +17,14 @@
 
 #include "comm_player_manager.h"
 #include "field_comm_manager.h"
+#include "scrcmd_battle_arcade.h"
+#include "scrcmd_battle_castle.h"
+#include "scrcmd_battle_hall.h"
 #include "trainer_case.h"
 #include "trainer_info.h"
+#include "union_room.h"
 #include "unk_02032798.h"
-#include "unk_0204FA34.h"
-#include "unk_0205001C.h"
-#include "unk_02050548.h"
 #include "unk_0205A0D8.h"
-#include "unk_0205B33C.h"
 
 static int CommPacketSizeOf_TrainerCase(void);
 static int sub_02099548(void);
@@ -122,14 +122,14 @@ static const CommCmdTable Unk_020F68A4[] = {
     { FieldCommManager_UpdateBattleRoomMovement, CommPacketSizeOf_NetId, NULL }, // 95
     { SecretBases_ProcessFlagRankUp, CommPacketSizeOf_NetId, NULL },
     { SecretBases_ProcessFlagRankUpEvent, CommPacketSizeOf_FlagRankUpEvent, NULL },
-    { sub_0205B988, TrainerInfo_Size, NULL },
-    { sub_0205B9AC, CommPacketSizeOf_NetId, NULL },
-    { sub_0205B98C, CommPacketSizeOf_NetId, NULL },
-    { sub_0205BA6C, CommPacketSizeOf_NetId, NULL },
-    { sub_0205B990, CommPacketSizeOf_Nothing, NULL },
-    { sub_0205B9C4, CommPacketSizeOf_NetId, NULL },
-    { sub_0205B9E0, CommPacketSizeOf_Nothing, NULL },
-    { sub_0205BA08, CommPacketSizeOf_TrainerCase, sub_0205BA5C },
+    { Dummy_0205B988, TrainerInfo_Size, NULL }, // no sender
+    { UnionRoom_RecvActivityProposal, CommPacketSizeOf_NetId, NULL },
+    { Dummy_0205B98C, CommPacketSizeOf_NetId, NULL }, // no sender
+    { UnionRoom_RecvPartySelectionResult, CommPacketSizeOf_NetId, NULL },
+    { UnionRoom_RecvRestart, CommPacketSizeOf_Nothing, NULL },
+    { UnionRoom_RecvActivityAnswer, CommPacketSizeOf_NetId, NULL },
+    { UnionRoom_RecvChatEnded, CommPacketSizeOf_Nothing, NULL },
+    { UnionRoom_RecvTrainerCase, CommPacketSizeOf_TrainerCase, UnionRoom_GetTrainerCaseRecvBuffer },
     { sub_0205B0C0, sub_0205B0E4, sub_0205B0F4 },
     { sub_0205B110, CommPacketSizeOf_NetId, NULL },
     { sub_02099510, CommPacketSizeOf_NetId, NULL },
@@ -157,8 +157,8 @@ static const CommCmdTable Unk_020F68A4[] = {
     { sub_02099510, sub_02099504, NULL },
     { sub_02099510, sub_02099508, NULL },
     { BattleHall_ProcessSelectedSpeciesMsg, CommPacketSizeOf_Variable, NULL },
-    { sub_0205001C, CommPacketSizeOf_Variable, NULL },
-    { sub_02050548, CommPacketSizeOf_Variable, NULL }
+    { BattleCastle_ProcessSpeciesCheckMsg, CommPacketSizeOf_Variable, NULL },
+    { BattleArcade_ProcessSpeciesCheckMsg, CommPacketSizeOf_Variable, NULL }
 };
 
 void sub_02099510(int param0, int param1, void *param2, void *param3)

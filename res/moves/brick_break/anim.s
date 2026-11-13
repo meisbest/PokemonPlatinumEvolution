@@ -8,14 +8,14 @@ L_0:
     End
 
 L_1:
-    BtlAnimCmd_013 L_3, L_4
+    JumpIfEffectChanceOdd L_3, L_4
     End
 
 L_3:
     CreateEmitter 0, 2, EMITTER_CB_SET_POS_TO_DEFENDER
     CreateEmitter 0, 4, EMITTER_CB_SET_POS_TO_DEFENDER
     Delay 45
-    PlaySoundEffectR SEQ_SE_DP_W233
+    PlaySoundEffectR SEQ_SE_DP_W233_sseq
     Delay 10
     WaitForAllEmitters
     UnloadParticleSystem 0
@@ -27,22 +27,22 @@ L_4:
     CreateEmitter 0, 2, EMITTER_CB_SET_POS_TO_DEFENDER
     CreateEmitter 0, 4, EMITTER_CB_SET_POS_TO_DEFENDER
     Delay 45
-    PlaySoundEffectR SEQ_SE_DP_W233
+    PlaySoundEffectR SEQ_SE_DP_W233_sseq
     Delay 10
-    PlaySoundEffectR SEQ_SE_DP_W280
+    PlaySoundEffectR SEQ_SE_DP_W280_sseq
     WaitForAllEmitters
     UnloadParticleSystem 0
     End
 
 L_2:
-    BtlAnimCmd_013 L_5, L_6
+    JumpIfEffectChanceOdd L_5, L_6
     End
 
 L_5:
     CreateEmitter 0, 3, EMITTER_CB_SET_POS_TO_DEFENDER
     CreateEmitter 0, 5, EMITTER_CB_SET_POS_TO_DEFENDER
     Delay 45
-    PlaySoundEffectR SEQ_SE_DP_W233
+    PlaySoundEffectR SEQ_SE_DP_W233_sseq
     Delay 10
     WaitForAllEmitters
     UnloadParticleSystem 0
@@ -54,9 +54,9 @@ L_6:
     CreateEmitter 0, 3, EMITTER_CB_SET_POS_TO_DEFENDER
     CreateEmitter 0, 5, EMITTER_CB_SET_POS_TO_DEFENDER
     Delay 45
-    PlaySoundEffectR SEQ_SE_DP_W233
+    PlaySoundEffectR SEQ_SE_DP_W233_sseq
     Delay 10
-    PlaySoundEffectR SEQ_SE_DP_W280
+    PlaySoundEffectR SEQ_SE_DP_W280_sseq
     WaitForAllEmitters
     UnloadParticleSystem 0
     End

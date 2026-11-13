@@ -9,7 +9,6 @@
 #include "overlay066/ov66_0222DDF0.h"
 #include "overlay066/ov66_022324F0.h"
 #include "overlay066/struct_ov66_0222DFF8_decl.h"
-#include "overlay066/struct_ov66_0222E71C_decl.h"
 #include "overlay113/footprint_data.h"
 #include "overlay113/struct_ov113_02260818.h"
 
@@ -47,9 +46,9 @@ static const TouchScreenRect Unk_ov113_02260D4C[] = {
     { 0xFF, 0x0, 0x0, 0x0 }
 };
 
-void ov113_02260620(MessageLoader *param0, StringTemplate *param1, Window param2[], UnkStruct_ov66_0222DFF8 *param3, s32 param4)
+void ov113_02260620(MessageLoader *param0, StringTemplate *param1, Window param2[], WiFiPlazaSystem *param3, s32 param4)
 {
-    const UnkStruct_ov66_0222E71C *v0;
+    const WiFiPlazaProfile *v0;
     TrainerInfo *v1;
     String *v2;
     String *v3;

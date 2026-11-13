@@ -6,6 +6,7 @@
 #include "constants/graphics.h"
 #include "constants/versions.h"
 
+#include "struct_defs/place_record.h"
 #include "struct_defs/wi_fi_history.h"
 
 #include "overlay066/ov66_0222DDF0.h"
@@ -14,7 +15,6 @@
 #include "overlay066/struct_ov66_02231428.h"
 #include "overlay066/struct_ov66_02231560.h"
 #include "overlay069/struct_ov69_0225C980.h"
-#include "overlay092/struct_ov92_021D1530.h"
 
 #include "bg_window.h"
 #include "camera.h"
@@ -23,6 +23,7 @@
 #include "font.h"
 #include "g3d_pipeline.h"
 #include "game_options.h"
+#include "geonet_locations.h"
 #include "graphics.h"
 #include "gx_layers.h"
 #include "heap.h"
@@ -49,7 +50,6 @@
 #include "system.h"
 #include "text.h"
 #include "unk_0202419C.h"
-#include "unk_020996D0.h"
 #include "vram_transfer.h"
 #include "wifi_history_save_data.h"
 #include "yes_no_touch_menu.h"
@@ -786,19 +786,19 @@ static void ov69_0225C980(UnkStruct_ov69_0225CA7C *param0, const UnkStruct_ov66_
 
     {
         void *v1;
-        UnkStruct_ov92_021D1530 *v2;
+        PlaceRecord *v2;
         u32 v3;
         int v4, v5;
 
         v1 = LoadMemberFromOpenNARC_OutFileSize(v0, 18, 0, heapID, 0, &v3);
-        v2 = (UnkStruct_ov92_021D1530 *)v1;
+        v2 = (PlaceRecord *)v1;
         v5 = v3 / 6;
 
         v2++;
 
         for (v4 = 1; v4 < v5; v4++) {
-            if (v2->unk_00 != 2) {
-                ov69_0225CA7C(param0, param0->unk_00.unk_00, v2->unk_02, v2->unk_04, v4, 0, param1);
+            if (v2->type != 2) {
+                ov69_0225CA7C(param0, param0->unk_00.unk_00, v2->x, v2->y, v4, 0, param1);
                 param0->unk_00.unk_00++;
             }
 
@@ -814,10 +814,10 @@ static void ov69_0225C980(UnkStruct_ov69_0225CA7C *param0, const UnkStruct_ov66_
         int v10, v11, v12, v13;
 
         v12 = 1;
-        v11 = sub_020996D0();
+        v11 = GeonetLocations_GetLocationListCount();
 
         while (v12 < v11) {
-            v9 = sub_02099764(v12);
+            v9 = GeonetLocations_GetNarcMemberIndex(v12);
             v6 = LoadMemberFromOpenNARC_OutFileSize(v0, v9, 0, heapID, 0, &v8);
             v7 = (UnkStruct_ov69_0225C980 *)v6;
             v13 = v8 / 4;
@@ -825,7 +825,7 @@ static void ov69_0225C980(UnkStruct_ov69_0225CA7C *param0, const UnkStruct_ov66_
             v7++;
 
             for (v10 = 1; v10 < v13; v10++) {
-                ov69_0225CA7C(param0, param0->unk_00.unk_00, v7->unk_00, v7->unk_02, sub_02099748(v12), v10, param1);
+                ov69_0225CA7C(param0, param0->unk_00.unk_00, v7->unk_00, v7->unk_02, GeonetLocations_GetCountry(v12), v10, param1);
                 param0->unk_00.unk_00++;
                 v7++;
             }
@@ -1138,7 +1138,7 @@ static u32 ov69_0225CF9C(UnkStruct_ov69_0225CE64 *param0)
     ov69_0225DC54(&param0->unk_BC44);
 
     if (param0->unk_BC44.unk_00 & PAD_BUTTON_B) {
-        Sound_PlayEffect(SEQ_SE_DP_DECIDE);
+        Sound_PlayEffect(SEQ_SE_DP_DECIDE_sseq);
         return 2;
     } else {
         if (gSystem.pressedKeys & PAD_BUTTON_X) {
@@ -1157,7 +1157,7 @@ static u32 ov69_0225CF9C(UnkStruct_ov69_0225CE64 *param0)
                             (void)0;
                         } else {
                             ov69_0225D268(param0, v2.unk_04, v2.unk_08);
-                            Sound_PlayEffect(SEQ_SE_PL_TIMER04);
+                            Sound_PlayEffect(SEQ_SE_PL_TIMER04_sseq);
                         }
                     }
                 }
@@ -1406,8 +1406,8 @@ static void ov69_0225D3A4(UnkStruct_ov69_0225D35C *param0, Options *options, u32
     Graphics_LoadTilesToBgLayerFromOpenNARC(param0->unk_1A8, 4, param0->unk_00, 6, 0, 0, 0, heapID);
     Graphics_LoadTilemapToBgLayerFromOpenNARC(param0->unk_1A8, 18, param0->unk_00, 7, 0, 0, 0, heapID);
 
-    Font_LoadScreenIndicatorsPalette(0, 1 * 0x20, heapID);
-    Font_LoadScreenIndicatorsPalette(4, 11 * 0x20, heapID);
+    Font_LoadScreenIndicatorsPalette(PAL_LOAD_MAIN_BG, PLTT_OFFSET(1), heapID);
+    Font_LoadScreenIndicatorsPalette(PAL_LOAD_SUB_BG, PLTT_OFFSET(11), heapID);
     LoadStandardWindowGraphics(param0->unk_00, BG_LAYER_MAIN_1, 1 + (18 + 12), 0, 0, heapID);
     LoadStandardWindowGraphics(param0->unk_00, BG_LAYER_MAIN_1, 1 + (18 + 12), 0, 0, heapID);
 
@@ -1734,10 +1734,10 @@ static void ov69_0225DB00(UnkStruct_ov69_0225DAEC *param0)
 {
     if (param0->unk_10 == 0) {
         param0->unk_10 = 1;
-        Sound_PlayEffect(SEQ_SE_PL_TIMER03);
+        Sound_PlayEffect(SEQ_SE_PL_TIMER03_sseq);
     } else {
         param0->unk_10 = 0;
-        Sound_PlayEffect(SEQ_SE_PL_TIMER03);
+        Sound_PlayEffect(SEQ_SE_PL_TIMER03_sseq);
     }
 
     param0->unk_12 = 1;
@@ -2681,7 +2681,7 @@ static void ov69_0225EC08(UnkStruct_ov69_0225EB60 *param0, UnkStruct_ov69_0225E4
             v0 = ov69_0225EC70(param0, param0->unk_30, param1);
 
             if (v0 == 1) {
-                Sound_PlayEffect(SEQ_SE_PL_TOKEI3);
+                Sound_PlayEffect(SEQ_SE_PL_TOKEI3_sseq);
             }
         }
 

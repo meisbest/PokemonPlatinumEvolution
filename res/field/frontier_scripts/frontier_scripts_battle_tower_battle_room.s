@@ -1,11 +1,12 @@
 # include "macros/frscrcmd.inc"
 # include "res/text/bank/battle_tower_battle_room.h"
 # include "res/text/bank/menu_entries.h"
+# include "constants/battle_frontier.h"
 
     .data
 
-    .long _00E2 - 4
-    .short 0xFD13
+    ScriptEntry _00E2
+    ScriptEntryEnd
 
     .balign 4, 0
 _0008:
@@ -262,7 +263,7 @@ _0330:
     BufferNumber 1, VAR_0x8008
     BufferPlayerName 0
     Message BattleTowerBattleRoom_Text_ReceiveBP
-    PlayFanfare SEQ_PL_POINTGET3
+    PlayFanfare SEQ_PL_POINTGET3_sseq
     WaitFanfare
     Return
 
@@ -281,13 +282,13 @@ _0360:
 
 _0374:
     Message BattleTowerBattleRoom_Text_HealPokemon
-    PlayFanfare SEQ_ASA
+    PlayFanfare SEQ_ASA_sseq
     WaitFanfare
     HealParty
     Return
 
 _0382:
-    CallBattleTowerFunction BT_FUNC_UNK_34, 0, VAR_0x8008
+    CallBattleTowerFunction BT_FUNC_INCREMENT_CURRENT_BATTLE, 0, VAR_0x8008
     CallBattleTowerFunction BT_FUNC_HAS_DEFEATED_SEVEN_TRAINERS, 0, VAR_0x8008
     Return
 
@@ -325,14 +326,14 @@ _03EF:
     FrontierScrCmd_25 3
     FrontierScrCmd_25 1
     FrontierScrCmd_23 FR_VAR_0x800F
-    FrontierScrCmd_02
+    ExitFrontier
 
 _043F:
     FadeScreenOut
     FrontierScrCmd_25 3
     FrontierScrCmd_25 1
     FrontierScrCmd_23 FR_VAR_0x800F
-    FrontierScrCmd_02
+    ExitFrontier
 
 _0459:
     SetSystemVar VAR_BATTLE_TOWER_BATTLE_ROOM_LOAD_ACTION, 0
@@ -343,12 +344,12 @@ _0459:
 _046D:
     CallBattleTowerFunction BT_FUNC_SET_OPPONENT_TEAMS, 0, VAR_0x8008
     Call _04A8
-    FrontierScrCmd_85 0
+    BattleTower_PrintTrainerIntro 0
     WaitABPress
     CloseMessage
     Call _04C8
     FrontierScrCmd_3F 0
-    CallBattleTowerFunction BT_FUNC_UNK_59, 0, VAR_0x8008
+    CallBattleTowerFunction BT_FUNC_SET_UNUSED_FLAG, 0, VAR_0x8008
     BattleTower_StartBattle
     BattleTower_CheckWonBattle VAR_0x800C
     FadeScreenIn
@@ -374,7 +375,7 @@ _04DC:
     Message BattleTowerBattleRoom_Text_AreYouReady
     CallBattleTowerFunction BT_FUNC_GET_CHALLENGE_MODE, 0, VAR_0x8008
     GoToIfNe VAR_0x8008, BATTLE_TOWER_MODE_SINGLE, _052C
-    CallBattleTowerFunction BT_FUNC_UNK_36, 0, VAR_0x8008
+    CallBattleTowerFunction BT_FUNC_GET_CURRENT_STREAK, 0, VAR_0x8008
     GoToIfEq VAR_0x8008, 20, _078C
     GoToIfEq VAR_0x8008, 48, _078C
     GoTo _052C
@@ -443,7 +444,7 @@ _0641:
     End
 
 _0655:
-    CallBattleTowerFunction BT_FUNC_UNK_36, 0, VAR_0x8005
+    CallBattleTowerFunction BT_FUNC_GET_CURRENT_STREAK, 0, VAR_0x8005
     Return
 
 _065F:
@@ -462,7 +463,7 @@ _0667:
     Return
 
 _069A:
-    PlaySoundEffect SEQ_SE_DP_SAVE
+    PlaySoundEffect SEQ_SE_DP_SAVE_sseq
     BufferPlayerName 0
     Message BattleTowerBattleRoom_Text_BattleSaved
     Return
@@ -485,14 +486,14 @@ _06B3:
 
 _06D3:
     SetSystemVar VAR_BATTLE_TOWER_LOBBY_LOAD_ACTION, 2
-    CallBattleTowerFunction BT_FUNC_UNK_39, 0, VAR_0x8008
+    CallBattleTowerFunction BT_FUNC_QUICKSAVE, 0, VAR_0x8008
     FreeTowerStruct
     Message BattleTowerBattleRoom_Text_Saving
     ShowSavingIcon
     FrontierScrCmd_72 VAR_0x8008
     HideSavingIcon
-    PlaySoundEffect SEQ_SE_DP_SAVE
-    WaitSoundEffect SEQ_SE_DP_SAVE
+    PlaySoundEffect SEQ_SE_DP_SAVE_sseq
+    WaitSoundEffect SEQ_SE_DP_SAVE_sseq
     FadeScreenOut
     CloseMessage
     FreeBattleRecording
@@ -515,7 +516,7 @@ _0731:
 _0741:
     CallBattleTowerFunction BT_FUNC_GET_CHALLENGE_MODE, 0, VAR_0x8008
     GoToIfNe VAR_0x8008, BATTLE_TOWER_MODE_SINGLE, _04DC
-    CallBattleTowerFunction BT_FUNC_UNK_36, 0, VAR_0x8008
+    CallBattleTowerFunction BT_FUNC_GET_CURRENT_STREAK, 0, VAR_0x8008
     GoToIfEq VAR_0x8008, 20, _0780
     GoToIfEq VAR_0x8008, 48, _0780
     GoTo _04DC
@@ -560,7 +561,7 @@ _082D:
     SetVar VAR_0x8003, 0
     CallBattleTowerFunction BT_FUNC_SET_OPPONENT_TEAMS, 0, VAR_0x8008
     Call _092C
-    CallBattleTowerFunction BT_FUNC_UNK_36, 0, VAR_0x8008
+    CallBattleTowerFunction BT_FUNC_GET_CURRENT_STREAK, 0, VAR_0x8008
     GoToIfEq VAR_0x8008, 48, _08F1
     BufferPlayerName 0
     BufferRivalName 1
@@ -572,12 +573,12 @@ _086E:
     CloseMessage
     Call _04C8
     IncrementRecordValue RECORD_UNK_059
-    FrontierScrCmd_47 1
+    PlayFrontierBrainEncounterEffect FACILITY_TOWER
     BattleTower_StartBattle
     BattleTower_CheckWonBattle VAR_0x800C
     FadeScreenIn
     GoToIfEq VAR_0x800C, 0, _020F
-    CallBattleTowerFunction BT_FUNC_UNK_36, 0, VAR_0x8008
+    CallBattleTowerFunction BT_FUNC_GET_CURRENT_STREAK, 0, VAR_0x8008
     GoToIfEq VAR_0x8008, 48, _08FD
     GetSystemVar VAR_BATTLE_TOWER_PRINT_STATE, VAR_0x8008
     CallIfEq VAR_0x8008, 0, _08D9

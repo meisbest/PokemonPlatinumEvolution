@@ -2,8 +2,8 @@
 #define POKEPLATINUM_FIELD_BATTLE_DATA_TRANSFER_H
 
 #include "constants/battle.h"
+#include "constants/fieldmap.h"
 #include "generated/evolution_methods.h"
-#include "generated/map_headers.h"
 
 #include "struct_defs/chatot_cry.h"
 #include "struct_defs/trainer.h"
@@ -20,8 +20,8 @@
 #include "pc_boxes.h"
 #include "pokedex.h"
 #include "poketch.h"
-#include "rtc.h"
 #include "savedata.h"
+#include "time_of_day.h"
 #include "trainer_info.h"
 
 typedef struct BattleRecords {
@@ -99,7 +99,7 @@ void FieldBattleDTO_AddPokemonToBattler(FieldBattleDTO *dto, Pokemon *src, int b
 void FieldBattleDTO_CopyPartyToBattler(FieldBattleDTO *dto, const Party *src, int battler);
 void FieldBattleDTO_CopyTrainerInfoToBattler(FieldBattleDTO *dto, const TrainerInfo *src, int battler);
 void FieldBattleDTO_CopyChatotCryToBattler(FieldBattleDTO *dto, const ChatotCry *src, int battler);
-void FieldBattleDTO_InitFromGameState(FieldBattleDTO *dto, const FieldSystem *fieldSystem, SaveData *save, enum MapHeader mapHeaderID, JournalEntry *journalEntry, BagCursor *bagCursor, u8 *subscreenCursorOn);
+void FieldBattleDTO_InitFromGameState(FieldBattleDTO *dto, const FieldSystem *fieldSystem, SaveData *save, enum MapHeaderID mapHeaderID, JournalEntry *journalEntry, BagCursor *bagCursor, u8 *subscreenCursorOn);
 void FieldBattleDTO_Init(FieldBattleDTO *dto, const FieldSystem *fieldSystem);
 void FieldBattleDTO_InitWithNormalizedMonLevels(FieldBattleDTO *dto, const FieldSystem *fieldSystem, int level);
 void FieldBattleDTO_InitWithPartyOrder(FieldBattleDTO *dto, const FieldSystem *fieldSystem, const Party *party, const u8 *partyOrder);

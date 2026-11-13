@@ -4,13 +4,13 @@
 #include <string.h>
 
 #include "constants/battle.h"
+#include "constants/battle/backgrounds.h"
 #include "constants/battle/battle_script.h"
 #include "constants/game_options.h"
 #include "constants/heap.h"
 #include "constants/items.h"
 #include "constants/rtc.h"
 #include "generated/abilities.h"
-#include "generated/battle_backgrounds.h"
 #include "generated/species.h"
 #include "generated/trainer_message_types.h"
 #include "generated/trainer_score_events.h"
@@ -2299,13 +2299,13 @@ static BOOL BattleMessage_Callback(TextPrinterTemplate *unused, u16 soundCommand
         result = Sound_IsBGMPausedByFanfare();
         break;
     case 3:
-        Sound_PlayFanfare(SEQ_FANFA5);
+        Sound_PlayFanfare(SEQ_FANFA5_sseq);
         break;
     case 4:
-        Sound_PlayEffect(SEQ_SE_DP_KON);
+        Sound_PlayEffect(SEQ_SE_DP_KON_sseq);
         break;
     case 5:
-        Sound_PlayFanfare(SEQ_FANFA1);
+        Sound_PlayFanfare(SEQ_FANFA1_sseq);
         break;
     default:
         break;

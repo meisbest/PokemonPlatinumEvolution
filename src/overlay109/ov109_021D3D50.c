@@ -51,9 +51,9 @@
 #include "system.h"
 #include "text.h"
 #include "trainer_info.h"
+#include "union_room.h"
 #include "unk_020363E8.h"
 #include "unk_02038ED4.h"
-#include "unk_0205B33C.h"
 #include "unk_0209BDF8.h"
 #include "vram_transfer.h"
 #include "wireless_manager.h"
@@ -209,7 +209,7 @@ int ov109_021D3D50(ApplicationManager *appMan, int *param1)
         CommManager_SetMaxNumConnections(3);
 
         if (CommSys_CurNetId() == 0) {
-            sub_0205BEA8(13);
+            UnionRoom_SetStatus(UR_STATUS_SPIN_TRADING);
         }
 
         NetworkIcon_Init();
@@ -561,8 +561,8 @@ static void ov109_021D4300(UnkStruct_ov109_021D5140 *param0, NARC *param1)
 
     Graphics_LoadPaletteFromOpenNARC(param1, 0, 0, 0, 16 * 16 * 2, HEAP_ID_95);
     Graphics_LoadPalette(NARC_INDEX_GRAPHIC__POKETCH, 12, 4, 0, 16 * 2, HEAP_ID_95);
-    Font_LoadScreenIndicatorsPalette(0, 13 * 0x20, HEAP_ID_95);
-    Font_LoadScreenIndicatorsPalette(4, 13 * 0x20, HEAP_ID_95);
+    Font_LoadScreenIndicatorsPalette(PAL_LOAD_MAIN_BG, PLTT_OFFSET(13), HEAP_ID_95);
+    Font_LoadScreenIndicatorsPalette(PAL_LOAD_SUB_BG, PLTT_OFFSET(13), HEAP_ID_95);
     Graphics_LoadTilesToBgLayer(NARC_INDEX_GRAPHIC__POKETCH, 10, v0, 6, 0, 0, 1, HEAP_ID_95);
     Graphics_LoadTilemapToBgLayer(NARC_INDEX_GRAPHIC__POKETCH, 11, v0, 6, 0, 0, 1, HEAP_ID_95);
     Graphics_LoadTilesToBgLayerFromOpenNARC(param1, 2, v0, 1, 0, 32 * 8 * 0x20, 1, HEAP_ID_95);
@@ -741,7 +741,7 @@ static void ov109_021D47B8(UnkStruct_ov109_021D5140 *param0)
                 sub_0209BEBC(param0->unk_10, 7, &v0, 1);
                 ov109_021D5858(param0, 0);
             } else {
-                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06);
+                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06_sseq);
             }
         }
     } else if (gSystem.pressedKeys & PAD_BUTTON_B) {
@@ -750,7 +750,7 @@ static void ov109_021D47B8(UnkStruct_ov109_021D5140 *param0)
                 ov109_021D55A8(param0, 4, 0);
                 ov109_021D48EC(param0, 4);
             } else {
-                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06);
+                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06_sseq);
             }
         } else {
             if ((CommSys_ConnectedCount() == param0->unk_10->unk_2C) && (param0->unk_10->unk_30 == 0)) {
@@ -761,7 +761,7 @@ static void ov109_021D47B8(UnkStruct_ov109_021D5140 *param0)
                 sub_0209BEBC(param0->unk_10, 7, &v1, 1);
                 ov109_021D5858(param0, 0);
             } else {
-                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06);
+                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06_sseq);
             }
         }
     } else {
@@ -846,7 +846,7 @@ static int ov109_021D4980(UnkStruct_ov109_021D5140 *param0, int param1)
     if (CommSys_CurNetId()) {
         if (param0->unk_10->unk_28) {
             if (gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B | PAD_KEY_UP | PAD_KEY_DOWN)) {
-                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06);
+                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06_sseq);
             }
 
             ov109_021D48D0(param0);
@@ -855,7 +855,7 @@ static int ov109_021D4980(UnkStruct_ov109_021D5140 *param0, int param1)
     } else {
         if (param0->unk_10->unk_30 != 0) {
             if (gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B | PAD_KEY_UP | PAD_KEY_DOWN)) {
-                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06);
+                Sound_PlayEffect(SEQ_SE_DP_CUSTOM06_sseq);
             }
 
             ov109_021D48D0(param0);
@@ -970,7 +970,7 @@ static int ov109_021D4B94(UnkStruct_ov109_021D5140 *param0, int param1)
 
     if ((ov109_021D548C() != param0->unk_10->unk_2C) || (param0->unk_10->unk_30 != 0)) {
         if (gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B | PAD_KEY_UP | PAD_KEY_DOWN)) {
-            Sound_PlayEffect(SEQ_SE_DP_CUSTOM06);
+            Sound_PlayEffect(SEQ_SE_DP_CUSTOM06_sseq);
         }
 
         ov109_021D48D0(param0);
@@ -990,7 +990,7 @@ static int ov109_021D4B94(UnkStruct_ov109_021D5140 *param0, int param1)
             if (CommSys_CurNetId() == 0) {
                 param0->unk_3B8 = 24;
                 param0->unk_4AB6 = ov109_021D548C();
-                sub_0205BEA8(12);
+                UnionRoom_SetStatus(UR_STATUS_UNK_12);
             } else {
                 GF_ASSERT(FALSE);
             }
@@ -1124,7 +1124,7 @@ static int ov109_021D4E28(UnkStruct_ov109_021D5140 *param0, int param1)
 
     if ((param0->unk_10->unk_2C != ov109_021D548C()) || (param0->unk_10->unk_30 != 0)) {
         if (gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B | PAD_KEY_UP | PAD_KEY_DOWN)) {
-            Sound_PlayEffect(SEQ_SE_DP_CUSTOM06);
+            Sound_PlayEffect(SEQ_SE_DP_CUSTOM06_sseq);
         }
 
         ov109_021D48D0(param0);
@@ -1285,7 +1285,7 @@ static int ov109_021D5098(UnkStruct_ov109_021D5140 *param0, int param1)
 
 static int ov109_021D510C(UnkStruct_ov109_021D5140 *param0, int param1)
 {
-    sub_0205BEA8(12);
+    UnionRoom_SetStatus(UR_STATUS_UNK_12);
     StartScreenFade(FADE_BOTH_SCREENS, FADE_TYPE_CIRCLE_OUT, FADE_TYPE_CIRCLE_OUT, COLOR_BLACK, 16, 1, HEAP_ID_95);
 
     param0->unk_08 = 1;
@@ -1632,7 +1632,7 @@ static void ov109_021D5668(UnkStruct_ov109_021D5140 *param0)
     }
 
     if (v1) {
-        Sound_PlayEffect(SEQ_SE_DP_TELE2);
+        Sound_PlayEffect(SEQ_SE_DP_TELE2_sseq);
     }
 }
 
@@ -1738,7 +1738,7 @@ static int ov109_021D58AC(UnkStruct_ov109_021D5140 *param0, int param1)
     case 2:
     case 3:
     case 4:
-        sub_0205BEA8(13);
+        UnionRoom_SetStatus(UR_STATUS_SPIN_TRADING);
 
         if (v0 < param0->unk_4AA8) {
             switch (param0->unk_4AB5) {
@@ -1754,7 +1754,7 @@ static int ov109_021D58AC(UnkStruct_ov109_021D5140 *param0, int param1)
         }
         break;
     case 5:
-        sub_0205BEA8(12);
+        UnionRoom_SetStatus(UR_STATUS_UNK_12);
         ov109_021D5858(param0, param1);
         break;
     }

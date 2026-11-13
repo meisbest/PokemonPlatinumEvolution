@@ -3,17 +3,12 @@
 
 #include "constants/battle_frontier_stats.h"
 
-#include "struct_defs/struct_0202D060.h"
 #include "struct_defs/struct_0202D080.h"
-#include "struct_defs/struct_0202D750.h"
-#include "struct_defs/struct_0202D764.h"
-#include "struct_defs/struct_0202FF58.h"
-#include "struct_defs/struct_020300F4.h"
-#include "struct_defs/struct_020302DC.h"
-#include "struct_defs/struct_0203041C.h"
-#include "struct_defs/struct_020304A0.h"
-#include "struct_defs/struct_020305B8.h"
+#include "struct_defs/wifi_battle_tower_data.h"
 
+#include "battle_arcade_save.h"
+#include "battle_castle_save.h"
+#include "battle_factory_save.h"
 #include "battle_hall_save.h"
 #include "wifi_list.h"
 
@@ -25,29 +20,29 @@ typedef struct BattleFrontierStats {
 typedef struct BattleFrontierSave {
     BattleFrontierStats stats;
     union {
-        UnkStruct_0202D060 unk_8E0_val1;
-        UnkStruct_0202FF58 unk_8E0_val2;
+        BattleTowerSave towerSave;
+        BattleFactorySave factorySave;
         BattleHallSave hallSave;
-        UnkStruct_020302DC unk_8E0_val4;
-        UnkStruct_020304A0 unk_8E0_val5;
+        BattleCastleSave castleSave;
+        BattleArcadeSave arcadeSave;
     };
     struct {
-        UnkStruct_0202D750 unk_00;
-        UnkStruct_0202D080 unk_168;
-        UnkStruct_0202D764 unk_188;
+        WifiBattleTowerRecord wifiBattleTowerRecord;
+        FrontierEasyChatMessages easyChatMessages;
+        WifiBattleTowerDownloadData wifiBattleTowerDownloadData;
     } unk_950;
     struct {
-        UnkStruct_020300F4 unk_00;
-    } unk_1614;
+        BattleFactoryStreakFlags streakFlags;
+    } factory;
     struct {
         BattleHallStreakFlags streakFlags;
     } hall;
     struct {
-        UnkStruct_0203041C unk_00;
-    } unk_161C;
+        BattleCastlePersistentSave persistentSave;
+    } castle;
     struct {
-        UnkStruct_020305B8 unk_00;
-    } unk_1620;
+        BattleArcadeStreakFlags streakFlags;
+    } arcade;
 } BattleFrontierSave;
 
 #endif // POKEPLATINUM_STRUCT_BATTLE_FRONTIER_H

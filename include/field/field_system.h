@@ -2,12 +2,11 @@
 #define POKEPLATINUM_FIELD_SYSTEM_STRUCT_H
 
 #include "struct_decls/map_object_manager.h"
-#include "struct_decls/struct_0205B43C_decl.h"
 #include "struct_decls/struct_0205C22C_decl.h"
-#include "struct_decls/struct_02095E80_decl.h"
 #include "struct_defs/battle_tower.h"
 #include "struct_defs/map_load_mode.h"
 
+#include "applications/trade_room/defs.h"
 #include "field/field_system_sub2_decl.h"
 #include "overlay005/area_data.h"
 #include "overlay005/area_light.h"
@@ -20,7 +19,6 @@
 #include "overlay005/model_attributes.h"
 #include "overlay005/ov5_021EAFA4.h"
 #include "overlay005/signpost.h"
-#include "overlay005/struct_ov5_021D1A68_decl.h"
 #include "overlay056/struct_ov56_02256468_decl.h"
 #include "overlay066/struct_ov66_0222DCE0_sub1.h"
 #include "underground/struct_underground_top_screen_context_decl.h"
@@ -41,6 +39,7 @@
 #include "savedata.h"
 #include "terrain_attributes.h"
 #include "terrain_collision_manager.h"
+#include "union_room.h"
 
 #define NUM_HONEY_TREES 21
 
@@ -66,6 +65,14 @@ typedef struct FieldProcessManager {
     BOOL kill;
 } FieldProcessManager;
 
+#define MAP_OBJECT_PRELOAD_SENTINEL 0xFFFF
+#define MAX_MAP_OBJECTS_TO_PRELOAD  24
+
+typedef struct MapObjectsToPreload {
+    u16 count;
+    int ids[MAX_MAP_OBJECTS_TO_PRELOAD];
+} MapObjectsToPreload;
+
 typedef struct FieldSystem_t {
     FieldProcessManager *processManager;
     FieldSystem_sub2 *unk_04;
@@ -80,7 +87,7 @@ typedef struct FieldSystem_t {
     LandDataManager *landDataMan;
     MapMatrix *mapMatrix;
     AreaDataManager *areaDataManager;
-    UnkStruct_ov5_021D1A68 *unk_34;
+    MapObjectsToPreload *mapObjectsToPreload;
     MapObjectManager *mapObjMan;
     PlayerAvatar *playerAvatar;
     FieldEffectManager *fieldEffMan;
@@ -98,10 +105,10 @@ typedef struct FieldSystem_t {
     int mapLoadType;
     const MapLoadMode *mapLoadMode;
     FieldWildBattleMetadata wildBattleMetadata;
-    UnkStruct_0205B43C *unk_7C;
+    UnionRoomManager *unionRoomMan;
     UnkStruct_0205C22C *unk_80;
     UnkStruct_ov56_02256468 *unk_84;
-    UnkStruct_02095E80 *unk_88;
+    TradeRoom *tradeRoom;
     UnkStruct_ov5_021EB0E0 *unk_8C;
     int menuCursorPos;
     RadarChain *chain;
@@ -113,7 +120,7 @@ typedef struct FieldSystem_t {
     BattleTower *battleTower;
     const BattleRegulation *battleRegulation;
     PokedexMemory *pokedexMemory;
-    BOOL unk_B8;
+    BOOL temporaryMapChange;
     u8 *battleSubscreenCursorOn;
     u32 unk_C0;
     UnkStruct_ov66_0222DCE0_sub1 unk_C4;

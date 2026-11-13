@@ -12,6 +12,8 @@
 #include "map_object.h"
 #include "overworld_anim_manager.h"
 
+#include "res/graphics/field_effects/field_effects.naix"
+
 typedef struct {
     FieldEffectManager *unk_00;
 } UnkStruct_ov5_021F32B0;
@@ -58,9 +60,9 @@ void ov5_021F32A0(void *param0)
 
 static void ov5_021F32B0(UnkStruct_ov5_021F32B0 *param0)
 {
-    ov5_021DF9E0(param0->unk_00, 3, 86);
-    ov5_021DFA14(param0->unk_00, 2, 174);
-    ov5_021DFA3C(param0->unk_00, 2, 5, 1);
+    ov5_021DF9E0(param0->unk_00, 3, water_splash_nsbmd);
+    ov5_021DFA14(param0->unk_00, 2, water_splash_bin);
+    ov5_021DFA3C(param0->unk_00, 2, water_splash_nsbtx, 1);
     ov5_021DF864(param0->unk_00, 3, 3, 2, 2, 0, Unk_ov5_0220059C);
 }
 
@@ -105,7 +107,7 @@ static int ov5_021F336C(OverworldAnimManager *param0, void *param1)
     v1->unk_14 = *v2;
     v1->unk_04 = MapObject_GetEffectiveGraphicsID(v1->unk_14.unk_0C);
     v1->unk_08 = MapObject_GetLocalID(v1->unk_14.unk_0C);
-    v1->unk_0C = MapObject_GetMapID(v1->unk_14.unk_0C);
+    v1->unk_0C = MapObject_GetMapHeaderID(v1->unk_14.unk_0C);
 
     OverworldAnimManager_SetPosition(param0, &v0);
     v1->unk_24 = ov5_021DF84C(v1->unk_14.unk_04, 3, &v0);

@@ -6,6 +6,7 @@
 #include "field/field_system.h"
 #include "overlay005/fieldmap.h"
 
+#include "battle_tower_save.h"
 #include "bg_window.h"
 #include "colored_arrow.h"
 #include "easy_chat_args.h"
@@ -22,7 +23,6 @@
 #include "string_template.h"
 #include "system.h"
 #include "text.h"
-#include "unk_0202D05C.h"
 #include "unk_0203D1B8.h"
 
 #include "res/text/bank/easy_chat.h"
@@ -135,19 +135,19 @@ static BOOL sub_0209AE14(FieldTask *param0)
 
             switch (v0->unk_64) {
             case 0:
-                EasyChatSentence_Copy(&(v0->unk_48), sub_0202D498(v0->fieldSystem->saveData, 0));
+                EasyChatSentence_Copy(&(v0->unk_48), FrontierEasyChatMessages_GetSentence(v0->fieldSystem->saveData, 0));
                 v0->unk_54 = 3;
                 break;
             case 1:
-                EasyChatSentence_Copy(&(v0->unk_48), sub_0202D498(v0->fieldSystem->saveData, 1));
+                EasyChatSentence_Copy(&(v0->unk_48), FrontierEasyChatMessages_GetSentence(v0->fieldSystem->saveData, 1));
                 v0->unk_54 = 3;
                 break;
             case 2:
-                EasyChatSentence_Copy(&(v0->unk_48), sub_0202D498(v0->fieldSystem->saveData, 2));
+                EasyChatSentence_Copy(&(v0->unk_48), FrontierEasyChatMessages_GetSentence(v0->fieldSystem->saveData, 2));
                 v0->unk_54 = 3;
                 break;
             case 3:
-                EasyChatSentence_Copy(&(v0->unk_48), sub_0202D498(v0->fieldSystem->saveData, 3));
+                EasyChatSentence_Copy(&(v0->unk_48), FrontierEasyChatMessages_GetSentence(v0->fieldSystem->saveData, 3));
                 v0->unk_54 = 3;
                 break;
             case 4:
@@ -193,7 +193,7 @@ static BOOL sub_0209AE14(FieldTask *param0)
                 v0->unk_54 = 11;
             } else {
                 EasyChatArgs_CopySentenceTo(v0->unk_50, &(v0->unk_48));
-                sub_0202D478(v0->fieldSystem->saveData, v0->unk_64, &(v0->unk_48));
+                FrontierEasyChatMessages_SetSentence(v0->fieldSystem->saveData, v0->unk_64, &(v0->unk_48));
                 sub_0209B084(v0, 6, 0);
                 v0->unk_54 = 9;
             }
@@ -382,12 +382,12 @@ static int sub_0209B288(UnkStruct_0209AD84 *param0)
         }
 
         if (gSystem.pressedKeys & PAD_BUTTON_A) {
-            Sound_PlayEffect(SEQ_SE_CONFIRM);
+            Sound_PlayEffect(SE_CONFIRM_sseq_3);
             return param0->unk_5C;
         }
 
         if (gSystem.pressedKeys & PAD_BUTTON_B) {
-            Sound_PlayEffect(SEQ_SE_CONFIRM);
+            Sound_PlayEffect(SE_CONFIRM_sseq_3);
             return param0->unk_60 - 1;
         }
 
@@ -398,7 +398,7 @@ static int sub_0209B288(UnkStruct_0209AD84 *param0)
         Window_FillRectWithColor(param0->unk_68, 15, 0, 0, 12, param0->unk_68->height * 8);
         ColoredArrow_Print(param0->unk_14, param0->unk_68, 0, param0->unk_5C * 16);
         Window_LoadTiles(param0->unk_68);
-        Sound_PlayEffect(SEQ_SE_CONFIRM);
+        Sound_PlayEffect(SE_CONFIRM_sseq_3);
     }
 
     return -1;

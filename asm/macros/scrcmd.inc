@@ -23,7 +23,7 @@
 #include "generated/poketch_apps.h"
 #include "generated/roaming_slots.h"
 #include "generated/save_types.h"
-#include "generated/sdat.h"
+#include "res/sound/pl_sound_data.naix"
 #include "generated/signpost_commands.h"
 #include "generated/signpost_types.h"
 #include "generated/time_of_day.h"
@@ -34,10 +34,10 @@
 #include "constants/animation_tags.h"
 #include "constants/battle.h"
 #include "constants/battle_tower.h"
-#include "constants/battle_tower_functions.h"
 #include "constants/battle/battle_script.h"
 #include "constants/boat_cutscene.h"
 #include "constants/colors.h"
+#include "constants/distortion_world.h"
 #include "constants/elevator_dirs.h"
 #include "constants/fade_screen.h"
 #include "constants/forms.h"
@@ -59,6 +59,8 @@
 #include "constants/union_room_message_types.h"
 #include "constants/villa_visitors.h"
 #include "constants/vs_seeker.h"
+
+#include "res/field/maps/scripts_common.h"
 
 #include "data/scripts/scrcmd.h"
 #include "macros/movement.inc"
@@ -383,7 +385,7 @@
     SetSignpostCommand SIGNPOST_CMD_SCROLL_IN
     WaitForSignpostDone
     GetSignpostInput VAR_RESULT
-    Common_HandleSignpostInput
+    CallCommonScript CommonScript_HandleSignpostInput
     .endm
 
     .macro ShowArrowSign messageID
@@ -391,7 +393,7 @@
     SetSignpostCommand SIGNPOST_CMD_SCROLL_IN
     WaitForSignpostDone
     GetSignpostInput VAR_RESULT
-    Common_HandleSignpostInput
+    CallCommonScript CommonScript_HandleSignpostInput
     .endm
 
     .macro ShowLandmarkSign messageID
@@ -399,7 +401,7 @@
     SetSignpostCommand SIGNPOST_CMD_SCROLL_IN
     WaitForSignpostDone
     GetSignpostInput VAR_RESULT
-    Common_HandleSignpostInput
+    CallCommonScript CommonScript_HandleSignpostInput
     .endm
 
     .macro ShowScrollingSign messageID
@@ -407,7 +409,7 @@
     SetSignpostCommand SIGNPOST_CMD_SCROLL_IN
     WaitForSignpostDone
     DrawSignpostScrollingMessage \messageID, VAR_RESULT
-    Common_HandleSignpostInput
+    CallCommonScript CommonScript_HandleSignpostInput
     .endm
 
     .macro DrawSignpostInstantMessage messageID, signpostType, signpostNARCMemberIdx=0, unused=VAR_RESULT
@@ -1833,8 +1835,8 @@
     .short \word
     .endm
 
-    .macro ScrCmd_131
-    .short SCRCMD_131
+    .macro EnablePoketch
+    .short SCRCMD_ENABLEPOKETCH
     .endm
 
     .macro CheckPoketchEnabled destVar
@@ -2731,9 +2733,9 @@
     .short \destVar
     .endm
 
-    .macro ScrCmd_1D7 arg0
-    .short SCRCMD_1D7
-    .short \arg0
+    .macro OpenPoffinCooking isInGroup
+    .short SCRCMD_OPENPOFFINCOOKING
+    .short \isInGroup
     .endm
 
     .macro CheckCanCookPoffin destVar
@@ -2741,19 +2743,19 @@
     .short \destVar
     .endm
 
-    .macro ScrCmd_1D9 arg0, arg1
-    .short SCRCMD_1D9
-    .short \arg0
-    .short \arg1
+    .macro OpenBattleTowerRecordsApp isRankingsScreen, resultsType
+    .short SCRCMD_OPENBATTLETOWERRECORDSAPP
+    .short \isRankingsScreen
+    .short \resultsType
     .endm
 
     .macro SetBattleTowerNull
     .short SCRCMD_SETBATTLETOWERNULL
     .endm
 
-    .macro InitBattleTower arg0, challengeMode
+    .macro InitBattleTower resumingFromSave, challengeMode
     .short SCRCMD_INITBATTLETOWER
-    .short \arg0
+    .short \resumingFromSave
     .short \challengeMode
     .endm
 
@@ -2786,11 +2788,11 @@
     .short \arg0
     .endm
 
-    .macro ScrCmd_1E1 arg0, arg1, arg2
-    .short SCRCMD_1E1
-    .short \arg0
-    .short \arg1
-    .short \arg2
+    .macro BattleTower_SendCommMessage command, arg, success
+    .short SCRCMD_BATTLE_TOWER_SEND_COMM_MESSAGE
+    .short \command
+    .short \arg
+    .short \success
     .endm
 
     .macro ScrCmd_1E2 arg0, arg1
@@ -2799,15 +2801,15 @@
     .short \arg1
     .endm
 
-    .macro ScrCmd_1E3 arg0, arg1
-    .short SCRCMD_1E3
-    .short \arg0
-    .short \arg1
+    .macro GetBattleTowerMatchIndices rank, opponentIdx
+    .short SCRCMD_GETBATTLETOWERMATCHINDICES
+    .short \rank
+    .short \opponentIdx
     .endm
 
-    .macro ScrCmd_1E4 arg0
-    .short SCRCMD_1E4
-    .short \arg0
+    .macro BattleTower_CheckHasMatchListData result
+    .short SCRCMD_BATTLETOWER_CHECKHASMATCHLISTDATA
+    .short \result
     .endm
 
     .macro IncrementGameRecord recordID
@@ -4232,10 +4234,10 @@
     .byte \sceneID
     .endm
 
-    .macro ScrCmd_2C5 arg0, arg1
-    .short SCRCMD_2C5
-    .short \arg0
-    .short \arg1
+    .macro DeleteActiveBattleFactoryStreak challengeType, isOpenLevel
+    .short SCRCMD_DELETEACTIVEBATTLEFACTORYSTREAK
+    .short \challengeType
+    .short \isOpenLevel
     .endm
 
     .macro ScrCmd_2C6
@@ -4268,11 +4270,11 @@
     .short \species
     .endm
 
-    .macro ScrCmd_2CC arg0, arg1, arg2
-    .short SCRCMD_2CC
-    .short \arg0
-    .short \arg1
-    .short \arg2
+    .macro CallBattleHallLobbyFunction action, arg, result
+    .short SCRCMD_CALLBATTLEHALLLOBBYFUNCTION
+    .short \action
+    .short \arg
+    .short \result
     .endm
 
     .macro ScrCmd_2CD
@@ -4295,35 +4297,35 @@
     .short \slot2
     .endm
 
-    .macro ScrCmd_2D1 arg0
-    .short SCRCMD_2D1
-    .short \arg0
+    .macro DeleteActiveBattleHallStreak challengeType
+    .short SCRCMD_DELETEACTIVEBATTLEHALLSTREAK
+    .short \challengeType
     .endm
 
-    .macro ScrCmd_2D2 arg0, arg1, arg2
-    .short SCRCMD_2D2
-    .short \arg0
-    .short \arg1
-    .short \arg2
+    .macro CallBattleCastleLobbyFunction action, arg, result
+    .short SCRCMD_CALLBATTLECASTLELOBBYFUNCTION
+    .short \action
+    .short \arg
+    .short \result
     .endm
 
-    .macro ScrCmd_2D3 arg0, arg1, arg2
-    .short SCRCMD_2D3
-    .short \arg0
-    .short \arg1
-    .short \arg2
+    .macro CheckBattleCastlePartnerUsesDifferentSpecies species1, species2, result
+    .short SCRCMD_CHECKBATTLECASTLEPARTNERUSESDIFFERENTSPECIES
+    .short \species1
+    .short \species2
+    .short \result
     .endm
 
-    .macro ScrCmd_2D4 arg0, arg1, arg2
-    .short SCRCMD_2D4
-    .short \arg0
-    .short \arg1
-    .short \arg2
+    .macro GetBattleCastleSelectedSlots selectedSlot1, selectedSlot2, selectedSlot3
+    .short SCRCMD_GETBATTLECASTLESELECTEDSLOTS
+    .short \selectedSlot1
+    .short \selectedSlot2
+    .short \selectedSlot3
     .endm
 
-    .macro ScrCmd_2D5 arg0
-    .short SCRCMD_2D5
-    .short \arg0
+    .macro DeleteActiveBattleCastleStreak challengeType
+    .short SCRCMD_DELETEACTIVEBATTLECASTLESTREAK
+    .short \challengeType
     .endm
 
     .macro SaveExtraData
@@ -4340,30 +4342,30 @@
     .byte \martID
     .endm
 
-    .macro ScrCmd_2D9 arg0, arg1, arg2
-    .short SCRCMD_2D9
-    .short \arg0
-    .short \arg1
-    .short \arg2
+    .macro CallBattleArcadeLobbyFunction action, arg, result
+    .short SCRCMD_CALLBATTLEARCADELOBBYFUNCTION
+    .short \action
+    .short \arg
+    .short \result
     .endm
 
-    .macro ScrCmd_2DA arg0, arg1, arg2
-    .short SCRCMD_2DA
-    .short \arg0
-    .short \arg1
-    .short \arg2
+    .macro CheckBattleArcadePartnerUsesDifferentSpecies species1, species2, result
+    .short SCRCMD_CHECKBATTLEARCADEPARTNERUSESDIFFERENTSPECIES
+    .short \species1
+    .short \species2
+    .short \result
     .endm
 
-    .macro ScrCmd_2DB arg0, arg1, arg2
-    .short SCRCMD_2DB
-    .short \arg0
-    .short \arg1
-    .short \arg2
+    .macro GetBattleArcadeSelectedSlots selectedSlot1, selectedSlot2, selectedSlot3
+    .short SCRCMD_GETBATTLEARCADESELECTEDSLOTS
+    .short \selectedSlot1
+    .short \selectedSlot2
+    .short \selectedSlot3
     .endm
 
-    .macro ScrCmd_2DC arg0
-    .short SCRCMD_2DC
-    .short \arg0
+    .macro DeleteActiveBattleArcadeStreak challengeType
+    .short SCRCMD_DELETEACTIVEBATTLEARCADESTREAK
+    .short \challengeType
     .endm
 
     .macro FindPartySlotWithSpecies destVarID, species
@@ -4403,19 +4405,19 @@
     .short \destBerryOrAccessoryID
     .endm
 
-    .macro ScrCmd_2E2
-    .short SCRCMD_2E2
+    .macro OpenScratchOffCardsApp
+    .short SCRCMD_OPENSCRATCHOFFCARDSAPP
     .endm
 
-    .macro ScrCmd_2E3
-    .short SCRCMD_2E3
+    .macro FreeScratchOffCardsArgs
+    .short SCRCMD_FREESCRATCHOFFCARDSARGS
     .endm
 
-    .macro ScrCmd_2E4 arg0, arg1, arg2
-    .short SCRCMD_2E4
-    .short \arg0
-    .short \arg1
-    .short \arg2
+    .macro GetScratchOffCardsWonItem index, resultItem, resultCount
+    .short SCRCMD_GETSCRATCHOFFCARDSWONITEM
+    .short \index
+    .short \resultItem
+    .short \resultCount
     .endm
 
     // destVarID will be set to TRUE if the pokemon has at least one move it can learn at the given location and doesn't know yet
@@ -4815,9 +4817,9 @@
     .short \movementType
     .endm
 
-    .macro ScrCmd_32A arg0
-    .short SCRCMD_32A
-    .short \arg0
+    .macro CheckIfBattleHallStreakIs50 result
+    .short SCRCMD_CHECKIFBATTLEHALLSTREAKIS50
+    .short \result
     .endm
 
     .macro CheckPartyHasFatefulEncounterRegigigas destVar
@@ -5188,7 +5190,7 @@
     .endm
 
     .macro NPCMessage messageID
-    PlaySE SEQ_SE_CONFIRM
+    PlaySE SE_CONFIRM_sseq_3
     LockAll
     FacePlayer
     Message \messageID
@@ -5198,7 +5200,7 @@
     .endm
 
     .macro EventMessage messageID
-    PlaySE SEQ_SE_CONFIRM
+    PlaySE SE_CONFIRM_sseq_3
     LockAll
     Message \messageID
     WaitButton
@@ -5207,10 +5209,10 @@
     .endm
 
     .macro PokemonCryAndMessage species, messageID, unused=0
-    PlaySE SEQ_SE_CONFIRM
+    PlaySE SE_CONFIRM_sseq_3
     LockAll
     FacePlayer
-    WaitSE SEQ_SE_CONFIRM
+    WaitSE SE_CONFIRM_sseq_3
     PlayCry \species, \unused
     Message \messageID
     WaitCry
@@ -5220,138 +5222,23 @@
     .endm
 
     .macro PokeMartCommonWithGreeting unused=1
-    PlaySE SEQ_SE_CONFIRM
+    PlaySE SE_CONFIRM_sseq_3
     LockAll
     FacePlayer
-    Common_VendorGreeting
+    CallCommonScript CommonScript_VendorGreetingGeneric
     CloseMessageWithoutErasing
     PokeMartCommon \unused
     ReleaseAll
     .endm
 
     .macro PokeMartSpecialtiesWithGreeting martID
-    PlaySE SEQ_SE_CONFIRM
+    PlaySE SE_CONFIRM_sseq_3
     LockAll
     FacePlayer
-    Common_VendorGreeting
+    CallCommonScript CommonScript_VendorGreetingGeneric
     CloseMessageWithoutErasing
     PokeMartSpecialties \martID
     ReleaseAll
-    .endm
-
-    /* CallCommonScript aliases below */
-
-    .macro Common_HandleSignpostInput
-    CallCommonScript 0x7D0
-    .endm
-
-    .macro Common_CheckBagPocketForItem
-    CallCommonScript 0x7D1
-    .endm
-
-    .macro Common_CallPokecenterNurse nurseLocalID
-    SetVar VAR_0x8007, \nurseLocalID
-    CallCommonScript 0x7D2
-    .endm
-
-    .macro Common_SaveGame
-    CallCommonScript 0x7D6
-    .endm
-
-    .macro Common_GivePoketchApp
-    CallCommonScript 0x7D9
-    .endm
-
-    .macro Common_SendToUndergroundPC
-    CallCommonScript 0x7DC
-    .endm
-
-    .macro Common_ObtainUndergroundTrap
-    CallCommonScript 0x7DD
-    .endm
-
-    .macro Common_ObtainUndergroundSphere
-    CallCommonScript 0x7DE
-    .endm
-
-    .macro Common_GiveAccessoryWaitForConfirm
-    CallCommonScript 0x7DF
-    .endm
-
-    .macro Common_GiveItemQuantityNoLineFeed
-    CallCommonScript 0x7E0
-    .endm
-
-    .macro Common_MessageBagIsFull
-    CallCommonScript 0x7E1
-    .endm
-
-    .macro Common_VendorGreeting
-    CallCommonScript 0x7E3
-    .endm
-
-    .macro Common_ObtainContestBackdropWaitForConfirm
-    CallCommonScript 0x7F4
-    .endm
-
-    .macro Common_PrintPlateObtainedMessage
-    CallCommonScript 0x7F6
-    .endm
-
-    .macro Common_SetCounterpartBGM
-    CallCommonScript 0x7F8
-    .endm
-
-    .macro Common_FadeToDefaultMusic
-    CallCommonScript 0x7F9
-    .endm
-
-    .macro Common_SetRivalBGM
-    CallCommonScript 0x7FA
-    .endm
-
-    .macro Common_FadeToDefaultMusic2
-    CallCommonScript 0x7FB
-    .endm
-
-    .macro Common_GiveItemQuantity
-    CallCommonScript 0x7FC
-    .endm
-
-    .macro Common_ObtainContestBackdrop
-    CallCommonScript 0x7FD
-    .endm
-
-    .macro Common_SendToUndergroundPCWithLinefeed
-    CallCommonScript 0x7FE
-    .endm
-
-    .macro Common_GiveAccessory
-    CallCommonScript 0x7FF
-    .endm
-
-    .macro Common_SetFollowMeBGM
-    CallCommonScript 0x800
-    .endm
-
-    .macro Common_FadeToDefaultMusic3
-    CallCommonScript 0x801
-    .endm
-
-    .macro Common_CheckAllFrontierGoldPrintsObtained
-    CallCommonScript 0x806
-    .endm
-
-    .macro Common_SetLookerBGM
-    CallCommonScript 0x807
-    .endm
-
-    .macro Common_FadeToDefaultMusic4
-    CallCommonScript 0x808
-    .endm
-
-    .macro Common_GriseousOrbCouldNotBeRemoved
-    CallCommonScript 0x809
     .endm
 
     .text

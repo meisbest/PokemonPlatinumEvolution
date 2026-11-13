@@ -11,6 +11,8 @@
 #include "overworld_anim_manager.h"
 #include "simple3d.h"
 
+#include "res/graphics/field_effects/field_effects.naix"
+
 typedef struct {
     FieldEffectManager *unk_00;
     Simple3DModel unk_04;
@@ -57,8 +59,8 @@ void ov5_021F23EC(void *param0)
 
 static void ov5_021F23FC(UnkStruct_ov5_021F23FC *param0)
 {
-    FieldEffectManager_LoadModel(param0->unk_00, &param0->unk_04, 0, 78, 0);
-    FieldEffectManager_LoadAnimation(param0->unk_00, &param0->unk_18, 0, 165, 0);
+    FieldEffectManager_LoadModel(param0->unk_00, &param0->unk_04, 0, snowpoint_gym_snowball_nsbmd, 0);
+    FieldEffectManager_LoadAnimation(param0->unk_00, &param0->unk_18, 0, snowpoint_gym_snowball_nsbtp, 0);
 }
 
 static void ov5_021F2424(UnkStruct_ov5_021F23FC *param0)
@@ -112,7 +114,7 @@ static int ov5_021F2488(OverworldAnimManager *param0, void *param1)
     Simple3D_CreateRenderObjectWithAnim(&v0->unk_40, &v0->unk_10.unk_04->unk_04, &v0->unk_1C);
 
     v0->unk_04 = MapObject_GetLocalID(v0->unk_10.unk_08);
-    v0->unk_08 = MapObject_GetMapID(v0->unk_10.unk_08);
+    v0->unk_08 = MapObject_GetMapHeaderID(v0->unk_10.unk_08);
 
     {
         VecFx32 v2, v3;

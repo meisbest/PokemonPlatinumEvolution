@@ -15,6 +15,8 @@
 #include "sys_task.h"
 #include "sys_task_manager.h"
 
+#include "res/graphics/field_effects/field_effects.naix"
+
 typedef struct {
     int unk_00;
     int unk_04;
@@ -227,7 +229,7 @@ static int ov5_021F15B4(OverworldAnimManager *param0, void *param1)
     if (sub_02062E94(v0->unk_14.unk_08) == 1) {
         v0->unk_08 = sub_02062C18(v0->unk_14.unk_08);
     } else {
-        v0->unk_08 = MapObject_GetMapID(v0->unk_14.unk_08);
+        v0->unk_08 = MapObject_GetMapHeaderID(v0->unk_14.unk_08);
     }
 
     return 1;
@@ -386,7 +388,7 @@ static const fx32 Unk_ov5_02200284[] = {
 };
 
 static const int Unk_ov5_02200278[3] = {
-    0x11,
-    0x12,
-    0x13
+    shadow_nsbmd,
+    red_mark_nsbmd,
+    blue_mark_nsbmd
 };

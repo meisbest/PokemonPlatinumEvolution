@@ -3,7 +3,6 @@
 #include <nitro.h>
 #include <string.h>
 
-#include "struct_decls/struct_0205B43C_decl.h"
 #include "struct_defs/struct_0203330C.h"
 #include "struct_defs/struct_0205C22C.h"
 #include "struct_defs/struct_0205C924.h"
@@ -37,8 +36,8 @@
 #include "text.h"
 #include "touch_screen.h"
 #include "trainer_info.h"
+#include "union_room.h"
 #include "unk_02033200.h"
-#include "unk_0205B33C.h"
 
 FS_EXTERN_OVERLAY(overlay56);
 
@@ -60,7 +59,7 @@ typedef struct {
 struct UnkStruct_ov56_02256468_t {
     int unk_00;
     UnkStruct_0205C22C *unk_04;
-    UnkStruct_0205B43C *unk_08;
+    UnionRoomManager *unk_08;
     FieldSystem *fieldSystem;
     TrainerInfo *unk_10;
     BgConfig *unk_14;
@@ -181,7 +180,7 @@ static void ov56_02256294(UnkStruct_ov56_02256468 *param0)
     param0->unk_2D8.unk_06 = 0;
     param0->unk_18 = StringTemplate_Default(HEAP_ID_FIELD1);
     param0->unk_1C = MessageLoader_Init(MSG_LOADER_PRELOAD_ENTIRE_BANK, NARC_INDEX_MSGDATA__PL_MSG, TEXT_BANK_UNION_ROOM, HEAP_ID_FIELD1);
-    param0->unk_20 = Graphics_GetScrnData(NARC_INDEX_GRAPHIC__UNIONROOM, 3, 1, &(param0->unk_24), 4);
+    param0->unk_20 = Graphics_GetScrnData(NARC_INDEX_GRAPHIC__UNIONROOM, 3, TRUE, &(param0->unk_24), HEAP_ID_FIELD1);
 }
 
 static void ov56_022562EC(BgConfig *param0, UnkStruct_ov56_022562EC *param1)
@@ -223,7 +222,7 @@ UnkStruct_ov56_02256468 *ov56_02256410(FieldSystem *fieldSystem)
     v0->fieldSystem = fieldSystem;
     v0->unk_14 = fieldSystem->bgConfig;
     v0->unk_04 = fieldSystem->unk_80;
-    v0->unk_08 = fieldSystem->unk_7C;
+    v0->unk_08 = fieldSystem->unionRoomMan;
     v0->unk_10 = SaveData_GetTrainerInfo(fieldSystem->saveData);
     v0->unk_00 = 0;
     v0->unk_2F8 = v1;
@@ -558,7 +557,7 @@ static int ov56_02256A68(UnkStruct_ov56_02256468 *param0)
 
             if (v3 == 1) {
                 if (param0->unk_2D8.unk_04 != 0) {
-                    Sound_PlayEffect(SEQ_SE_DP_BUTTON3);
+                    Sound_PlayEffect(SEQ_SE_DP_BUTTON3_sseq);
                     param0->unk_2D8.unk_04--;
                 }
 
@@ -570,7 +569,7 @@ static int ov56_02256A68(UnkStruct_ov56_02256468 *param0)
 
             if (v3 == 1) {
                 if (param0->unk_2D8.unk_04 < param0->unk_2D8.unk_00 - 3) {
-                    Sound_PlayEffect(SEQ_SE_DP_BUTTON3);
+                    Sound_PlayEffect(SEQ_SE_DP_BUTTON3_sseq);
                     param0->unk_2D8.unk_04++;
                 }
 
@@ -595,7 +594,7 @@ static int ov56_02256A68(UnkStruct_ov56_02256468 *param0)
                         v5 = (UnkStruct_0203330C *)&v4->gameInfo.userGameInfo;
 
                         if ((param0->unk_04->unk_0C[v1].unk_01 == 2) && (v5->unk_00 == param0->unk_2D4->unk_00[v2].unk_0C)) {
-                            Sound_PlayEffect(SEQ_SE_DP_BUTTON3);
+                            Sound_PlayEffect(SEQ_SE_DP_BUTTON3_sseq);
                             param0->unk_04->unk_0C[v1].unk_03 = 1;
                             break;
                         }
@@ -606,7 +605,7 @@ static int ov56_02256A68(UnkStruct_ov56_02256468 *param0)
                     TrainerInfo *v6 = sub_02033F9C();
 
                     if (param0->unk_2D4->unk_00[v2].unk_0C == TrainerInfo_ID(v6)) {
-                        Sound_PlayEffect(SEQ_SE_DP_BUTTON3);
+                        Sound_PlayEffect(SEQ_SE_DP_BUTTON3_sseq);
                         param0->unk_04->unk_0C[50].unk_03 = 1;
                     }
                 }
@@ -671,7 +670,7 @@ static void ov56_02256C84(UnkStruct_ov56_02256468 *param0)
         if (gSystem.pressedKeysRepeatable & PAD_BUTTON_L) {
             if (param0->unk_2D8.unk_04 != 0) {
                 param0->unk_2D8.unk_04--;
-                Sound_PlayEffect(SEQ_SE_DP_BUTTON3);
+                Sound_PlayEffect(SEQ_SE_DP_BUTTON3_sseq);
             }
         }
     } else if (gSystem.heldKeys & PAD_BUTTON_R) {
@@ -680,7 +679,7 @@ static void ov56_02256C84(UnkStruct_ov56_02256468 *param0)
         if (gSystem.pressedKeysRepeatable & PAD_BUTTON_R) {
             if (param0->unk_2D8.unk_04 < param0->unk_2D8.unk_00 - 3) {
                 param0->unk_2D8.unk_04++;
-                Sound_PlayEffect(SEQ_SE_DP_BUTTON3);
+                Sound_PlayEffect(SEQ_SE_DP_BUTTON3_sseq);
             }
         }
     }
@@ -884,7 +883,7 @@ static void ov56_02257098(UnkStruct_ov56_02256468 *param0)
         }
     }
 
-    if ((v4 = sub_0205C028(param0->unk_08)) != NULL) {
+    if ((v4 = UnionRoom_TakePendingSentence(param0->unk_08)) != NULL) {
         u32 v7 = TrainerInfo_ID(param0->unk_10);
         ov56_02257048(param0, param0->unk_10, v4, v7);
     }

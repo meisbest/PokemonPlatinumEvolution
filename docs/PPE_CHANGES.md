@@ -1,13 +1,10 @@
 # PPE — Modifiche rispetto a pret/pokeplatinum
 
 - **Ultimo aggiornamento:** 2026-11-13
-- **Allineato a origin/main:** `b2cd286f3` "Fix flag name typo (#1216)" del 21/06/2026.
-  Su `ppe` corrisponde a `51a167557`, che ha lo stesso contenuto.
-  Al momento `origin/main` è a `62bdaacdc` (06/11/2026), cioè **121 commit più avanti**
-  e non ancora importati.
-- **Come è stato ricavato:** `git diff b2cd286f3 ppe` e i commit di Enrico Agrusti
-  e meisbest. Non si usa `origin/main...ppe` perché la storia è stata riscritta
-  (vedi [CLAUDE.md](../CLAUDE.md)).
+- **Allineato a origin/main:** `62bdaacdc` "tools: Make scripts and events easier to
+  work with by hand (#1332)" del 06/11/2026. Importato con il primo `/aggiorna` del 2026-11-13.
+- **Come vedere le modifiche PPE:** `git diff origin/main...ppe`, con tre puntini.
+  Funziona dal merge ponte del 2026-11-13 in poi: vedi [CLAUDE.md](../CLAUDE.md).
 
 Legenda: ⚠️ = problema noto o da verificare.
 
@@ -35,7 +32,7 @@ Legenda: ⚠️ = problema noto o da verificare.
 - ⚠️ **Flag 318 controllato due volte:** vale come "→ 85" e come "→ 60". Il controllo
   "85" viene prima, quindi appena il flag 318 si attiva (Saturno al Lago Valore,
   secondo il commento) il cap salta subito a 85 e il ramo "60" non viene mai usato.
-  Da verificare.
+  Da correggere dopo il primo `/aggiorna`.
 - **Commit:** `e8b0a26a5` Level cap, `98bb08cdb` Level cap finito, `f6691cc1d`
   (adattamento della scheda allenatore dopo il merge).
 
@@ -53,13 +50,15 @@ Legenda: ⚠️ = problema noto o da verificare.
 
 ## 2. Lotte
 
-### Niente strumenti contro gli allenatori
+### Niente strumenti contro gli allenatori — ⚠️ ECCEZIONE NOTA: non attiva
 - **Cosa cambia:** `BATTLE_TYPE_NO_ITEMS` include anche `BATTLE_TYPE_TRAINER`.
 - **Effetto previsto:** nelle lotte contro allenatori la Borsa non si può usare
   (compare "Items can't be used here.").
 - ⚠️ **Al momento NON funziona.** Nel merge di giugno upstream ha sostituito il
-  controllo in `src/battle/battle_controller_player.c` con `BATTLE_TYPE_FRONTIER_LINK`,
-  e `BATTLE_TYPE_NO_ITEMS` non è più usata da nessuna parte. Va riapplicata.
+  controllo in `src/battle/battle_controller_player.c` (`case PLAYER_INPUT_ITEM`)
+  con `BATTLE_TYPE_FRONTIER_LINK`, e `BATTLE_TYPE_NO_ITEMS` non è più usata da nessuna
+  parte. È un'**eccezione nota**, accettata il 2026-11-13: non blocca il push di
+  `/aggiorna`. Va riapplicata in un passo separato.
 - **File:** `include/constants/battle.h` (`src/battle/battle_controller_player.c` per
   ripristinarla)
 - **Commit:** `8191212f0` No items if trainer
@@ -78,22 +77,27 @@ Legenda: ⚠️ = problema noto o da verificare.
     uguali tra le statistiche attive, al massimo 255 ciascuna.
   - `nature`: per esempio `"NATURE_ADAMANT"`, oppure `null` per lasciarla casuale.
   - `ability`: `0` o `1` per lo slot abilità, oppure `null` per il default.
-  - Anche il tool di build `trainerproc` legge i nuovi campi, e le struct
-    `TrainerMon*` hanno `evFlags`, `nature` e `abilitySlot`.
+  - Il tool di build `trainerproc` (funzione `PackParty`) legge i campi, e le struct
+    `TrainerMon*` hanno `evFlags`, `nature` e `abilitySlot`, prima di `item`.
 - **Stato dei dati:** tutti i **927 file** in `res/trainers/data/` hanno i nuovi
   campi, ma con i valori di default (tutto `false`/`null`). Quindi per ora nel gioco
   **non cambia nulla**: c'è l'infrastruttura, i valori vanno ancora decisi.
+- **Verificato il 2026-11-13**, dopo la riscrittura di `trainerproc`:
+  1. valori di prova nel JSON di Roark (attack+speed, `NATURE_ADAMANT`, slot 1);
+  2. decodifica di `build/res/trainers/trpoke.narc`, risultato `evFlags=0x0A nature=3 abilitySlot=1`;
+  3. JSON ripristinato.
 - **File:** `include/struct_defs/trainer_data.h`, `src/trainer_data.c`,
   `tools/dataproc/src/trainerproc.c`, `res/trainers/data/*.json`
-- **Commit:** `c384801d5` Aggiunta EVs nemici, `852161878` Nature e abilità decise a mano
+- **Commit:** `c384801d5` Aggiunta EVs nemici, `852161878` Nature e abilità decise a
+  mano; riportato sulla nuova API di dataproc nel merge del 2026-11-13.
 
 ---
 
 ## 3. Personaggi e script (Pratopoli)
 
 ### Guru Lotta (nuovo NPC)
-- **Cosa cambia:** nella casa est di Pratopoli c'è un nuovo NPC
-  `PASTORIA_CITY_EAST_HOUSE_GURU_2` (aspetto da scienziato, posizione x=4, z=3)
+- **Cosa cambia:** nella casa est di Pratopoli c'è un nuovo NPC `LOCALID_GURU_2`
+  (aspetto da scienziato, posizione x=4, z=3, rivolto a sud, script `_GuruScript`)
   con il menu "Guru's Dojo":
   - **Cambia Abilità**: passa all'altra abilità della specie, se ne ha due.
   - **Cambia Natura**: scegli la natura da un elenco. Il PID viene rigenerato
@@ -122,16 +126,18 @@ Legenda: ⚠️ = problema noto o da verificare.
   | 0x241 | `ScrCmd_Dummy241` | `ScrCmd_ModifyEV` |
   | 0x242 | `ScrCmd_Dummy242` | `ScrCmd_ProcessGuruMoney` |
 
-- **File:** `res/field/events/events_pastoria_city_east_house.json`,
-  `res/field/scripts/scripts_pastoria_city_east_house.s` (macro `GuruCmd_*` e
+- **File:** `res/field/maps/pastoria_city_east_house/events.json` (NPC),
+  `res/field/maps/pastoria_city_east_house/scripts.s` (macro `GuruCmd_*` e
   script `_GuruScript`), `res/text/pastoria_city_east_house.json` (testi in inglese),
   `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c`
-- **Commit:** `ff94d873a` Guru lotta
+- **Commit:** `ff94d873a` Guru lotta. Adattato nel merge del 2026-11-13 ai nuovi
+  percorsi e al nuovo formato degli eventi (script per etichetta, direzione `DIR_*`,
+  id `LOCALID_*`) e ai nuovi nomi dei suoni (`SE_CONFIRM_sseq_3`).
 
 ### Insegnamosse: soldi invece della Squama Cuore
 - **Cosa cambia:** l'Insegnamosse di Pratopoli non chiede più una Squama Cuore ma
   **5.000 ₽** per mossa. Usa il comando `ProcessGuruMoney`.
-- **File:** `res/field/scripts/scripts_pastoria_city_east_house.s`,
+- **File:** `res/field/maps/pastoria_city_east_house/scripts.s`,
   `res/text/pastoria_city_east_house.json`
 - **Commit:** `ab7c49e63` Ricordamosse a 5000
 
@@ -152,13 +158,18 @@ Legenda: ⚠️ = problema noto o da verificare.
 ### Nuovo strumento: Tenda (`ITEM_TENT`)
 - **Cosa cambia:** nuovo strumento curativo nella tasca Medicine, costo 500 ₽.
   Cura PS, PP e stati e rianima **tutta la squadra**. Ha un'icona nuova.
-  Il menu squadra è stato modificato perché la cura venga applicata a tutti i
-  Pokémon presenti, non solo agli esausti.
+  Passa per il percorso della Cenere Sacra (`reviveAll`). Il menu squadra è stato
+  modificato perché la cura venga applicata a tutti i Pokémon presenti, non solo
+  agli esausti, con una protezione sul conteggio dei PS per chi è già al massimo.
 - **Dove si compra:** in tutti i Pokémon Market fin dall'inizio.
-- **File:** `res/items/data/tent.json`, `res/items/icons/tent.png`/`.pal`,
-  `res/items/icons/meson.build`, `res/items/item_icon.order`, `generated/items.txt`,
-  `include/data/mart_items.h`, `src/applications/party_menu/unk_02084B70.c`
-- **Commit:** `e623f2622` Tenda fatta
+- **File:** `res/items/data/tent.json` (con `battleUseCategory`), `res/items/icons/tent.png`
+  e `tent.pal` (nel repo in LF, sul disco in CRLF come tutte le palette:
+  `*.pal eol=crlf`), `res/items/icons/meson.build`, `res/items/item_icon.order`,
+  `generated/items.txt`, `include/data/mart_items.h`,
+  `src/applications/party_menu/callbacks.c` (`IsFullPartyHealItem`,
+  `FindNextPresentMember`, `FindNextReviveAllTarget`, usati da `PartyMenuCB_HandleSacredAsh`)
+- **Commit:** `e623f2622` Tenda fatta. Riportata nel merge del 2026-11-13 da
+  `unk_02084B70.c`, eliminato upstream, a `callbacks.c`.
 
 ### Merce nei negozi
 - **Market comuni:** Tenda (da 0 medaglie) e **Caramella Rara** (da 3 medaglie).
@@ -201,19 +212,21 @@ Legenda: ⚠️ = problema noto o da verificare.
 
 ## 6. Build e repository (non toccano il gioco)
 
-- `.gitignore`: aggiunti `*.nds` e `.claude/settings.local.json`.
+- `.gitignore`: in fondo c'è un blocco `# PPE` con `*.nds` e `.claude/settings.local.json`.
 - `.claude/settings.local.json` era stato committato prima della regola. Dal
   2026-11-13 non è più tracciato e ognuno tiene il proprio in locale.
-- Aggiunti `CLAUDE.md`, `docs/PPE_CHANGES.md` e i comandi `/salva` e `/aggiorna`
-  in `.claude/commands/`.
+- Aggiunti `CLAUDE.md`, `SETUP.md`, `docs/PPE_CHANGES.md` e i comandi `/salva` e
+  `/aggiorna` in `.claude/commands/`.
 - Submodule `subprojects/narc` aggiunto (`f6691cc1d`).
 - `.gitattributes`: in fondo c'è un blocco PPE che forza LF per `*.template`,
   `*.patch`, `*.adoc`, `*.csv` e `Makefile`. Non include `*.order` e `*.txt`,
-  perché alcuni file upstream di quei tipi sono in CRLF.
+  perché alcuni file upstream di quei tipi sono in CRLF. Non tocca `*.pal`, che upstream
+  forza in CRLF.
 - Il 2026-11-13 il "rumore da Windows" accumulato (permessi 755 → 644 e fine riga CRLF
   su ~100 file) è stato riportato alla versione upstream con il commit
-  "Normalizza fine riga e permessi". Ora `git diff b2cd286f3 ppe` mostra solo
-  modifiche PPE vere.
+  `d454b1d66` "Normalizza fine riga e permessi".
+- Da origin/main `62bdaacdc` meson è alla 1.12.0. Dopo `make update` può servire
+  `make distclean` (vedi Troubleshooting in CLAUDE.md).
 
 ---
 
@@ -223,21 +236,22 @@ Simboli, file e formati di upstream da cui dipendono le modifiche PPE. Servono
 per i **controlli semantici** di `/aggiorna`: se upstream rinomina, sposta o
 riscrive uno di questi, la modifica corrispondente va verificata.
 **Aggiorna questa tabella quando aggiungi o cambi una modifica.**
+Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 
 | Modifica PPE | Simboli upstream usati / modificati | File |
 |--------------|-------------------------------------|------|
 | Level cap | `VarsFlags_GetVarAddress`, `VarsFlags_CheckFlag`, `SaveData_GetVarsFlags`, `SaveData_GetTrainerInfo`, `TrainerInfo_HasBadge`, `BADGE_ID_*`, variabili `0x4055`–`0x410D` e flag `318` (numeri grezzi), `Pokemon_GetSpeciesBaseExpAt`, `ITEM_PARAM_LEVEL_UP`, `Pokemon_CheckItemEffects`, `Pokemon_ApplyItemEffects`, `Daycare_MoveToPartyFromDaycareMon`, `BoxPokemon_GiveExperience`, `ov5_021E63E0`, `DaycareMon_GetSteps`, `SaveData_Init` | `src/field_battle_data_transfer.c`, `include/field_battle_data_transfer.h`, `src/item_use_pokemon.c`, `src/overlay005/daycare.c`, `src/savedata.c` |
 | Level cap in battaglia + Condividi Esp. | `BtlCmd_CalcExpGain`, `BattleScript_GetExpTask`, `sideGetExpMask`, `gainedExp`/`sharedExp`, `HOLD_EFFECT_EXP_SHARE`, `MON_DATA_IS_EGG` | `src/battle/battle_script.c` |
 | Level cap nella Scheda Allenatore | `TrainerCard_DrawFrontText`, `TRAINER_CARD_WINDOW_SCORE`, `TrainerCard_DrawNumber`, `TRAINER_CARD_WINDOW_PARTIAL_WIDTH`, `Font_CalcStringWidth` | `src/applications/trainer_case/card_text.c` |
-| Niente strumenti contro allenatori | `BATTLE_TYPE_NO_ITEMS`, il controllo `PLAYER_INPUT_ITEM` (oggi `BATTLE_TYPE_FRONTIER_LINK`) | `include/constants/battle.h`, `src/battle/battle_controller_player.c` |
+| Niente strumenti contro allenatori (⚠️ eccezione nota) | `BATTLE_TYPE_NO_ITEMS`, il controllo in `case PLAYER_INPUT_ITEM` (oggi `BATTLE_TYPE_FRONTIER_LINK`) | `include/constants/battle.h`, `src/battle/battle_controller_player.c` |
 | Stile lotta Fisso, testo veloce | `Options_Init`, `Options_BattleStyle`, `OPTIONS_BATTLE_STYLE_SET`, `OPTIONS_TEXT_SPEED_FAST`, `ProcessMainInput`, `ENTRY_BATTLE_STYLE`, `ENTRY_CLOSE` | `src/game_options.c`, `src/applications/options_menu.c` |
-| EV, natura e abilità degli allenatori | `TrainerMonBase`/`WithMoves`/`WithItem`/`WithMovesAndItem`, `TrainerData_BuildParty`, `Pokemon_InitWith`, `NATURE_COUNT`, `SPECIES_DATA_ABILITY_1/2`, `MON_DATA_*_EV`, `proc_trainer`, `include_enum`, `dp_*` (API di dataproc), formato JSON degli allenatori | `include/struct_defs/trainer_data.h`, `src/trainer_data.c`, `tools/dataproc/src/trainerproc.c`, `res/trainers/data/*.json` |
+| EV, natura e abilità degli allenatori | `TrainerMonBase`/`WithMoves`/`WithItem`/`WithMovesAndItem` (layout: i nostri campi **prima di** `item`, perché `PackParty` copia fino a `offsetof(item)`), `TrainerData_BuildParty`, `Pokemon_InitWith`, `NATURE_COUNT`, `SPECIES_DATA_ABILITY_1/2`, `MON_DATA_*_EV`; in trainerproc: `PackParty`, `LOOKUP_ENUM`, `dp_try`, `dp_missing`, `dp_type_of`, `DP_STRING`/`DP_INT`, `dp_bool`, `dp_lookup`, `dp_u8`; formato JSON degli allenatori | `include/struct_defs/trainer_data.h`, `src/trainer_data.c`, `tools/dataproc/src/trainerproc.c`, `tools/dataproc/lib/include/dataproc.h`, `res/trainers/data/*.json` |
 | Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x242` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount`, `TrainerInfo_Money`/`SetMoney` | `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c` |
-| Guru Lotta: script, testi, NPC | macro con opcode grezzi (`.short 0x009C`…, `0x0045` InitListMenu, `0x0032` WaitAB), `macros/scrcmd.inc`, label `PastoriaCityEastHouse_*`, `FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC`, ID testi `PastoriaCityEastHouse_Text_*` e `pl_msg_00000140_*`, formato del file eventi (⚠️ upstream #1332 "Make scripts and events easier to work with by hand" lo tocca) | `res/field/scripts/scripts_pastoria_city_east_house.s`, `res/text/pastoria_city_east_house.json`, `res/field/events/events_pastoria_city_east_house.json` |
+| Guru Lotta: script, testi, NPC | macro con opcode grezzi (`.short 0x009C`…, `0x0045` = `INITLOCALTEXTLISTMENU`, `0x0032` = `WAITABPADPRESS`), `asm/macros/scrcmd.inc`, nomi dei suoni (`SE_CONFIRM_sseq_3`), label `PastoriaCityEastHouse_*` e `_GuruScript`, `ScriptEntry`, `FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC`, ID testi `PastoriaCityEastHouse_Text_*` e `pl_msg_00000140_*`, formato `events.json` (id `LOCALID_*`, `"script"` per etichetta, `"initial_dir"` = `DIR_*`) | `res/field/maps/pastoria_city_east_house/scripts.s`, `res/field/maps/pastoria_city_east_house/events.json`, `res/text/pastoria_city_east_house.json` |
 | MN dalla Borsa | `ScrCmd_CheckPartyMonHasMove`, `ScrCmd_FindPartySlotWithMove`, `Bag_GetItemQuantity`, `SaveData_GetBag`, `ITEM_HM01`–`ITEM_HM08`, `MOVE_CUT`/`STRENGTH`/`ROCK_SMASH`/`WATERFALL`/`ROCK_CLIMB` | `src/scrcmd_party.c` |
-| Tenda | schema JSON degli strumenti (`itemUseParams`, `fieldUseFunc`, `ITEM_USE_FUNC_HEALING`), `ITEM_PARAM_REVIVE_ALL`, `ITEM_PARAM_HEAL_SLEEP`, `sub_02085804`, `GetFirstFaintedMon`, `HEAP_ID_PARTY_MENU` | `res/items/data/tent.json`, `res/items/icons/*`, `res/items/icons/meson.build`, `res/items/item_icon.order`, `generated/items.txt`, `src/applications/party_menu/unk_02084B70.c` |
+| Tenda | schema JSON degli strumenti (`itemUseParams`, `fieldUseFunc`, `ITEM_USE_FUNC_HEALING`, `battleUseCategory`/`BATTLE_USE_CATEGORY_*`), `ITEM_PARAM_REVIVE_ALL`, `ITEM_PARAM_HEAL_SLEEP`, `CheckItemSacredAsh`, `PartyMenuCB_HandleSacredAsh`, `FindNextFaintedMember`, `SACREDASH_STATE_*`, `HEAP_ID_PARTY_MENU`, formato palette JASC (CRLF, `nitrogfx`) | `res/items/data/tent.json`, `res/items/icons/*`, `res/items/icons/meson.build`, `res/items/item_icon.order`, `generated/items.txt`, `src/applications/party_menu/callbacks.c` |
 | Negozi e prezzi | `PokeMartCommonItems`, `HearthomeMartSpecialties`, `PastoriaMartSpecialties`, `PokemonLeagueMartSpecialties`, `ITEM_*`, campo `price` dei JSON | `include/data/mart_items.h`, `res/items/data/*.json` |
-| Blocco LF in `.gitattributes` | file `.gitattributes` di upstream (il nostro blocco è in fondo) | `.gitattributes` |
+| Blocco PPE in `.gitignore` e `.gitattributes` | file di upstream, i nostri blocchi sono in fondo. `.gitattributes`: non aggiungere pattern già regolati da upstream (`*.pal`) | `.gitignore`, `.gitattributes` |
 | Nature colorate | `DrawSkillsPageWindows`, `SUMMARY_TEXT_RED`/`BLUE`/`BLACK`, `SUMMARY_WINDOW_*`, `monData.nature` | `src/applications/pokemon_summary_screen/window.c` |
 
 ---
@@ -265,4 +279,5 @@ riscrive uno di questi, la modifica corrispondente va verificata.
 | 2026-11-13 | `4da947f79` | Enrico | Documentazione di gestione (CLAUDE.md, PPE_CHANGES.md, /salva, /aggiorna) |
 | 2026-11-13 | `783cb676c` | Enrico | Controlli semantici, settings.local.json non tracciato |
 | 2026-11-13 | `61d6d28a0` | Enrico | Merge ponte con `b2cd286f3` (nessun file cambiato) |
-| 2026-11-13 | (questo) | Enrico | Normalizza fine riga e permessi, blocco LF in `.gitattributes` |
+| 2026-11-13 | `d454b1d66` | Enrico | Normalizza fine riga e permessi, blocco LF in `.gitattributes` |
+| 2026-11-13 | (questo) | Enrico | Merge di origin/main `62bdaacdc` (121 commit), con Tenda, trainerproc e Guru adattati |

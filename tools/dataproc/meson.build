@@ -4,55 +4,23 @@ dataproc_cflags = [
     '-Wall',
     '-Wextra',
     '-Wpedantic',
-    '-Wconversion',
-    '-Wno-sign-conversion',
     '-Wno-unused-result',
     '-Wno-stringop-overflow',
 ]
 
-dataproc_dep = declare_dependency(
-    include_directories: include_directories('lib/include'),
-    link_with: static_library(
-        'dataproc',
-        sources: files(
-            'lib/dataproc.c',
-            'lib/json.c',
-        ),
-
-        c_args: dataproc_cflags,
-
-        include_directories: include_directories('lib/include'),
-        dependencies: dependency('yyjson'),
-        native: true,
-    ),
-)
+dataproc_strict_cflags = [
+    dataproc_cflags,
+    '-Wconversion',
+    '-Wno-sign-conversion',
+]
 
 repo_include = meson.global_source_root() / 'include'
 repo_build = meson.global_build_root()
 dataproc_templates_dir = meson.current_source_dir() / 'data'
 
-commonproc_dep = declare_dependency(
-    link_with: static_library(
-        'commonproc',
-        sources: files('src/common.c'),
-
-        c_args: [
-            dataproc_cflags,
-            f'-DREPO_INCLUDE="@repo_include@"',
-            f'-DREPO_BUILD="@repo_build@"',
-            f'-DTEMPLATES_DIR="@dataproc_templates_dir@"',
-        ],
-
-        dependencies: [
-            dataproc_dep,
-            nitroarc_dep,
-            libenum_dep,
-            libexpr_dep,
-        ],
-        native: true,
-    ),
-    dependencies: [ dataproc_dep, nitroarc_dep, libenum_dep ],
-)
+subdir('lib')
+subdir('src/buildgen')
+subdir('src/common')
 
 cc = meson.get_compiler('c', native: true)
 speciesproc_exe = executable(
@@ -61,7 +29,7 @@ speciesproc_exe = executable(
     c_args: dataproc_cflags,
     include_directories: [ public_includes, toplevel_includes ],
     dependencies: [
-        commonproc_dep,
+        common_dep,
         cc.find_library('m', required: true),
     ],
     native: true,
@@ -72,7 +40,7 @@ resdatproc_exe = executable(
     sources: files('src/resdatproc.c'),
     c_args: dataproc_cflags,
     include_directories: [ public_includes, toplevel_includes ],
-    dependencies: commonproc_dep,
+    dependencies: common_dep,
     native: true,
 )
 
@@ -81,7 +49,7 @@ dexproc_exe = executable(
     sources: [ files('src/dexproc.c'), c_consts_generators ],
     c_args: dataproc_cflags,
     include_directories: [ public_includes, toplevel_includes ],
-    dependencies: commonproc_dep,
+    dependencies: common_dep,
     native: true,
 )
 
@@ -90,7 +58,7 @@ trainerproc_exe = executable(
     sources: [ files('src/trainerproc.c'), c_consts_generators ],
     c_args: dataproc_cflags,
     include_directories: [ public_includes, toplevel_includes ],
-    dependencies: commonproc_dep,
+    dependencies: common_dep,
     native: true,
 )
 
@@ -99,7 +67,7 @@ frontierproc_exe = executable(
     sources: [ files('src/frontierproc.c'), c_consts_generators ],
     c_args: dataproc_cflags,
     include_directories: [ public_includes, toplevel_includes ],
-    dependencies: commonproc_dep,
+    dependencies: common_dep,
     native: true,
 )
 
@@ -108,7 +76,7 @@ itemproc_exe = executable(
     sources: [ files('src/itemproc.c'), c_consts_generators ],
     c_args: dataproc_cflags,
     include_directories: [ public_includes, toplevel_includes ],
-    dependencies: commonproc_dep,
+    dependencies: common_dep,
     native: true,
 )
 
@@ -117,7 +85,7 @@ npctradeproc_exe = executable(
     sources: [ files('src/npctradeproc.c'), c_consts_generators ],
     c_args: dataproc_cflags,
     include_directories: [ public_includes, toplevel_includes ],
-    dependencies: commonproc_dep,
+    dependencies: common_dep,
     native: true,
 )
 
@@ -126,6 +94,42 @@ moveproc_exe = executable(
     sources: [ files('src/moveproc.c'), c_consts_generators ],
     c_args: dataproc_cflags,
     include_directories: [ public_includes, toplevel_includes ],
-    dependencies: commonproc_dep,
+    dependencies: common_dep,
+    native: true,
+)
+
+frameseqproc_exe = executable(
+    'frameseqproc',
+    sources: files('src/frameseqproc.c'),
+    c_args: dataproc_cflags,
+    include_directories: [ public_includes, toplevel_includes ],
+    dependencies: common_dep,
+    native: true,
+)
+
+mapgen_exe = executable(
+    'mapgen',
+    sources: [ files('src/maps/generator.c'), c_consts_generators ],
+    c_args: dataproc_cflags,
+    include_directories: [ public_includes, toplevel_includes ],
+    dependencies: [ buildgen_dep, common_dep ],
+    native: true,
+)
+
+mapproc_exe = executable(
+    'mapproc',
+    sources: [ files('src/maps/mapproc.c'), c_consts_generators ],
+    c_args: dataproc_cflags,
+    include_directories: [ public_includes, toplevel_includes ],
+    dependencies: [ common_dep ],
+    native: true,
+)
+
+encounterproc_exe = executable(
+    'encounterproc',
+    sources: files('src/maps/encounterproc.c'),
+    c_args: dataproc_cflags,
+    include_directories: [ public_includes, toplevel_includes ],
+    dependencies: [ common_dep ],
     native: true,
 )

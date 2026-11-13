@@ -17,6 +17,8 @@
 #include "overworld_anim_manager.h"
 #include "simple3d.h"
 
+#include "res/graphics/field_effects/field_effects.naix"
+
 #define RENDERER_MIN_Y_OFFSET     FX32_ONE
 #define RENDERER_MAX_Y_OFFSET     (FX32_ONE * 4)
 #define RENDERER_INITIAL_Y_OFFSET FX32_ONE
@@ -76,7 +78,7 @@ void SurfMountRenderer_Free(void *context)
 
 static void SurfMountResources_Init(SurfMountResources *resources)
 {
-    FieldEffectManager_LoadModel(resources->fieldEffMan, &resources->surfMountModel, 0, 81, FALSE);
+    FieldEffectManager_LoadModel(resources->fieldEffMan, &resources->surfMountModel, 0, surf_mount_nsbmd, FALSE);
     Simple3D_CreateRenderObject(&resources->surfMountRenderObj, &resources->surfMountModel);
 }
 
@@ -120,7 +122,7 @@ static BOOL SurfMountRenderer_AnimInit(OverworldAnimManager *animMan, void *cont
 
     renderer->userData = *userData;
     renderer->mapObjLocalID = MapObject_GetLocalID(playerMapObj);
-    renderer->mapHeaderID = MapObject_GetMapID(playerMapObj);
+    renderer->mapHeaderID = MapObject_GetMapHeaderID(playerMapObj);
     renderer->dir = userData->dir;
     renderer->syncPos = OverworldAnimManager_GetUserInt(animMan);
     renderer->yOffset = RENDERER_INITIAL_Y_OFFSET;

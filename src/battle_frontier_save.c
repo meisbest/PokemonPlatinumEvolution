@@ -4,12 +4,12 @@
 
 #include "struct_defs/battle_frontier.h"
 
+#include "battle_arcade_save.h"
+#include "battle_castle_save.h"
+#include "battle_factory_save.h"
 #include "battle_hall_save.h"
+#include "battle_tower_save.h"
 #include "savedata.h"
-#include "unk_0202D05C.h"
-#include "unk_0202FF4C.h"
-#include "unk_020302D0.h"
-#include "unk_02030494.h"
 #include "wifi_list.h"
 
 int BattleFrontierSave_Size(void)
@@ -21,13 +21,13 @@ void BattleFrontier_Init(BattleFrontierSave *frontier)
 {
     MI_CpuClear8(frontier, sizeof(BattleFrontierSave));
 
-    sub_0202D06C(&frontier->unk_950.unk_00);
-    sub_0202D080(&frontier->unk_950.unk_168);
-    sub_0202D0AC(&frontier->unk_950.unk_188);
-    sub_020300A4(&frontier->unk_1614.unk_00);
+    WifiBattleTowerRecord_Init(&frontier->unk_950.wifiBattleTowerRecord);
+    FrontierEasyChatMessages_Init(&frontier->unk_950.easyChatMessages);
+    WifiBattleTowerDownloadData_Init(&frontier->unk_950.wifiBattleTowerDownloadData);
+    BattleFactoryStreakFlags_Init(&frontier->factory.streakFlags);
     BattleHallStreakFlags_Init(&frontier->hall.streakFlags);
-    sub_02030410(&frontier->unk_161C.unk_00);
-    sub_020305AC(&frontier->unk_1620.unk_00);
+    BattleCastlePersistentSave_Init(&frontier->castle.persistentSave);
+    BattleArcadeStreakFlags_Init(&frontier->arcade.streakFlags);
 }
 
 BattleFrontierSave *SaveData_GetBattleFrontier(SaveData *saveData)

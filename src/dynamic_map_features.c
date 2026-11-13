@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "constants/field/dynamic_map_features.h"
-#include "generated/map_headers.h"
+#include "constants/fieldmap.h"
 
 #include "field/field_system.h"
 #include "overlay005/villa_furniture.h"
@@ -104,6 +104,6 @@ BOOL DynamicMapFeatures_CheckCollision(FieldSystem *fieldSystem, const int tileX
 
 BOOL DynamicMapFeatures_WillPlayerJumpEternaGymClock(FieldSystem *fieldSystem, const int tileX, const int tileZ, const fx32 unused3, int direction)
 {
-    return fieldSystem->location->mapId == MAP_HEADER_ETERNA_CITY_GYM
+    return fieldSystem->location->mapHeaderID == MAP_HEADER_ETERNA_CITY_GYM
         && EternaGym_IsHourHandJumpTile(fieldSystem, tileX, tileZ, direction);
 }
