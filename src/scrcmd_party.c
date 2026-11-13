@@ -5,6 +5,7 @@
 #include "constants/heap.h"
 #include "constants/moves.h"
 #include "constants/items.h"
+#include "generated/abilities.h"
 #include "generated/natures.h"
 #include "generated/species.h"
 
@@ -938,46 +939,109 @@ BOOL ScrCmd_GetGuruPrice(ScriptContext *ctx)
     return FALSE;
 }
 
+// PPE: abilità della specie, tenendo conto della forma (come Pokemon_CalcAbility)
+static void Guru_GetSpeciesAbilities(Pokemon *mon, u32 *ability1, u32 *ability2)
+{
+    int species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
+    int form = Pokemon_GetValue(mon, MON_DATA_FORM, NULL);
+
+    *ability1 = SpeciesData_GetFormValue(species, form, SPECIES_DATA_ABILITY_1);
+    *ability2 = SpeciesData_GetFormValue(species, form, SPECIES_DATA_ABILITY_2);
+}
+
+// PPE: slot (0 o 1) dell'abilità che il Pokémon ha ADESSO.
+// Non si usa il bit 0 del PID perché i Pokémon cambiati dalla vecchia versione
+// del Guru hanno l'abilità scritta a mano, non coerente con il PID.
+static u8 Guru_GetCurrentAbilitySlot(Pokemon *mon)
+{
+    u32 ability1, ability2;
+    Guru_GetSpeciesAbilities(mon, &ability1, &ability2);
+
+    if (ability2 != ABILITY_NONE && Pokemon_GetValue(mon, MON_DATA_ABILITY, NULL) == ability2) {
+        return 1;
+    }
+
+    return 0;
+}
+
+// PPE: sceglie un nuovo PID con la natura e lo slot di abilità richiesti,
+// tenendo uguali sesso, cromaticità e ordine dei blocchi dati, poi ricalcola
+// abilità e statistiche. L'abilità dipende dal bit 0 del PID: upstream la
+// ricalcola da lì all'evoluzione (Pokemon_CalcAbility in evolution.c), quindi
+// cambiarla solo con MON_DATA_ABILITY non basta.
+static void Guru_SetPersonality(Pokemon *mon, u8 desiredNature, u8 abilitySlot)
+{
+    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
+    u32 oldPid = Pokemon_GetValue(mon, MON_DATA_PERSONALITY, NULL);
+    u32 otid = Pokemon_GetValue(mon, MON_DATA_OT_ID, NULL);
+    u32 oldGender = Pokemon_GetValue(mon, MON_DATA_GENDER, NULL);
+
+    u8 genderRatio = SpeciesData_GetSpeciesValue(species, SPECIES_DATA_GENDER_RATIO);
+    u16 tid = otid & 0xFFFF;
+    u16 sid = (otid >> 16) & 0xFFFF;
+
+    u16 oldPLow = oldPid & 0xFFFF;
+    u16 oldPHigh = (oldPid >> 16) & 0xFFFF;
+    u8 isShiny = ((tid ^ sid ^ oldPLow ^ oldPHigh) < 8);
+
+    // I bit 13-17 del PID decidono l'ordine dei blocchi dati cifrati:
+    // tenerli uguali evita di dover rimescolare i blocchi.
+    u32 blockShuffleBits = oldPid & 0x3E000;
+
+    u32 newPid;
+
+    while (1) {
+        newPid = (LCRNG_Next() << 16) | LCRNG_Next();
+        newPid = (newPid & ~0x3E000) | blockShuffleBits;
+
+        if ((newPid % 25) != desiredNature) continue;
+        if ((newPid & 1) != abilitySlot) continue;
+
+        u8 newGender;
+        if (genderRatio == 255) newGender = 2;
+        else if (genderRatio == 254) newGender = 1;
+        else if (genderRatio == 0) newGender = 0;
+        else newGender = ((newPid & 0xFF) >= genderRatio) ? 0 : 1;
+
+        if (newGender != oldGender) continue;
+
+        u16 pLow = newPid & 0xFFFF;
+        u16 pHigh = (newPid >> 16) & 0xFFFF;
+        u8 newShiny = ((tid ^ sid ^ pLow ^ pHigh) < 8);
+        if (newShiny != isShiny) continue;
+
+        break;
+    }
+
+    Pokemon_SetValue(mon, MON_DATA_PERSONALITY, &newPid);
+    Pokemon_CalcAbility(mon);
+    Pokemon_CalcLevelAndStats(mon);
+}
+
 BOOL ScrCmd_CheckAbilitySwap(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
-    
-    // Lo script ci dice quale Pokémon della squadra ha scelto il giocatore
     u16 partySlot = ScriptContext_GetVar(ctx);
-    
-    // Variabili di ritorno per lo script
     u16 *statusVar = ScriptContext_GetVarPointer(ctx); // 0 = OK, 1 = Uovo, 2 = Solo 1 abilità
-    u16 *newAbilityVar = ScriptContext_GetVarPointer(ctx); // L'ID della nuova abilità da stampare a schermo
+    u16 *newAbilityVar = ScriptContext_GetVarPointer(ctx); // nuova abilità, da mostrare a schermo
 
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
 
-    // Controllo Uovo
     if (Pokemon_GetValue(mon, MON_DATA_IS_EGG, NULL) != FALSE) {
-        *statusVar = 1; 
+        *statusVar = 1;
         return FALSE;
     }
 
-    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
-    u32 currAbility = Pokemon_GetValue(mon, MON_DATA_ABILITY, NULL);
+    u32 ability1, ability2;
+    Guru_GetSpeciesAbilities(mon, &ability1, &ability2);
 
-    // Leggiamo le abilità base della specie 
-    // (Simile a come il file daycare.c leggeva i gruppi uovo!)
-    u32 abil1 = SpeciesData_GetSpeciesValue(species, SPECIES_DATA_ABILITY_1);
-    u32 abil2 = SpeciesData_GetSpeciesValue(species, SPECIES_DATA_ABILITY_2);
-
-    // Controllo Abilità Unica (Se la 1 è uguale alla 2, o se la 2 è zero)
-    if (abil1 == abil2 || abil2 == 0) { 
-        *statusVar = 2; 
+    if (ability1 == ability2 || ability2 == ABILITY_NONE) {
+        *statusVar = 2;
         return FALSE;
     }
 
-    // È tutto pronto! Calcoliamo qual è quella nuova
-    *statusVar = 0; 
-    if (currAbility == abil1) {
-        *newAbilityVar = abil2;
-    } else {
-        *newAbilityVar = abil1;
-    }
+    *statusVar = 0;
+    *newAbilityVar = Guru_GetCurrentAbilitySlot(mon) == 0 ? ability2 : ability1;
 
     StringTemplate **strTemplate = FieldSystem_GetScriptMemberPtr(ctx->fieldSystem, SCRIPT_MANAGER_STR_TEMPLATE);
     StringTemplate_SetAbilityName(*strTemplate, 0, *newAbilityVar);
@@ -989,14 +1053,15 @@ BOOL ScrCmd_ApplyAbilitySwap(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
     u16 partySlot = ScriptContext_GetVar(ctx);
-    
-    // FONDAMENTALE: Usare u32 per impedire letture della RAM sporca!
-    u32 newAbility = ScriptContext_GetVar(ctx); 
+    u16 newAbility = ScriptContext_GetVar(ctx);
 
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
 
-    Pokemon_SetValue(mon, MON_DATA_ABILITY, &newAbility);
-    Pokemon_CalcLevelAndStats(mon); // Aggiorniamo le statistiche per sicurezza
+    u32 ability1, ability2;
+    Guru_GetSpeciesAbilities(mon, &ability1, &ability2);
+    u8 newSlot = (ability2 != ABILITY_NONE && newAbility == ability2) ? 1 : 0;
+
+    Guru_SetPersonality(mon, Pokemon_GetNature(mon), newSlot);
 
     return FALSE;
 }
@@ -1026,60 +1091,7 @@ BOOL ScrCmd_ApplyNatureSwap(ScriptContext *ctx)
 
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
 
-    u16 species = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
-    u32 oldPid = Pokemon_GetValue(mon, MON_DATA_PERSONALITY, NULL);
-    u32 otid = Pokemon_GetValue(mon, MON_DATA_OT_ID, NULL);
-    u32 oldGender = Pokemon_GetValue(mon, MON_DATA_GENDER, NULL);
-    
-    // In Gen 4, lo slot abilità (0 o 1) è il primo bit del PID!
-    u8 abilitySlot = oldPid & 1; 
-
-    u8 genderRatio = SpeciesData_GetSpeciesValue(species, SPECIES_DATA_GENDER_RATIO);
-    u16 tid = otid & 0xFFFF;
-    u16 sid = (otid >> 16) & 0xFFFF;
-
-    u16 oldPLow = oldPid & 0xFFFF;
-    u16 oldPHigh = (oldPid >> 16) & 0xFFFF;
-    u8 isShiny = ((tid ^ sid ^ oldPLow ^ oldPHigh) < 8);
-
-    // LA MAGIA: Salviamo la sequenza di bit (13-17) che regola il rimescolamento dei blocchi!
-    u32 blockShuffleBits = oldPid & 0x3E000;
-
-    u32 newPid;
-    
-    while (1) {
-        newPid = (LCRNG_Next() << 16) | LCRNG_Next();
-        
-        // 1. Iniettiamo la sequenza originale: questo EVITA la corruzione dei dati!
-        newPid = (newPid & ~0x3E000) | blockShuffleBits;
-
-        // 2. Controllo Natura
-        if ((newPid % 25) != desiredNature) continue;
-        
-        // 3. Controllo Slot Abilità
-        if ((newPid & 1) != abilitySlot) continue;
-
-        // 4. Controllo Sesso
-        u8 newGender;
-        if (genderRatio == 255) newGender = 2;
-        else if (genderRatio == 254) newGender = 1;
-        else if (genderRatio == 0) newGender = 0;
-        else newGender = ((newPid & 0xFF) >= genderRatio) ? 0 : 1; 
-        
-        if (newGender != oldGender) continue;
-
-        // 5. Controllo Cromaticità
-        u16 pLow = newPid & 0xFFFF;
-        u16 pHigh = (newPid >> 16) & 0xFFFF;
-        u8 newShiny = ((tid ^ sid ^ pLow ^ pHigh) < 8);
-        if (newShiny != isShiny) continue;
-
-        // Sopravvissuto! Abbiamo il DNA perfetto.
-        break; 
-    }
-
-    Pokemon_SetValue(mon, MON_DATA_PERSONALITY, &newPid);
-    Pokemon_CalcLevelAndStats(mon);
+    Guru_SetPersonality(mon, desiredNature, Guru_GetCurrentAbilitySlot(mon));
 
     return FALSE;
 }

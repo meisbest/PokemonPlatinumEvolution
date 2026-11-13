@@ -131,9 +131,14 @@ Legenda: ⚠️ = problema noto o da verificare.
 - **Cosa cambia:** nella casa est di Pratopoli c'è un nuovo NPC `LOCALID_GURU_2`
   (aspetto da scienziato, posizione x=4, z=3, rivolto a sud, script `_GuruScript`)
   con il menu "Guru's Dojo":
-  - **Cambia Abilità**: passa all'altra abilità della specie, se ne ha due.
+  - **Cambia Abilità**: passa all'altra abilità della specie, se ne ha due. Il PID
+    viene rigenerato con il bit 0 giusto (stessa natura, sesso e cromaticità), così
+    l'abilità resta anche dopo l'evoluzione. Dal 2026-11-13: prima veniva scritta
+    solo `MON_DATA_ABILITY` e l'evoluzione la riportava a quella originale.
   - **Cambia Natura**: scegli la natura da un elenco. Il PID viene rigenerato
-    mantenendo sesso, slot abilità e cromaticità.
+    mantenendo sesso, abilità attuale e cromaticità.
+  - Effetto collaterale noto: cambiare il PID può cambiare l'evoluzione di Wurmple
+    (Silcoon/Cascoon dipende dal PID).
   - **Imposta IV** (0–31 per statistica)
   - **Imposta EV**: aggiunge o toglie EV, con limite di 252 per statistica e 510 in totale.
   - **Azzera EV** (gratis)
@@ -281,7 +286,7 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | Niente strumenti contro allenatori | `BATTLE_TYPE_NO_ITEMS`, `BATTLE_TYPE_TRAINER`, il controllo in `case PLAYER_INPUT_ITEM`. Upstream lo riscrive facilmente: ricontrollare dopo ogni merge che usi ancora `BATTLE_TYPE_NO_ITEMS` | `include/constants/battle.h`, `src/battle/battle_controller_player.c` |
 | Stile lotta Fisso, testo veloce | `Options_Init`, `Options_BattleStyle`, `OPTIONS_BATTLE_STYLE_SET`, `OPTIONS_TEXT_SPEED_FAST`, `ProcessMainInput`, `ENTRY_BATTLE_STYLE`, `ENTRY_CLOSE` | `src/game_options.c`, `src/applications/options_menu.c` |
 | EV, natura e abilità degli allenatori | `TrainerMonBase`/`WithMoves`/`WithItem`/`WithMovesAndItem` (layout: i nostri campi **prima di** `item`, perché `PackParty` copia fino a `offsetof(item)`), `TrainerData_BuildParty`, `Pokemon_InitWith`, `NATURE_COUNT`, `SPECIES_DATA_ABILITY_1/2`, `MON_DATA_*_EV`; in trainerproc: `PackParty`, `LOOKUP_ENUM`, `dp_try`, `dp_missing`, `dp_type_of`, `DP_STRING`/`DP_INT`, `dp_bool`, `dp_lookup`, `dp_u8`; formato JSON degli allenatori | `include/struct_defs/trainer_data.h`, `src/trainer_data.c`, `tools/dataproc/src/trainerproc.c`, `tools/dataproc/lib/include/dataproc.h`, `res/trainers/data/*.json` |
-| Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x242` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount`, `TrainerInfo_Money`/`SetMoney` | `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c` |
+| Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x242` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `Pokemon_CalcAbility` (abilità dal bit 0 del PID: se upstream cambia questa regola, va rivisto `Guru_SetPersonality`), `SpeciesData_GetFormValue`, `Pokemon_GetNature`, `ABILITY_NONE`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount`, `TrainerInfo_Money`/`SetMoney` | `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c` |
 | Guru Lotta: script, testi, NPC | macro con opcode grezzi (`.short 0x009C`…, `0x0045` = `INITLOCALTEXTLISTMENU`, `0x0032` = `WAITABPADPRESS`), `asm/macros/scrcmd.inc`, nomi dei suoni (`SE_CONFIRM_sseq_3`), label `PastoriaCityEastHouse_*` e `_GuruScript`, `ScriptEntry`, `FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC`, ID testi `PastoriaCityEastHouse_Text_*` e `pl_msg_00000140_*`, formato `events.json` (id `LOCALID_*`, `"script"` per etichetta, `"initial_dir"` = `DIR_*`) | `res/field/maps/pastoria_city_east_house/scripts.s`, `res/field/maps/pastoria_city_east_house/events.json`, `res/text/pastoria_city_east_house.json` |
 | MN dalla Borsa | `ScrCmd_CheckPartyMonHasMove`, `ScrCmd_FindPartySlotWithMove`, `Bag_GetItemQuantity`, `SaveData_GetBag`, `ITEM_HM01`–`ITEM_HM08`, `MOVE_CUT`/`STRENGTH`/`ROCK_SMASH`/`WATERFALL`/`ROCK_CLIMB` | `src/scrcmd_party.c` |
 | Tenda | schema JSON degli strumenti (`itemUseParams`, `fieldUseFunc`, `ITEM_USE_FUNC_HEALING`, `battleUseCategory`/`BATTLE_USE_CATEGORY_*`), `ITEM_PARAM_REVIVE_ALL`, `ITEM_PARAM_HEAL_SLEEP`, `CheckItemSacredAsh`, `PartyMenuCB_HandleSacredAsh`, `FindNextFaintedMember`, `SACREDASH_STATE_*`, `HEAP_ID_PARTY_MENU`, formato palette JASC (CRLF, `nitrogfx`) | `res/items/data/tent.json`, `res/items/icons/*`, `res/items/icons/meson.build`, `res/items/item_icon.order`, `generated/items.txt`, `src/applications/party_menu/callbacks.c` |
@@ -318,3 +323,4 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `491f0364e` | Enrico | Merge di origin/main `62bdaacdc` (121 commit), con Tenda, trainerproc e Guru adattati |
 | 2026-11-13 | `b8951696d` | Enrico | Level cap: condizioni 85 e 77 corrette, nomi al posto dei numeri. Borsa bloccata contro gli allenatori |
 | 2026-11-13 | `7e99c688a` | Enrico | Guida di setup per collaboratori su Windows (`docs/SETUP.md`) |
+| 2026-11-13 | (questo) | Enrico | Guru: cambio abilità che resta dopo l'evoluzione |
