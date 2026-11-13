@@ -14,9 +14,20 @@ Se il branch corrente non è `ppe`, fermati e chiedi.
    - `baserom.nds`, `*.nds`, la cartella `build/`
    - file più grandi di ~50 MB: `find . -size +50M -not -path './build/*' -not -path './.git/*'`
    - file con marcatori di conflitto: `git diff --name-only | xargs grep -l '^<<<<<<< '`
-   - file che cambiano solo per i fine riga CRLF o solo per i permessi
-     (`git diff --summary` con "mode change 100755 => 100644"), a meno che non siano voluti
+   - file che cambiano solo per i fine riga CRLF o solo per i permessi, a meno
+     che non siano voluti
    - file personali o temporanei
+
+   Dopo il `git add` del punto 4, controlla il **rumore da Windows**:
+   ```bash
+   git diff --cached --summary | grep "mode change"      # nessun 100755 => 100644
+   comm -13 <(git diff --cached --ignore-cr-at-eol --name-only | sort) \
+            <(git diff --cached --name-only | sort)       # file cambiati SOLO nei fine riga
+   git diff --cached --name-only --diff-filter=AM | xargs git ls-files --eol -- | grep -v "i/lf"   # nuovi CRLF
+   ```
+   Togli dal commit (`git restore --staged` + `git checkout -- <file>`) i file solo
+   rumore. Converti in LF (`sed -i 's/\r$//'`) quelli con modifiche vere. Ignora
+   binari (`i/-text`) e file già CRLF upstream.
 
    Se trovi qualcosa di dubbio, **fermati e chiedi** prima di procedere.
 3. **Aggiorna `docs/PPE_CHANGES.md`.** Per ogni modifica di questo salvataggio

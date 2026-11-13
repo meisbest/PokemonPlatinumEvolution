@@ -50,7 +50,12 @@ Flusso di collaborazione:
    working tree c'è roba che non va committata.
 5. Non toccare le stash esistenti (`git stash drop`/`clear`) e non cancellare
    file non tracciati (`git clean`) senza l'ok dell'utente.
-6. Niente PR, issue o commenti verso pret/pokeplatinum. Le regole di
+6. **Git solo da WSL.** Esegui git sempre dentro Linux: terminale WSL, VS Code
+   collegato con l'estensione "WSL", oppure `wsl -d Ubuntu -- bash -lc "cd ~/pokeplatinum && git ..."`.
+   **Mai** il Git per Windows (Git Bash, VS Code aperto su `\\wsl.localhost\...`)
+   su questo repo: non vede i permessi di esecuzione e committa tutti gli script
+   come 644. È già successo nel commit `b160815e5`.
+7. Niente PR, issue o commenti verso pret/pokeplatinum. Le regole di
    [AGENTS.md](AGENTS.md), che arriva da upstream, valgono per chi contribuisce a pret.
    PPE non invia nulla a pret.
 
@@ -63,7 +68,7 @@ Flusso di collaborazione:
     `origin/main`. I due commit hanno **lo stesso identico contenuto** (stesso tree).
   - Per questo git crede che l'ultimo antenato comune sia un commit del 2023
     (`488c510e6`). Un `git merge origin/main` normale darebbe migliaia di conflitti.
-- **Correzione una tantum, da fare solo con l'ok dell'utente:** il "merge ponte"
+- **Fatto il 2026-11-13** (commit `61d6d28a0`). Correzione una tantum: il "merge ponte"
   `git merge -s ours b2cd286f3`. Aggiunge un commit di merge che segna `b2cd286f3`
   come già incluso. Non modifica nessun file e non riscrive la storia. È descritto
   nel passo 0 della procedura AGGIORNA.
@@ -89,6 +94,14 @@ Flusso di collaborazione:
    grandi (`find . -size +50M -not -path './build/*' -not -path './.git/*'`),
    file personali, avanzi di merge (file con `<<<<<<<`). Se c'è qualcosa di dubbio,
    chiedi all'utente.
+   **Rumore da Windows** (dopo `git add`, prima del commit):
+   - `git diff --cached --summary | grep "mode change"`: non deve comparire
+     nessun `100755 => 100644`.
+   - `git diff --cached --ignore-cr-at-eol --name-only` confrontato con
+     `git diff --cached --name-only`: i file presenti solo nel secondo elenco
+     cambiano solo nei fine riga e vanno tolti dal commit.
+   - `git ls-files --eol -- <file in commit>`: i file nuovi o modificati devono
+     essere `i/lf`, salvo binari e file già CRLF upstream.
 3. **Aggiorna [docs/PPE_CHANGES.md](docs/PPE_CHANGES.md)** con le modifiche di
    questo salvataggio. Va fatto *prima* del commit, così finisce nello stesso commit.
 4. `git add <file/cartelle specifiche>` (compreso `docs/PPE_CHANGES.md`).
@@ -210,5 +223,5 @@ make clean          # pulisce gli oggetti di build
 | Script in `tools/` che perdono il permesso di esecuzione | Succede quando si modificano i file da Windows. Controlla con `git diff --summary` (righe "mode change 100755 => 100644") e ripristina con `git update-index --chmod=+x <file>`. |
 | Commit bloccato da "untracked content" nel submodule `subprojects/narc` | `cd subprojects/narc && git clean -fd && cd -` |
 | GitHub rifiuta il push per un file > 100 MB | Quasi sempre è `baserom.nds`. Non riscrivere la storia da solo: fermati e chiedi. |
-| Fine riga CRLF nei file (diff enormi con +N/-N righe identiche) | I file sono stati salvati da Windows. Non committarli: ripristinali con `git checkout -- <file>`. |
+| Fine riga CRLF nei file (diff enormi con +N/-N righe identiche) | I file sono stati salvati da Windows. Non committarli: ripristinali con `git checkout -- <file>`. Se il file ha anche modifiche vere: `sed -i 's/\r$//' <file>`. In fondo a `.gitattributes` c'è un blocco PPE che forza LF per `*.template *.patch *.adoc *.csv Makefile`. `*.order` e `*.txt` sono esclusi apposta: alcuni file upstream di quei tipi sono salvati in CRLF (es. `pokedex.order`). |
 | `git stash show stash@{0}` dà "not a stash-like commit" | È la stash riscritta da filter-branch: usa `git diff 51a167557 stash@{0}`. |

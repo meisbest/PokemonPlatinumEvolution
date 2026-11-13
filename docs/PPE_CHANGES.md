@@ -207,14 +207,13 @@ Legenda: ⚠️ = problema noto o da verificare.
 - Aggiunti `CLAUDE.md`, `docs/PPE_CHANGES.md` e i comandi `/salva` e `/aggiorna`
   in `.claude/commands/`.
 - Submodule `subprojects/narc` aggiunto (`f6691cc1d`).
-- **Rumore da Windows, senza effetti sul gioco:**
-  - Circa 60 script in `tools/`, `.github/` e `replace.sh` hanno perso il permesso di
-    esecuzione (755 → 644, commit `b160815e5`). `get_metroskrew.sh` è stato ripristinato
-    il 2026-11-13.
-  - 14 file binari in `res/trainers/classes/` cambiano solo nel modo.
-  - Il commit `bb3ac00e1` (wip, 25/06/2026) ha convertito in CRLF `Makefile`, molti
-    `.order` in `res/`, i template di `tools/dataproc/data/`, le patch yyjson e la doc
-    di nitroarc. Contenuto identico, cambiano solo i fine riga.
+- `.gitattributes`: in fondo c'è un blocco PPE che forza LF per `*.template`,
+  `*.patch`, `*.adoc`, `*.csv` e `Makefile`. Non include `*.order` e `*.txt`,
+  perché alcuni file upstream di quei tipi sono in CRLF.
+- Il 2026-11-13 il "rumore da Windows" accumulato (permessi 755 → 644 e fine riga CRLF
+  su ~100 file) è stato riportato alla versione upstream con il commit
+  "Normalizza fine riga e permessi". Ora `git diff b2cd286f3 ppe` mostra solo
+  modifiche PPE vere.
 
 ---
 
@@ -238,6 +237,7 @@ riscrive uno di questi, la modifica corrispondente va verificata.
 | MN dalla Borsa | `ScrCmd_CheckPartyMonHasMove`, `ScrCmd_FindPartySlotWithMove`, `Bag_GetItemQuantity`, `SaveData_GetBag`, `ITEM_HM01`–`ITEM_HM08`, `MOVE_CUT`/`STRENGTH`/`ROCK_SMASH`/`WATERFALL`/`ROCK_CLIMB` | `src/scrcmd_party.c` |
 | Tenda | schema JSON degli strumenti (`itemUseParams`, `fieldUseFunc`, `ITEM_USE_FUNC_HEALING`), `ITEM_PARAM_REVIVE_ALL`, `ITEM_PARAM_HEAL_SLEEP`, `sub_02085804`, `GetFirstFaintedMon`, `HEAP_ID_PARTY_MENU` | `res/items/data/tent.json`, `res/items/icons/*`, `res/items/icons/meson.build`, `res/items/item_icon.order`, `generated/items.txt`, `src/applications/party_menu/unk_02084B70.c` |
 | Negozi e prezzi | `PokeMartCommonItems`, `HearthomeMartSpecialties`, `PastoriaMartSpecialties`, `PokemonLeagueMartSpecialties`, `ITEM_*`, campo `price` dei JSON | `include/data/mart_items.h`, `res/items/data/*.json` |
+| Blocco LF in `.gitattributes` | file `.gitattributes` di upstream (il nostro blocco è in fondo) | `.gitattributes` |
 | Nature colorate | `DrawSkillsPageWindows`, `SUMMARY_TEXT_RED`/`BLUE`/`BLACK`, `SUMMARY_WINDOW_*`, `monData.nature` | `src/applications/pokemon_summary_screen/window.c` |
 
 ---
@@ -263,3 +263,6 @@ riscrive uno di questi, la modifica corrispondente va verificata.
 | 2026-06-25 | `bb3ac00e1` | meisbest | wip (solo fine riga CRLF) |
 | 2026-11-13 | `e623f2622` | Enrico | Tenda |
 | 2026-11-13 | `4da947f79` | Enrico | Documentazione di gestione (CLAUDE.md, PPE_CHANGES.md, /salva, /aggiorna) |
+| 2026-11-13 | `783cb676c` | Enrico | Controlli semantici, settings.local.json non tracciato |
+| 2026-11-13 | `61d6d28a0` | Enrico | Merge ponte con `b2cd286f3` (nessun file cambiato) |
+| 2026-11-13 | (questo) | Enrico | Normalizza fine riga e permessi, blocco LF in `.gitattributes` |

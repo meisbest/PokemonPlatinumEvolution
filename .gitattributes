@@ -34,3 +34,11 @@ lib/msl/include/MSL_C/* text eol=lf
 *.h linguist-language=C
 *.inc linguist-language=Assembly
 *.py linguist-language=Python
+
+# PPE: forza LF anche per i tipi di file non coperti da upstream.
+# Non aggiungere *.order o *.txt: alcuni file upstream sono salvati in CRLF.
+*.template text eol=lf
+*.patch    text eol=lf
+*.adoc     text eol=lf
+*.csv      text eol=lf
+Makefile   text eol=lf
