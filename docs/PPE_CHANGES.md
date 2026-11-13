@@ -29,10 +29,41 @@ Legenda: ⚠️ = problema noto o da verificare.
   `src/item_use_pokemon.c`, `src/overlay005/daycare.c`,
   `src/applications/trainer_case/card_text.c`, `src/savedata.c` (nuovo puntatore
   globale `gSaveDataPtr`, usato per leggere il salvataggio da ovunque).
-- ⚠️ **Flag 318 controllato due volte:** vale come "→ 85" e come "→ 60". Il controllo
-  "85" viene prima, quindi appena il flag 318 si attiva (Saturno al Lago Valore,
-  secondo il commento) il cap salta subito a 85 e il ramo "60" non viene mai usato.
-  Da correggere dopo il primo `/aggiorna`.
+- **Condizioni (dal più avanzato):**
+
+  | Cap | Condizione |
+  |-----|------------|
+  | 100 | `VAR_STARK_MOUNTAIN_ROOM_1_STATE ≥ 1`: Martes e Giove battuti nella Stanza 1 del Monte Ostile |
+  | 85 | `VAR_FIGHT_AREA_STATE ≥ 2`: Corrado e Vulcano battuti nell'Area Lotta |
+  | 77 | `SystemFlag_CheckGameCompleted`: Lega battuta (Hall of Fame) |
+  | 75 | `VAR_RIVAL_BEAT_SUNYSHORE_GYM ≥ 1`: rivale al Centro Pokémon della Lega |
+  | 73 | medaglia Faro (Volkner) |
+  | 71 | `VAR_DISTORTION_WORLD_PROGRESS ≥ 10` (Cyrus, Mondo Distorto) |
+  | 68 | `VAR_SPEAR_PILLAR_STATE ≥ 2` / `VAR_GALACTIC_HQ_CONTROL_ROOM_STATE ≥ 1` |
+  | 65 | `VAR_GALACTIC_HQ_4F_STATE ≥ 1` / medaglia Ghiacciolo |
+  | 63 | `VAR_LAKE_ACUITY_STATE ≥ 1`: Martes al Lago Verità |
+  | 60 | `FLAG_DEFEATED_COMMANDER_SATURN_VALOR_CAVERN`: Saturno al Lago Valore |
+  | 59 | medaglia Miniera (Byron) |
+  | 58 / 54 | `VAR_CANALAVE_CITY_STATE ≥ 1` / `VAR_CELESTIC_TOWN_STATE ≥ 1` |
+  | 52 | medaglia Palude (Wake) |
+  | 47 | `VAR_PASTORIA_CITY_STATE ≥ 2`: rivale a Pratopoli |
+  | 45 | medaglia Roccia (Maylene) |
+  | 42 | `VAR_ROUTE_209_GATE_TO_HEARTHOME_CITY_STATE ≥ 2`: rivale a Cuoripoli |
+  | 37 | medaglia Reliquia (Fantina) |
+  | 36 | `VAR_ETERNA_CITY_STATE ≥ 3` (Giove) |
+  | 30 | medaglia Foresta (Gardenia) |
+  | 27 | `VAR_VALLEY_WINDWORKS_STATE ≥ 2` (Martes) |
+  | 21 | medaglia Carbone (Roark) |
+  | 16 | `VAR_ROUTE_203_RIVAL_STATE ≥ 1`: rivale al Percorso 203 |
+  | 10 | default |
+
+- **Corretto il 2026-11-13:**
+  - La condizione dell'85 usava per errore il flag 318, cioè Saturno al Lago
+    Valore: il cap saltava a 85 a metà gioco.
+  - La condizione del 77 usava `0x40F4` (`VAR_DUMMY_0x40F4`), una variabile che il
+    gioco non imposta mai.
+  - Tutti i numeri grezzi sono stati sostituiti con i nomi di `generated/vars_flags.h`.
+    Se upstream rinomina una variabile, la build fallisce invece di rompere il cap in silenzio.
 - **Commit:** `e8b0a26a5` Level cap, `98bb08cdb` Level cap finito, `f6691cc1d`
   (adattamento della scheda allenatore dopo il merge).
 
@@ -50,18 +81,19 @@ Legenda: ⚠️ = problema noto o da verificare.
 
 ## 2. Lotte
 
-### Niente strumenti contro gli allenatori — ⚠️ ECCEZIONE NOTA: non attiva
-- **Cosa cambia:** `BATTLE_TYPE_NO_ITEMS` include anche `BATTLE_TYPE_TRAINER`.
-- **Effetto previsto:** nelle lotte contro allenatori la Borsa non si può usare
-  (compare "Items can't be used here.").
-- ⚠️ **Al momento NON funziona.** Nel merge di giugno upstream ha sostituito il
-  controllo in `src/battle/battle_controller_player.c` (`case PLAYER_INPUT_ITEM`)
-  con `BATTLE_TYPE_FRONTIER_LINK`, e `BATTLE_TYPE_NO_ITEMS` non è più usata da nessuna
-  parte. È un'**eccezione nota**, accettata il 2026-11-13: non blocca il push di
-  `/aggiorna`. Va riapplicata in un passo separato.
-- **File:** `include/constants/battle.h` (`src/battle/battle_controller_player.c` per
-  ripristinarla)
-- **Commit:** `8191212f0` No items if trainer
+### Niente strumenti contro gli allenatori
+- **Cosa cambia:** `BATTLE_TYPE_NO_ITEMS` include anche `BATTLE_TYPE_TRAINER`, e il
+  controllo della Borsa in lotta (`case PLAYER_INPUT_ITEM` in
+  `battle_controller_player.c`) usa `BATTLE_TYPE_NO_ITEMS`.
+- **Effetto nel gioco:** in tutte le lotte contro allenatori, comprese doppie, in
+  coppia e rivincite, premendo Borsa compare "Items can't be used here.". Le lotte
+  contro Pokémon selvatici non cambiano, quindi le Poké Ball si usano normalmente.
+  Gli strumenti usati dall'IA avversaria non sono toccati.
+- **Storia:** nel merge di giugno upstream aveva sostituito il controllo con
+  `BATTLE_TYPE_FRONTIER_LINK` e la modifica non era più attiva. È stata ripristinata
+  il 2026-11-13.
+- **File:** `include/constants/battle.h`, `src/battle/battle_controller_player.c`
+- **Commit:** `8191212f0` No items if trainer, ripristino del 2026-11-13
 
 ### Stile lotta "Fisso" obbligatorio
 - **Cosa cambia:** `Options_BattleStyle()` restituisce sempre `SET`. Nel menu
@@ -240,10 +272,10 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 
 | Modifica PPE | Simboli upstream usati / modificati | File |
 |--------------|-------------------------------------|------|
-| Level cap | `VarsFlags_GetVarAddress`, `VarsFlags_CheckFlag`, `SaveData_GetVarsFlags`, `SaveData_GetTrainerInfo`, `TrainerInfo_HasBadge`, `BADGE_ID_*`, variabili `0x4055`–`0x410D` e flag `318` (numeri grezzi), `Pokemon_GetSpeciesBaseExpAt`, `ITEM_PARAM_LEVEL_UP`, `Pokemon_CheckItemEffects`, `Pokemon_ApplyItemEffects`, `Daycare_MoveToPartyFromDaycareMon`, `BoxPokemon_GiveExperience`, `ov5_021E63E0`, `DaycareMon_GetSteps`, `SaveData_Init` | `src/field_battle_data_transfer.c`, `include/field_battle_data_transfer.h`, `src/item_use_pokemon.c`, `src/overlay005/daycare.c`, `src/savedata.c` |
+| Level cap | `VarsFlags_GetVarAddress`, `VarsFlags_CheckFlag`, `SaveData_GetVarsFlags`, `SaveData_GetTrainerInfo`, `TrainerInfo_HasBadge`, `BADGE_ID_*`, `SystemFlag_CheckGameCompleted`, `generated/vars_flags.h` (`VAR_STARK_MOUNTAIN_ROOM_1_STATE`, `VAR_FIGHT_AREA_STATE`, `VAR_RIVAL_BEAT_SUNYSHORE_GYM`, `VAR_DISTORTION_WORLD_PROGRESS`, `VAR_SPEAR_PILLAR_STATE`, `VAR_GALACTIC_HQ_*`, `VAR_LAKE_ACUITY_STATE`, `FLAG_DEFEATED_COMMANDER_SATURN_VALOR_CAVERN`, `VAR_CANALAVE_CITY_STATE`, `VAR_CELESTIC_TOWN_STATE`, `VAR_PASTORIA_CITY_STATE`, `VAR_ROUTE_209_GATE_TO_HEARTHOME_CITY_STATE`, `VAR_ETERNA_CITY_STATE`, `VAR_VALLEY_WINDWORKS_STATE`, `VAR_ROUTE_203_RIVAL_STATE`) e **il significato** dei loro valori negli script delle mappe, `Pokemon_GetSpeciesBaseExpAt`, `ITEM_PARAM_LEVEL_UP`, `Pokemon_CheckItemEffects`, `Pokemon_ApplyItemEffects`, `Daycare_MoveToPartyFromDaycareMon`, `BoxPokemon_GiveExperience`, `ov5_021E63E0`, `DaycareMon_GetSteps`, `SaveData_Init` | `src/field_battle_data_transfer.c`, `include/field_battle_data_transfer.h`, `src/item_use_pokemon.c`, `src/overlay005/daycare.c`, `src/savedata.c` |
 | Level cap in battaglia + Condividi Esp. | `BtlCmd_CalcExpGain`, `BattleScript_GetExpTask`, `sideGetExpMask`, `gainedExp`/`sharedExp`, `HOLD_EFFECT_EXP_SHARE`, `MON_DATA_IS_EGG` | `src/battle/battle_script.c` |
 | Level cap nella Scheda Allenatore | `TrainerCard_DrawFrontText`, `TRAINER_CARD_WINDOW_SCORE`, `TrainerCard_DrawNumber`, `TRAINER_CARD_WINDOW_PARTIAL_WIDTH`, `Font_CalcStringWidth` | `src/applications/trainer_case/card_text.c` |
-| Niente strumenti contro allenatori (⚠️ eccezione nota) | `BATTLE_TYPE_NO_ITEMS`, il controllo in `case PLAYER_INPUT_ITEM` (oggi `BATTLE_TYPE_FRONTIER_LINK`) | `include/constants/battle.h`, `src/battle/battle_controller_player.c` |
+| Niente strumenti contro allenatori | `BATTLE_TYPE_NO_ITEMS`, `BATTLE_TYPE_TRAINER`, il controllo in `case PLAYER_INPUT_ITEM`. Upstream lo riscrive facilmente: ricontrollare dopo ogni merge che usi ancora `BATTLE_TYPE_NO_ITEMS` | `include/constants/battle.h`, `src/battle/battle_controller_player.c` |
 | Stile lotta Fisso, testo veloce | `Options_Init`, `Options_BattleStyle`, `OPTIONS_BATTLE_STYLE_SET`, `OPTIONS_TEXT_SPEED_FAST`, `ProcessMainInput`, `ENTRY_BATTLE_STYLE`, `ENTRY_CLOSE` | `src/game_options.c`, `src/applications/options_menu.c` |
 | EV, natura e abilità degli allenatori | `TrainerMonBase`/`WithMoves`/`WithItem`/`WithMovesAndItem` (layout: i nostri campi **prima di** `item`, perché `PackParty` copia fino a `offsetof(item)`), `TrainerData_BuildParty`, `Pokemon_InitWith`, `NATURE_COUNT`, `SPECIES_DATA_ABILITY_1/2`, `MON_DATA_*_EV`; in trainerproc: `PackParty`, `LOOKUP_ENUM`, `dp_try`, `dp_missing`, `dp_type_of`, `DP_STRING`/`DP_INT`, `dp_bool`, `dp_lookup`, `dp_u8`; formato JSON degli allenatori | `include/struct_defs/trainer_data.h`, `src/trainer_data.c`, `tools/dataproc/src/trainerproc.c`, `tools/dataproc/lib/include/dataproc.h`, `res/trainers/data/*.json` |
 | Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x242` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount`, `TrainerInfo_Money`/`SetMoney` | `include/data/scripts/scrcmd.h`, `src/scrcmd.c`, `src/scrcmd_party.c` |
@@ -280,4 +312,5 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `783cb676c` | Enrico | Controlli semantici, settings.local.json non tracciato |
 | 2026-11-13 | `61d6d28a0` | Enrico | Merge ponte con `b2cd286f3` (nessun file cambiato) |
 | 2026-11-13 | `d454b1d66` | Enrico | Normalizza fine riga e permessi, blocco LF in `.gitattributes` |
-| 2026-11-13 | (questo) | Enrico | Merge di origin/main `62bdaacdc` (121 commit), con Tenda, trainerproc e Guru adattati |
+| 2026-11-13 | `491f0364e` | Enrico | Merge di origin/main `62bdaacdc` (121 commit), con Tenda, trainerproc e Guru adattati |
+| 2026-11-13 | (questo) | Enrico | Level cap: condizioni 85 e 77 corrette, nomi al posto dei numeri. Borsa bloccata contro gli allenatori |

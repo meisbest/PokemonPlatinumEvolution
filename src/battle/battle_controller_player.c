@@ -460,7 +460,8 @@ static void BattleControllerPlayer_CommandSelectionInput(BattleSystem *battleSys
                     break;
 
                 case PLAYER_INPUT_ITEM:
-                    if (BattleSystem_GetBattleType(battleSys) & BATTLE_TYPE_FRONTIER_LINK) {
+                    // PPE: BATTLE_TYPE_NO_ITEMS = LINK | FRONTIER | TRAINER -> niente Borsa anche contro gli allenatori
+                    if (BattleSystem_GetBattleType(battleSys) & BATTLE_TYPE_NO_ITEMS) {
                         msg.id = 593; // "Items can’t be used here."
                         msg.tags = TAG_NONE;
                         BattleController_EmitSetAlertMessage(battleSys, i, msg);

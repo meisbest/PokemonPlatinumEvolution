@@ -11,6 +11,7 @@
 #include "constants/string.h"
 #include "generated/items.h"
 #include "generated/species.h"
+#include "generated/vars_flags.h"
 
 #include "struct_defs/chatot_cry.h"
 #include "struct_defs/player_data.h"
@@ -78,56 +79,59 @@ u32 GetHardLevelCap(SaveData *saveData) {
     TrainerInfo *trInfo = SaveData_GetTrainerInfo(saveData);
     VarsFlags *varsFlags = SaveData_GetVarsFlags(saveData);
 
-    // 1. Monte Ostile
-    if (ReadVarSafe(varsFlags, 0x40AD) >= 1) return 100;
-    // Volkner & Flint -> Monte ostile (77 -> 85)
-    if (VarsFlags_CheckFlag(varsFlags, 318)) return 85; 
-    // 2. Lega -> Volkner & Flint (75 -> 77)
-    if (ReadVarSafe(varsFlags, 0x40F4) >= 1) return 77;
+    // Nota: usare sempre i nomi di generated/vars_flags.h, mai numeri grezzi.
+    // Se upstream rinomina una variabile la build fallisce, invece di rompere il cap in silenzio.
+
+    // 1. Monte Ostile, dopo Martes e Giove nella Stanza 1 (85 -> 100)
+    if (ReadVarSafe(varsFlags, VAR_STARK_MOUNTAIN_ROOM_1_STATE) >= 1) return 100;
+    // Volkner & Flint battuti nell'Area Lotta -> Monte ostile (77 -> 85)
+    if (ReadVarSafe(varsFlags, VAR_FIGHT_AREA_STATE) >= 2) return 85;
+    // 2. Lega battuta (Hall of Fame) -> Volkner & Flint (75 -> 77)
+    if (SystemFlag_CheckGameCompleted(varsFlags)) return 77;
     // 3. Rivale Lega -> Lega (73 -> 75)
-    if (ReadVarSafe(varsFlags, 0x40EF) >= 1) return 75;
+    if (ReadVarSafe(varsFlags, VAR_RIVAL_BEAT_SUNYSHORE_GYM) >= 1) return 75;
     // 4. Badge 8: Volkner -> Rivale (71 -> 73)
     if (TrainerInfo_HasBadge(trInfo, BADGE_ID_BEACON)) return 73;
     // 5. Cyrus Mondo Distorto -> Volkner (68 -> 71)
-    if (ReadVarSafe(varsFlags, 0x4055) >= 10) return 71;
+    if (ReadVarSafe(varsFlags, VAR_DISTORTION_WORLD_PROGRESS) >= 10) return 71;
     // 6. Monte Corona -> Cyrus (68 -> 68)
-    if (ReadVarSafe(varsFlags, 0x4098) >= 2) return 68;
+    if (ReadVarSafe(varsFlags, VAR_SPEAR_PILLAR_STATE) >= 2) return 68;
     // 7. Saturno Base -> M&J (65 -> 68)
-    if (ReadVarSafe(varsFlags, 0x410D) >= 1) return 68;
+    if (ReadVarSafe(varsFlags, VAR_GALACTIC_HQ_CONTROL_ROOM_STATE) >= 1) return 68;
     // 8. Cyrus Base -> Saturn (65 -> 65)
-    if (ReadVarSafe(varsFlags, 0x40D6) >= 1) return 65;
+    if (ReadVarSafe(varsFlags, VAR_GALACTIC_HQ_4F_STATE) >= 1) return 65;
     // 9. Badge 7: Candice -> Cyrus (63 -> 65)
     if (TrainerInfo_HasBadge(trInfo, BADGE_ID_ICICLE)) return 65;
     // 10. Martes Lago Verità -> Candice (60 -> 63)
-    if (ReadVarSafe(varsFlags, 0x40D3) >= 1) return 63;
-    // 11. Flag 318 Saturno Lago Valore -> Martes (59 -> 60)
-    if (VarsFlags_CheckFlag(varsFlags, 318)) return 60; 
+    if (ReadVarSafe(varsFlags, VAR_LAKE_ACUITY_STATE) >= 1) return 63;
+    // 11. Saturno Lago Valore -> Martes (59 -> 60)
+    if (VarsFlags_CheckFlag(varsFlags, FLAG_DEFEATED_COMMANDER_SATURN_VALOR_CAVERN)) return 60;
     // 12. Badge 6: Byron -> Saturn (58 -> 59)
     if (TrainerInfo_HasBadge(trInfo, BADGE_ID_MINE)) return 59;
     // 13. Rivale Canalipoli -> Byron (54 -> 58)
-    if (ReadVarSafe(varsFlags, 0x4078) >= 1) return 58;
+    if (ReadVarSafe(varsFlags, VAR_CANALAVE_CITY_STATE) >= 1) return 58;
     // Cyrus Memoride -> Rivale (52 -> 54)
-    if (ReadVarSafe(varsFlags, 0x4074) >= 1) return 54;
+    if (ReadVarSafe(varsFlags, VAR_CELESTIC_TOWN_STATE) >= 1) return 54;
     // 14. Badge 4: Wake -> Cyrus (47 -> 52)
     if (TrainerInfo_HasBadge(trInfo, BADGE_ID_FEN)) return 52;
-    // 15. Rivale Arenipoli -> Wake (45 -> 47)
-    if (ReadVarSafe(varsFlags, 0x407C) >= 2) return 47;
+    // 15. Rivale Pratopoli -> Wake (45 -> 47)
+    if (ReadVarSafe(varsFlags, VAR_PASTORIA_CITY_STATE) >= 2) return 47;
     // 16. Badge 3: Maylene -> Rivale (42 -> 45)
     if (TrainerInfo_HasBadge(trInfo, BADGE_ID_COBBLE)) return 45;
     // 17. Rivale Cuoripoli -> Maylene (37 -> 42)
-    if (ReadVarSafe(varsFlags, 0x407B) >= 2) return 42;
+    if (ReadVarSafe(varsFlags, VAR_ROUTE_209_GATE_TO_HEARTHOME_CITY_STATE) >= 2) return 42;
     // 18. Badge 5: Fantina -> Rivale (36 -> 37)
     if (TrainerInfo_HasBadge(trInfo, BADGE_ID_RELIC)) return 37;
     // 19. Jupiter -> Fantina (30 -> 36)
-    if (ReadVarSafe(varsFlags, 0x407A) >= 3) return 36;
+    if (ReadVarSafe(varsFlags, VAR_ETERNA_CITY_STATE) >= 3) return 36;
     // 20. Badge 2: Gardenia -> Jupiter (27 -> 30)
     if (TrainerInfo_HasBadge(trInfo, BADGE_ID_FOREST)) return 30;
     // 21. Mars -> Gardenia (21 -> 27)
-    if (ReadVarSafe(varsFlags, 0x4089) >= 2) return 27;
+    if (ReadVarSafe(varsFlags, VAR_VALLEY_WINDWORKS_STATE) >= 2) return 27;
     // 22. Badge 1: Roark -> Mars (16 -> 21)
     if (TrainerInfo_HasBadge(trInfo, BADGE_ID_COAL)) return 21;
     // 23. Rivale Percorso 203 -> Roark (10 -> 16)
-    if (ReadVarSafe(varsFlags, 0x4088) >= 1) return 16;
+    if (ReadVarSafe(varsFlags, VAR_ROUTE_203_RIVAL_STATE) >= 1) return 16;
 
     // Default (rivale = 10)
     return 10;
