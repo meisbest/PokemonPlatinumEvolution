@@ -362,4 +362,4 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `c2c3cd096` | Enrico | MN dalla Borsa: mai un Uovo come Pokémon che usa la mossa |
 | 2026-11-13 | `07271878b` | Enrico | Allenatori: la natura dal JSON non cambia più sesso e abilità |
 | 2026-11-13 | `50eb39cd3` | Enrico | Allenatori: `ability: 1` su specie con una sola abilità |
-| 2026-11-13 | (questo) | Enrico | Testi di Insegnamosse e Guru: prezzi con `$` |
+| 2026-11-13 | `6a7bb0cfd` | Enrico | Testi di Insegnamosse e Guru: prezzi con `$` |
