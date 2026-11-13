@@ -317,4 +317,4 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `d454b1d66` | Enrico | Normalizza fine riga e permessi, blocco LF in `.gitattributes` |
 | 2026-11-13 | `491f0364e` | Enrico | Merge di origin/main `62bdaacdc` (121 commit), con Tenda, trainerproc e Guru adattati |
 | 2026-11-13 | `b8951696d` | Enrico | Level cap: condizioni 85 e 77 corrette, nomi al posto dei numeri. Borsa bloccata contro gli allenatori |
-| 2026-11-13 | (questo) | Enrico | Guida di setup per collaboratori su Windows (`docs/SETUP.md`) |
+| 2026-11-13 | `7e99c688a` | Enrico | Guida di setup per collaboratori su Windows (`docs/SETUP.md`) |
