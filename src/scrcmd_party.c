@@ -1076,6 +1076,11 @@ BOOL ScrCmd_ApplyNatureSwap(ScriptContext *ctx)
     u16 partySlot = ScriptContext_GetVar(ctx);
     u16 desiredNature = ScriptContext_GetVar(ctx);
 
+    // Una natura inesistente farebbe girare all'infinito la ricerca del PID
+    if (desiredNature >= NATURE_COUNT) {
+        return FALSE;
+    }
+
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
 
     Guru_SetPersonality(mon, desiredNature, Guru_GetCurrentAbilitySlot(mon));

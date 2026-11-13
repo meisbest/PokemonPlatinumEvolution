@@ -270,8 +270,7 @@ _GuruNature:
     ShowListMenu
     CloseMessage
 
-    GoToIfEq VAR_0x8007, 255, _GuruMenu
-    GoToIfEq VAR_0x8007, 65535, _GuruMenu
+    GoToIfEq VAR_0x8007, MENU_CANCEL, _GuruMenu
 
     GoToIfEq VAR_0x8008, 0, _GuruNatureFree
 
