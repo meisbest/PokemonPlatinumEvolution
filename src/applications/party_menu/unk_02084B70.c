@@ -571,6 +571,30 @@ static u8 GetFirstFaintedMon(PartyMenuApplication *application, u8 startIndex)
     return 0xff;
 }
 
+// Items with reviveAll + status healing target ALL present mons, not just fainted ones (e.g. Tent)
+static BOOL IsFullPartyHealItem(u16 itemID)
+{
+    return Item_LoadParam(itemID, ITEM_PARAM_REVIVE_ALL, HEAP_ID_PARTY_MENU) != 0
+        && Item_LoadParam(itemID, ITEM_PARAM_HEAL_SLEEP, HEAP_ID_PARTY_MENU) != 0;
+}
+
+static u8 GetFirstPresentMon(PartyMenuApplication *application, u8 startIndex)
+{
+    u8 partySlot;
+
+    if (startIndex >= 6) {
+        return 0xff;
+    }
+
+    for (partySlot = startIndex; partySlot < 6; partySlot++) {
+        if (application->partyMembers[partySlot].isPresent != FALSE) {
+            return partySlot;
+        }
+    }
+
+    return 0xff;
+}
+
 int sub_02085804(PartyMenuApplication *application)
 {
     Pokemon *mon;
@@ -580,7 +604,9 @@ int sub_02085804(PartyMenuApplication *application)
 
     switch (application->unk_B0E) {
     case 0:
-        application->currPartySlot = GetFirstFaintedMon(application, 0);
+        application->currPartySlot = IsFullPartyHealItem(application->partyMenu->usedItemID)
+            ? GetFirstPresentMon(application, 0)
+            : GetFirstFaintedMon(application, 0);
 
         if (application->currPartySlot == 0xff) {
             MessageLoader_GetString(application->messageLoader, PartyMenu_Text_ItWontHaveAnyEffect, application->tmpString);
@@ -621,7 +647,9 @@ int sub_02085804(PartyMenuApplication *application)
         mon = Party_GetPokemonBySlotIndex(application->partyMenu->party, application->currPartySlot);
         curHP = Pokemon_GetValue(mon, MON_DATA_HP, NULL);
 
-        application->partyMembers[application->currPartySlot].curHP++;
+        if (application->partyMembers[application->currPartySlot].curHP < curHP) {
+            application->partyMembers[application->currPartySlot].curHP++;
+        }
 
         PartyMenu_ClearMemberHP(application, application->currPartySlot);
         Window_FillTilemap(&application->windows[3 + application->currPartySlot * 5], 0);
@@ -641,7 +669,9 @@ int sub_02085804(PartyMenuApplication *application)
         if (gSystem.pressedKeys & (PAD_BUTTON_A | PAD_BUTTON_B)) {
             Sound_PlayEffect(SEQ_SE_CONFIRM);
             v3 = application->currPartySlot;
-            application->currPartySlot = GetFirstFaintedMon(application, application->currPartySlot + 1);
+            application->currPartySlot = IsFullPartyHealItem(application->partyMenu->usedItemID)
+                ? GetFirstPresentMon(application, application->currPartySlot + 1)
+                : GetFirstFaintedMon(application, application->currPartySlot + 1);
 
             if (application->currPartySlot != 0xff) {
                 Window_EraseMessageBox(&application->windows[34], 0);

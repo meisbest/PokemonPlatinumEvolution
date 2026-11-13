@@ -1,0 +1,42 @@
+{
+  "name": "Tent",
+  "plural": "Tents",
+  "article": "a",
+  "description": [
+    "Allows the party to rest and fully\n",
+    "recover HP, PP, and all\n",
+    "status conditions."
+  ],
+  "icon": {
+    "sprite": "tent_NCGR",
+    "palette": "tent_NCLR"
+  },
+  "gbaID": "GBA_ITEM_NONE",
+  "price": 500,
+  "effectParam": 0,
+  "holdEffect": "HOLD_EFFECT_NONE",
+  "pluckEffect": "PLUCK_EFFECT_NONE",
+  "flingEffect": "FLING_EFFECT_NONE",
+  "flingPower": 30,
+  "naturalGiftPower": 0,
+  "naturalGiftType": null,
+  "preventToss": false,
+  "canRegister": false,
+  "fieldPocket": "POCKET_MEDICINE",
+  "battlePocket": "BATTLE_POCKET_MASK_NONE",
+  "fieldUseFunc": "ITEM_USE_FUNC_HEALING",
+  "battleUseFunc": 0,
+  "itemUseParams": {
+    "revive": true,
+    "reviveAll": true,
+    "hpRestored": -1,
+    "healSleep": true,
+    "healPoison": true,
+    "healBurn": true,
+    "healFreeze": true,
+    "healParalysis": true,
+    "healConfusion": true,
+    "restorePPAllMoves": true,
+    "ppRestored": -1
+  }
+}

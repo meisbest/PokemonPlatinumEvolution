@@ -20,6 +20,7 @@ const PokeMartCommonItem PokeMartCommonItems[] = {
     { ITEM_HYPER_POTION, 0x4 },
     { ITEM_MAX_POTION, 0x5 },
     { ITEM_FULL_RESTORE, 0x6 },
+    { ITEM_TENT, 0x1 },
     { ITEM_REVIVE, 0x3 },
     { ITEM_ANTIDOTE, 0x1 },
     { ITEM_PARLYZ_HEAL, 0x1 },

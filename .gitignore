@@ -125,3 +125,4 @@ compile_commands.json
 *.mch
 
 *.nds
+.claude/settings.local.json
