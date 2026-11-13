@@ -120,6 +120,38 @@ BOOL ScrCmd_ResetPartyMonMoveSlot_Unused(ScriptContext *ctx)
     return FALSE;
 }
 
+// PPE: MN usabili dalla Borsa. Restituisce la MN che insegna la mossa, se la
+// mossa è tra quelle sbloccate dalla Borsa, altrimenti ITEM_NONE.
+// Volo, Surf e Scacciabruma restano come nell'originale.
+static u16 HMFromBag_GetItemForMove(u16 move)
+{
+    switch (move) {
+    case MOVE_CUT:
+        return ITEM_HM01;
+    case MOVE_STRENGTH:
+        return ITEM_HM04;
+    case MOVE_ROCK_SMASH:
+        return ITEM_HM06;
+    case MOVE_WATERFALL:
+        return ITEM_HM07;
+    case MOVE_ROCK_CLIMB:
+        return ITEM_HM08;
+    }
+
+    return ITEM_NONE;
+}
+
+static BOOL HMFromBag_HasItemForMove(FieldSystem *fieldSystem, u16 move)
+{
+    u16 hmItem = HMFromBag_GetItemForMove(move);
+
+    if (hmItem == ITEM_NONE) {
+        return FALSE;
+    }
+
+    return Bag_GetItemQuantity(SaveData_GetBag(fieldSystem->saveData), hmItem, HEAP_ID_FIELD1) > 0;
+}
+
 BOOL ScrCmd_CheckPartyMonHasMove(ScriptContext *ctx)
 {
     FieldSystem *fieldSystem = ctx->fieldSystem;
@@ -127,33 +159,10 @@ BOOL ScrCmd_CheckPartyMonHasMove(ScriptContext *ctx)
     u16 move = ScriptContext_GetVar(ctx);
     u16 partySlot = ScriptContext_GetVar(ctx);
 
-    // --- HACK QoL: MN DA ZAINO ---
-    u16 hmItem = 0;
-    
-    // Lista VIP delle MN
-    switch(move) {
-        case MOVE_CUT: hmItem = ITEM_HM01; break;
-        //case MOVE_FLY: hmItem = ITEM_HM02; break;
-        //case MOVE_SURF: hmItem = ITEM_HM03; break;
-        case MOVE_STRENGTH: hmItem = ITEM_HM04; break;
-        //case MOVE_DEFOG: hmItem = ITEM_HM05; break;
-        case MOVE_ROCK_SMASH: hmItem = ITEM_HM06; break;
-        case MOVE_WATERFALL: hmItem = ITEM_HM07; break;
-        case MOVE_ROCK_CLIMB: hmItem = ITEM_HM08; break;
-    }
-    
-    // Se la mossa che lo script sta cercando è una MN...
-    if (hmItem != 0) {
-        Bag *bag = SaveData_GetBag(fieldSystem->saveData);
-        
-        // Controlliamo se hai l'oggetto fisicamente nella borsa
-        if (Bag_GetItemQuantity(bag, hmItem, HEAP_ID_FIELD1) > 0) {
-            
-            // Mentiamo spudoratamente allo script!
-            // Gli diciamo: "Sì, il Pokémon nello slot 0 (il tuo leader) conosce la mossa!"
-            *destVar = TRUE; 
-            return FALSE;
-        }
+    // PPE: con la MN nella Borsa lo script crede che il Pokémon conosca la mossa
+    if (HMFromBag_HasItemForMove(fieldSystem, move)) {
+        *destVar = TRUE;
+        return FALSE;
     }
 
     Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), partySlot);
@@ -179,35 +188,6 @@ BOOL ScrCmd_FindPartySlotWithMove(ScriptContext *ctx)
     u16 *destVar = ScriptContext_GetVarPointer(ctx);
     u16 move = ScriptContext_GetVar(ctx);
 
-    // --- HACK QoL: MN DA ZAINO ---
-    u16 hmItem = 0;
-    
-    // Lista VIP delle MN
-    switch(move) {
-        case MOVE_CUT: hmItem = ITEM_HM01; break;
-        //case MOVE_FLY: hmItem = ITEM_HM02; break;
-        //case MOVE_SURF: hmItem = ITEM_HM03; break;
-        case MOVE_STRENGTH: hmItem = ITEM_HM04; break;
-        //case MOVE_DEFOG: hmItem = ITEM_HM05; break;
-        case MOVE_ROCK_SMASH: hmItem = ITEM_HM06; break;
-        case MOVE_WATERFALL: hmItem = ITEM_HM07; break;
-        case MOVE_ROCK_CLIMB: hmItem = ITEM_HM08; break;
-    }
-    
-    // Se la mossa che lo script sta cercando è una MN...
-    if (hmItem != 0) {
-        Bag *bag = SaveData_GetBag(fieldSystem->saveData);
-        
-        // Controlliamo se hai l'oggetto fisicamente nella borsa
-        if (Bag_GetItemQuantity(bag, hmItem, HEAP_ID_FIELD1) > 0) {
-            
-            // Mentiamo spudoratamente allo script!
-            // Gli diciamo: "Sì, il Pokémon nello slot 0 (il tuo leader) conosce la mossa!"
-            *destVar = 0; 
-            return FALSE;
-        }
-    }
-
     u8 partyCount = Party_GetCurrentCount(SaveData_GetParty(fieldSystem->saveData));
 
     u8 slot;
@@ -224,6 +204,19 @@ BOOL ScrCmd_FindPartySlotWithMove(ScriptContext *ctx)
             || (Pokemon_GetValue(mon, MON_DATA_MOVE4, NULL) == move)) {
             *destVar = slot;
             break;
+        }
+    }
+
+    // PPE: nessuno conosce la mossa ma c'è la MN nella Borsa: la usa il primo
+    // Pokémon che non è un Uovo (lo slot serve per il messaggio e per l'animazione)
+    if (*destVar == MAX_PARTY_SIZE && HMFromBag_HasItemForMove(fieldSystem, move)) {
+        for (slot = 0; slot < partyCount; slot++) {
+            Pokemon *mon = Party_GetPokemonBySlotIndex(SaveData_GetParty(fieldSystem->saveData), slot);
+
+            if (Pokemon_GetValue(mon, MON_DATA_IS_EGG, NULL) == FALSE) {
+                *destVar = slot;
+                break;
+            }
         }
     }
 

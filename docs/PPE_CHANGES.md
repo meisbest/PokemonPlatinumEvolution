@@ -203,10 +203,12 @@ Legenda: ⚠️ = problema noto o da verificare.
 ### MN usabili dalla Borsa
 - **Cosa cambia:** quando uno script controlla se un Pokémon conosce Taglio, Forza,
   Spaccaroccia, Cascata o Scalaroccia, basta avere la **MN corrispondente nella
-  Borsa**: lo script crede che il primo Pokémon della squadra conosca la mossa.
+  Borsa**: lo script crede che un Pokémon della squadra conosca la mossa. Se qualcuno
+  la conosce davvero, la usa lui; altrimenti la usa il primo Pokémon che non è un
+  Uovo (fino al 2026-11-13 era sempre lo slot 0, anche se era un Uovo).
   Volo, Surf e Scacciabruma non sono incluse e funzionano come nell'originale.
 - **Effetto nel gioco:** non serve un "HM slave" per gli ostacoli sul campo.
-- **File:** `src/scrcmd_party.c` (`ScrCmd_CheckPartyMonHasMove`,
+- **File:** `src/scrcmd_party.c` (`HMFromBag_GetItemForMove`, `ScrCmd_CheckPartyMonHasMove`,
   `ScrCmd_FindPartySlotWithMove`)
 - **Commit:** `ff94d873a`
 
@@ -310,7 +312,7 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | EV, natura e abilità degli allenatori | `TrainerMonBase`/`WithMoves`/`WithItem`/`WithMovesAndItem` (layout: i nostri campi **prima di** `item`, perché `PackParty` copia fino a `offsetof(item)`), `TrainerData_BuildParty`, `Pokemon_InitWith`, `NATURE_COUNT`, `SPECIES_DATA_ABILITY_1/2`, `MON_DATA_*_EV`; in trainerproc: `PackParty`, `LOOKUP_ENUM`, `dp_try`, `dp_missing`, `dp_type_of`, `DP_STRING`/`DP_INT`, `dp_bool`, `dp_lookup`, `dp_u8`; formato JSON degli allenatori | `include/struct_defs/trainer_data.h`, `src/trainer_data.c`, `tools/dataproc/src/trainerproc.c`, `tools/dataproc/lib/include/dataproc.h`, `res/trainers/data/*.json` |
 | Guru Lotta: comandi script | ID `0x09C`–`0x0A0` e `0x23F`–`0x241` in `scrcmd.h` (se upstream li rinomina o li **riusa**, il Guru si rompe), `ScriptContext_GetVar`/`GetVarPointer`/`ReadHalfWord`, `FieldSystem_GetScriptMemberPtr`, `SCRIPT_MANAGER_STR_TEMPLATE`, `StringTemplate_SetAbilityName`, `LCRNG_Next`, `Pokemon_CalcAbility` (abilità dal bit 0 del PID: se upstream cambia questa regola, va rivisto `Guru_SetPersonality`), `SpeciesData_GetFormValue`, `Pokemon_GetNature`, `Pokemon_GetNatureOf`, `Pokemon_IsPersonalityShiny`, `SpeciesData_FromMonSpecies`/`GetGenderOf`/`Free`, `ABILITY_NONE`, `STAT_*` e l'ordine di `MON_DATA_HP_EV`…`SPDEF_EV` / `MON_DATA_HP_IV`…`SPDEF_IV` (uguale a `STAT_*`), `MAX_IVS_SINGLE_STAT`, `MAX_EVS_ALL_STATS`, `NATURE_COUNT`, `TrainerInfo_IsMainStoryCleared`, `TrainerInfo_BadgeCount` | `include/data/scripts/scrcmd.h`, `include/scrcmd_party.h`, `include/constants/scrcmd.h`, `src/scrcmd_party.c` |
 | Guru Lotta: script, testi, NPC | le nostre macro in `asm/macros/scrcmd.inc` (al posto di `ScrCmd_Unused_09C`…`Dummy0A0`, `Dummy23F`…`Dummy241`: se upstream le rinomina, conflitto lì) con le costanti `SCRCMD_*`, comandi upstream `CheckMoney2`, `RemoveMoney2`, `GoToIfNotEnoughMoney`, `RemoveMoney`, `InitLocalTextListMenu`, `WaitABPadPress`, `AddListMenuEntry`, `ShowYesNoMenu`, `GoToIfLt`, `PlaySE`, costanti `MENU_YES`, `MENU_CANCEL`, `PARTY_SLOT_NONE`, `STAT_*`, nomi dei suoni (`SE_CONFIRM_sseq_3`), label `PastoriaCityEastHouse_*` e `_GuruScript`, `ScriptEntry`, `FLAG_TALKED_TO_PASTORIA_CITY_EAST_HOUSE_MOVE_MANIAC`, ID testi `PastoriaCityEastHouse_Text_*` (i nostri sono `..._Text_Guru*`), formato `events.json` (id `LOCALID_*`, `"script"` per etichetta, `"initial_dir"` = `DIR_*`) | `res/field/maps/pastoria_city_east_house/scripts.s`, `res/field/maps/pastoria_city_east_house/events.json`, `res/text/pastoria_city_east_house.json`, `asm/macros/scrcmd.inc` |
-| MN dalla Borsa | `ScrCmd_CheckPartyMonHasMove`, `ScrCmd_FindPartySlotWithMove`, `Bag_GetItemQuantity`, `SaveData_GetBag`, `ITEM_HM01`–`ITEM_HM08`, `MOVE_CUT`/`STRENGTH`/`ROCK_SMASH`/`WATERFALL`/`ROCK_CLIMB` | `src/scrcmd_party.c` |
+| MN dalla Borsa | `ScrCmd_CheckPartyMonHasMove`, `ScrCmd_FindPartySlotWithMove`, `Bag_GetItemQuantity`, `SaveData_GetBag`, `ITEM_HM01`–`ITEM_HM08`, `ITEM_NONE`, uso dello slot in `res/field/scripts/field_moves.s` (`BufferPartyMonNickname`, `PlayHMCutIn`), `MOVE_CUT`/`STRENGTH`/`ROCK_SMASH`/`WATERFALL`/`ROCK_CLIMB` | `src/scrcmd_party.c` |
 | Tenda | schema JSON degli strumenti (`itemUseParams`, `fieldUseFunc`, `ITEM_USE_FUNC_HEALING`, `battleUseCategory`/`BATTLE_USE_CATEGORY_*`), `ITEM_PARAM_REVIVE_ALL`, `ITEM_PARAM_HEAL_SLEEP`, `CheckItemSacredAsh`, `PartyMenuCB_HandleSacredAsh`, `FindNextFaintedMember`, `SACREDASH_STATE_*`, `HEAP_ID_PARTY_MENU`, formato palette JASC (CRLF, `nitrogfx`) | `res/items/data/tent.json`, `res/items/icons/*`, `res/items/icons/meson.build`, `res/items/item_icon.order`, `generated/items.txt`, `src/applications/party_menu/callbacks.c` |
 | Negozi e prezzi | `PokeMartCommonItems`, `HearthomeMartSpecialties`, `PastoriaMartSpecialties`, `PokemonLeagueMartSpecialties`, `ITEM_*`, campo `price` dei JSON | `include/data/mart_items.h`, `res/items/data/*.json` |
 | Blocco PPE in `.gitignore` e `.gitattributes` | file di upstream, i nostri blocchi sono in fondo. `.gitattributes`: non aggiungere pattern già regolati da upstream (`*.pal`) | `.gitignore`, `.gitattributes` |
@@ -350,3 +352,4 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `24b75cc95` | Enrico | Guru: B nella lista delle nature non blocca più il gioco |
 | 2026-11-13 | `121e1d2d3` | Enrico | Guru: macro con nome, costanti, testi con nome, `PlaySE` |
 | 2026-11-13 | `3711abbad` | Enrico | Guru: testo corretto per il cambio natura gratuito |
+| 2026-11-13 | (questo) | Enrico | MN dalla Borsa: mai un Uovo come Pokémon che usa la mossa |
