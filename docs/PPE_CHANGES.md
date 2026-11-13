@@ -109,6 +109,10 @@ Legenda: ⚠️ = problema noto o da verificare.
   - `ev_flags`: per ogni statistica `true`/`false`. I 510 EV si dividono in parti
     uguali tra le statistiche attive, al massimo 255 ciascuna.
   - `nature`: per esempio `"NATURE_ADAMANT"`, oppure `null` per lasciarla casuale.
+    Il PID viene corretto solo nella parte alta (a passi di 256), così sesso e slot
+    abilità restano quelli dell'originale. Fino al 2026-11-13 si cambiava il byte
+    basso: un Pokémon di un'allenatrice di specie 50/50 poteva diventare maschio e
+    l'abilità poteva cambiare.
   - `ability`: `0` o `1` per lo slot abilità, oppure `null` per il default.
   - Il tool di build `trainerproc` (funzione `PackParty`) legge i campi, e le struct
     `TrainerMon*` hanno `evFlags`, `nature` e `abilitySlot`, prima di `item`.
@@ -352,4 +356,5 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `24b75cc95` | Enrico | Guru: B nella lista delle nature non blocca più il gioco |
 | 2026-11-13 | `121e1d2d3` | Enrico | Guru: macro con nome, costanti, testi con nome, `PlaySE` |
 | 2026-11-13 | `3711abbad` | Enrico | Guru: testo corretto per il cambio natura gratuito |
-| 2026-11-13 | (questo) | Enrico | MN dalla Borsa: mai un Uovo come Pokémon che usa la mossa |
+| 2026-11-13 | `c2c3cd096` | Enrico | MN dalla Borsa: mai un Uovo come Pokémon che usa la mossa |
+| 2026-11-13 | (questo) | Enrico | Allenatori: la natura dal JSON non cambia più sesso e abilità |

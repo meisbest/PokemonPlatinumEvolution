@@ -24,6 +24,7 @@
 static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID heapID);
 static void TrainerData_ApplyEvFlags(Pokemon *mon, u16 evFlags);
 static void TrainerData_ApplyAbilitySlot(Pokemon *mon, u16 species, u8 abilitySlot);
+static u32 TrainerData_ApplyNature(u32 personality, u8 nature);
 
 void Trainer_Encounter(FieldBattleDTO *dto, const SaveData *saveData, enum HeapID heapID)
 {
@@ -213,6 +214,22 @@ static void TrainerData_ApplyAbilitySlot(Pokemon *mon, u16 species, u8 abilitySl
     Pokemon_SetValue(mon, MON_DATA_ABILITY, &abilityVal);
 }
 
+// PPE: porta il PID alla natura scelta nel JSON senza toccare il byte basso, che
+// decide sesso (genderMod) e abilità (bit 0). Si aggiunge k * 256: 256 vale 6
+// modulo 25 e 6 * 21 vale 1 modulo 25, quindi k = differenza * 21 (mod 25).
+static u32 TrainerData_ApplyNature(u32 personality, u8 nature)
+{
+    u32 diff;
+
+    if (nature == TRAINER_MON_NATURE_NONE) {
+        return personality;
+    }
+
+    diff = (nature + NATURE_COUNT - personality % NATURE_COUNT) % NATURE_COUNT;
+
+    return personality + ((diff * 21) % NATURE_COUNT) * 256;
+}
+
 /**
  * @brief Build the party for a trainer as loaded in the FieldBattleDTO struct.
  *
@@ -258,9 +275,7 @@ static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID
             }
 
             rnd = (rnd << 8) + genderMod;
-            if (trmon[i].nature != TRAINER_MON_NATURE_NONE) {
-                rnd += ((u32)trmon[i].nature - rnd % NATURE_COUNT + NATURE_COUNT) % NATURE_COUNT;
-            }
+            rnd = TrainerData_ApplyNature(rnd, trmon[i].nature);
             ivs = trmon[i].ivScale * MAX_IVS_SINGLE_STAT / MAX_IV_SCALE;
 
             Pokemon_InitWith(mon, species, trmon[i].level, ivs, TRUE, rnd, OTID_NOT_SHINY, 0);
@@ -288,9 +303,7 @@ static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID
             }
 
             rnd = (rnd << 8) + genderMod;
-            if (trmon[i].nature != TRAINER_MON_NATURE_NONE) {
-                rnd += ((u32)trmon[i].nature - rnd % NATURE_COUNT + NATURE_COUNT) % NATURE_COUNT;
-            }
+            rnd = TrainerData_ApplyNature(rnd, trmon[i].nature);
             ivs = trmon[i].ivScale * MAX_IVS_SINGLE_STAT / MAX_IV_SCALE;
 
             Pokemon_InitWith(mon, species, trmon[i].level, ivs, TRUE, rnd, OTID_NOT_SHINY, 0);
@@ -323,9 +336,7 @@ static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID
             }
 
             rnd = (rnd << 8) + genderMod;
-            if (trmon[i].nature != TRAINER_MON_NATURE_NONE) {
-                rnd += ((u32)trmon[i].nature - rnd % NATURE_COUNT + NATURE_COUNT) % NATURE_COUNT;
-            }
+            rnd = TrainerData_ApplyNature(rnd, trmon[i].nature);
             ivs = trmon[i].ivScale * MAX_IVS_SINGLE_STAT / MAX_IV_SCALE;
 
             Pokemon_InitWith(mon, species, trmon[i].level, ivs, TRUE, rnd, OTID_NOT_SHINY, 0);
@@ -354,9 +365,7 @@ static void TrainerData_BuildParty(FieldBattleDTO *dto, int battler, enum HeapID
             }
 
             rnd = (rnd << 8) + genderMod;
-            if (trmon[i].nature != TRAINER_MON_NATURE_NONE) {
-                rnd += ((u32)trmon[i].nature - rnd % NATURE_COUNT + NATURE_COUNT) % NATURE_COUNT;
-            }
+            rnd = TrainerData_ApplyNature(rnd, trmon[i].nature);
             ivs = trmon[i].ivScale * MAX_IVS_SINGLE_STAT / MAX_IV_SCALE;
 
             Pokemon_InitWith(mon, species, trmon[i].level, ivs, TRUE, rnd, OTID_NOT_SHINY, 0);
