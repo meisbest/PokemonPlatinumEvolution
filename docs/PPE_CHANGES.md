@@ -345,4 +345,4 @@ Ultima verifica: 2026-11-13, su origin/main `62bdaacdc`.
 | 2026-11-13 | `0062765cd` | Enrico | Guru: cambio abilità che resta dopo l'evoluzione |
 | 2026-11-13 | `fa9b9fc7b` | Enrico | Guru e level cap: funzioni e comandi upstream al posto dei nostri doppioni |
 | 2026-11-13 | `24b75cc95` | Enrico | Guru: B nella lista delle nature non blocca più il gioco |
-| 2026-11-13 | (questo) | Enrico | Guru: macro con nome, costanti, testi con nome, `PlaySE` |
+| 2026-11-13 | `121e1d2d3` | Enrico | Guru: macro con nome, costanti, testi con nome, `PlaySE` |
